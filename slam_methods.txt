@@ -1,0 +1,39 @@
+--- SLAM METHODS ---
+ 
+-Large-Scale Direct Monocular SLAM (LSD-SLAM)
+ https://github.com/tum-vision/lsd_slam
+
+- RGBD-SLAM
+ https://openslam-org.github.io/rgbdslam.html
+
+- ORB-SLAM
+ http://webdiis.unizar.es/~raulmur/orbslam/
+
+- CNN-SLAM (Convolutional Neural Network)
+ https://github.com/Lishunkai/CNN-SLAM
+ http://openaccess.thecvf.com/content_cvpr_2017/papers/Tateno_CNN-SLAM_Real-Time_Dense_CVPR_2017_paper.pdf
+
+- SIVO (Semantically Informed Visual Odometry and Mapping)
+ https://github.com/navganti/SIVO
+ 
+------------- DATASETS KINECT --------------
+
+https://www.mrpt.org/Collection_of_Kinect_RGBD_datasets_with_ground_truth_CVPR_TUM_2011
+
+https://vision.in.tum.de/data/datasets/rgbd-dataset
+
+http://www.cvlibs.net/datasets/kitti/eval_odometry.php
+
+------------ MISCELLANEOUS ---------
+
+- G2O is an open-source C++ framework for optimizing graph-based nonlinear error functions
+  https://github.com/rainerkuemmerle/g2o
+
+
+------------ RUNING SLAM RGB-D ------------------
+- PDF to launch freenet with ROS and Kinect
+ https://www.choitek.com/uploads/5/0/8/4/50842795/ros_kinect.pdf
+
+- RTabMap forum to optimizate data transfer 
+ http://official-rtab-map-forum.67519.x6.nabble.com/RGB-D-SLAM-example-on-ROS-and-Raspberry-Pi-3-td1250.html
+
