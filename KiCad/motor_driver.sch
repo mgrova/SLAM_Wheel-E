@@ -31,7 +31,7 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
-LIBS:L293D
+LIBS:l293d
 LIBS:motor_driver-cache
 EELAYER 25 0
 EELAYER END
@@ -48,428 +48,416 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L L293D U1
-U 1 1 5C72E20E
-P -6300 9050
-F 0 "U1" H -6250 9100 60  0000 C CNN
-F 1 "L293D" H 2700 17050 60  0000 C CNN
-F 2 "Housings_DIP:DIP-16_W7.62mm_Socket_LongPads" H -6300 9050 60  0001 C CNN
-F 3 "" H -6300 9050 60  0001 C CNN
-	1    -6300 9050
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	2100 1950 2100 1800
-Wire Wire Line
-	3600 1950 3600 1800
-Wire Wire Line
-	2100 1800 1800 1800
-Wire Wire Line
-	3600 1800 3900 1800
-$Comp
 L GND #PWR01
 U 1 1 5C72F3AF
-P 1800 1800
-F 0 "#PWR01" H 1800 1550 50  0001 C CNN
-F 1 "GND" H 1800 1650 50  0000 C CNN
-F 2 "" H 1800 1800 50  0001 C CNN
-F 3 "" H 1800 1800 50  0001 C CNN
-	1    1800 1800
-	1    0    0    -1  
+P 2150 1800
+F 0 "#PWR01" H 2150 1550 50  0001 C CNN
+F 1 "GND" H 2150 1650 50  0000 C CNN
+F 2 "" H 2150 1800 50  0001 C CNN
+F 3 "" H 2150 1800 50  0001 C CNN
+	1    2150 1800
+	0    1    1    0   
 $EndComp
+Text GLabel 3550 1050 2    60   Input ~ 0
+ardu5V
+Text GLabel 2150 2850 0    60   Input ~ 0
+supply12V
+Text GLabel 2150 1550 0    60   Input ~ 0
+m2+
+Text GLabel 2150 2350 0    60   Input ~ 0
+m2-
+Text GLabel 3550 1550 2    60   Input ~ 0
+m4-
+Text GLabel 3550 2350 2    60   Input ~ 0
+m4+
+Text GLabel 2150 1050 0    60   Input ~ 0
+en
+Text GLabel 3550 2850 2    60   Input ~ 0
+en
+Text GLabel 2150 1300 0    60   Input ~ 0
+pwm_m2
+Text GLabel 2150 2600 0    60   Input ~ 0
+dig_m2
+Text GLabel 3550 2600 2    60   Input ~ 0
+pwm_m4
+Text GLabel 3550 1300 2    60   Input ~ 0
+dig_m4
+Text GLabel 3550 3300 2    60   Input ~ 0
+ardu5V
+Text GLabel 2150 5100 0    60   Input ~ 0
+supply12V
+Text GLabel 2150 3800 0    60   Input ~ 0
+m3+
+Text GLabel 2150 4600 0    60   Input ~ 0
+m3-
+Text GLabel 3550 3800 2    60   Input ~ 0
+m1-
+Text GLabel 3550 4600 2    60   Input ~ 0
+m1+
+Text GLabel 2150 3300 0    60   Input ~ 0
+en
+Text GLabel 3550 5100 2    60   Input ~ 0
+en
+Text GLabel 2150 3550 0    60   Input ~ 0
+pwm_m3
+Text GLabel 2150 4850 0    60   Input ~ 0
+dig_m3
+Text GLabel 3550 4850 2    60   Input ~ 0
+pwm_m1
+Text GLabel 3550 3550 2    60   Input ~ 0
+dig_m1
 $Comp
 L GND #PWR02
-U 1 1 5C72F3C9
-P 3900 1800
-F 0 "#PWR02" H 3900 1550 50  0001 C CNN
-F 1 "GND" H 3900 1650 50  0000 C CNN
-F 2 "" H 3900 1800 50  0001 C CNN
-F 3 "" H 3900 1800 50  0001 C CNN
-	1    3900 1800
-	1    0    0    -1  
+U 1 1 5C72FE27
+P 2150 6250
+F 0 "#PWR02" H 2150 6000 50  0001 C CNN
+F 1 "GND" H 2150 6100 50  0000 C CNN
+F 2 "" H 2150 6250 50  0001 C CNN
+F 3 "" H 2150 6250 50  0001 C CNN
+	1    2150 6250
+	0    1    1    0   
 $EndComp
-Text GLabel 3600 1350 2    60   Input ~ 0
+Text GLabel 3550 5500 2    60   Input ~ 0
 ardu5V
-Text GLabel 2100 2400 0    60   Input ~ 0
+Text GLabel 2150 7300 0    60   Input ~ 0
 supply12V
-Text GLabel 2100 1650 0    60   Input ~ 0
+Text GLabel 2150 6000 0    60   Input ~ 0
+m6+
+Text GLabel 2150 6800 0    60   Input ~ 0
+m6-
+Text GLabel 3550 6000 2    60   Input ~ 0
+m5-
+Text GLabel 3550 6800 2    60   Input ~ 0
+m5+
+Text GLabel 2150 5500 0    60   Input ~ 0
+en
+Text GLabel 3550 7300 2    60   Input ~ 0
+en
+Text GLabel 2150 5750 0    60   Input ~ 0
+pwm_m6
+Text GLabel 2150 7050 0    60   Input ~ 0
+dig_m6
+Text GLabel 3550 7050 2    60   Input ~ 0
+pwm_m5
+Text GLabel 3550 5750 2    60   Input ~ 0
+dig_m5
+Text GLabel 6000 1150 0    60   Input ~ 0
 m1+
-Text GLabel 2100 2100 0    60   Input ~ 0
+Text GLabel 6000 1250 0    60   Input ~ 0
 m1-
-Text GLabel 3600 1650 2    60   Input ~ 0
+Text GLabel 6000 1550 0    60   Input ~ 0
 m2+
-Text GLabel 3600 2100 2    60   Input ~ 0
+Text GLabel 6000 1650 0    60   Input ~ 0
 m2-
-Text GLabel 2100 1350 0    60   Input ~ 0
-en
-Text GLabel 3600 2400 2    60   Input ~ 0
-en
-Text GLabel 2100 1500 0    60   Input ~ 0
-pwm_m1
-Text GLabel 2100 2250 0    60   Input ~ 0
-dig_m1
-Text GLabel 3600 2250 2    60   Input ~ 0
-pwm_m2
-Text GLabel 3600 1500 2    60   Input ~ 0
-dig_m2
-$Comp
-L L293D U2
-U 2 1 5C72FDB9
-P -6250 11150
-F 0 "U2" V -6200 11200 60  0000 C CNN
-F 1 "L293D" H 2750 19150 60  0000 C CNN
-F 2 "Housings_DIP:DIP-16_W7.62mm_Socket_LongPads" H -6250 11150 60  0001 C CNN
-F 3 "" H -6250 11150 60  0001 C CNN
-	2    -6250 11150
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	2150 4050 2150 3900
-Wire Wire Line
-	3650 4050 3650 3900
-Wire Wire Line
-	2150 3900 1850 3900
-Wire Wire Line
-	3650 3900 3950 3900
+Text GLabel 6000 2300 0    60   Input ~ 0
+m3+
+Text GLabel 6000 2400 0    60   Input ~ 0
+m3-
+Text GLabel 6000 2700 0    60   Input ~ 0
+m4+
+Text GLabel 6000 2800 0    60   Input ~ 0
+m4-
+Text GLabel 6000 3750 0    60   Input ~ 0
+m5+
+Text GLabel 6000 3850 0    60   Input ~ 0
+m5-
+Text GLabel 6000 4150 0    60   Input ~ 0
+m6+
+Text GLabel 6000 4250 0    60   Input ~ 0
+m6-
+Text GLabel 6100 5650 0    60   Input ~ 0
+supply12V
 $Comp
 L GND #PWR03
-U 1 1 5C72FDC4
-P 1850 3900
-F 0 "#PWR03" H 1850 3650 50  0001 C CNN
-F 1 "GND" H 1850 3750 50  0000 C CNN
-F 2 "" H 1850 3900 50  0001 C CNN
-F 3 "" H 1850 3900 50  0001 C CNN
-	1    1850 3900
-	1    0    0    -1  
-$EndComp
-$Comp
-L GND #PWR04
-U 1 1 5C72FDCA
-P 3950 3900
-F 0 "#PWR04" H 3950 3650 50  0001 C CNN
-F 1 "GND" H 3950 3750 50  0000 C CNN
-F 2 "" H 3950 3900 50  0001 C CNN
-F 3 "" H 3950 3900 50  0001 C CNN
-	1    3950 3900
-	1    0    0    -1  
-$EndComp
-Text GLabel 3650 3450 2    60   Input ~ 0
-ardu5V
-Text GLabel 2150 4500 0    60   Input ~ 0
-supply12V
-Text GLabel 2150 3750 0    60   Input ~ 0
-m3+
-Text GLabel 2150 4200 0    60   Input ~ 0
-m3-
-Text GLabel 3650 3750 2    60   Input ~ 0
-m4+
-Text GLabel 3650 4200 2    60   Input ~ 0
-m4-
-Text GLabel 2150 3450 0    60   Input ~ 0
-en
-Text GLabel 3650 4500 2    60   Input ~ 0
-en
-Text GLabel 2150 3600 0    60   Input ~ 0
-pwm_m3
-Text GLabel 2150 4350 0    60   Input ~ 0
-dig_m3
-Text GLabel 3650 4350 2    60   Input ~ 0
-pwm_m4
-Text GLabel 3650 3600 2    60   Input ~ 0
-dig_m4
-$Comp
-L L293D U3
-U 3 1 5C72FE1C
-P -6200 13450
-F 0 "U3" H -6150 13500 60  0000 C CNN
-F 1 "L293D" H 2800 21450 60  0000 C CNN
-F 2 "Housings_DIP:DIP-16_W7.62mm_Socket_LongPads" H -6200 13450 60  0001 C CNN
-F 3 "" H -6200 13450 60  0001 C CNN
-	3    -6200 13450
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	2200 6350 2200 6200
-Wire Wire Line
-	3700 6350 3700 6200
-Wire Wire Line
-	2200 6200 1900 6200
-Wire Wire Line
-	3700 6200 4000 6200
-$Comp
-L GND #PWR05
-U 1 1 5C72FE27
-P 1900 6200
-F 0 "#PWR05" H 1900 5950 50  0001 C CNN
-F 1 "GND" H 1900 6050 50  0000 C CNN
-F 2 "" H 1900 6200 50  0001 C CNN
-F 3 "" H 1900 6200 50  0001 C CNN
-	1    1900 6200
-	1    0    0    -1  
-$EndComp
-$Comp
-L GND #PWR06
-U 1 1 5C72FE2D
-P 4000 6200
-F 0 "#PWR06" H 4000 5950 50  0001 C CNN
-F 1 "GND" H 4000 6050 50  0000 C CNN
-F 2 "" H 4000 6200 50  0001 C CNN
-F 3 "" H 4000 6200 50  0001 C CNN
-	1    4000 6200
-	1    0    0    -1  
-$EndComp
-Text GLabel 3700 5750 2    60   Input ~ 0
-ardu5V
-Text GLabel 2200 6800 0    60   Input ~ 0
-supply12V
-Text GLabel 2200 6050 0    60   Input ~ 0
-m5+
-Text GLabel 2200 6500 0    60   Input ~ 0
-m5-
-Text GLabel 3700 6050 2    60   Input ~ 0
-m6+
-Text GLabel 3700 6500 2    60   Input ~ 0
-m6-
-Text GLabel 2200 5750 0    60   Input ~ 0
-en
-Text GLabel 3700 6800 2    60   Input ~ 0
-en
-Text GLabel 2200 5900 0    60   Input ~ 0
-pwm_m5
-Text GLabel 2200 6650 0    60   Input ~ 0
-dig_m5
-Text GLabel 3700 6650 2    60   Input ~ 0
-pwm_m6
-Text GLabel 3700 5900 2    60   Input ~ 0
-dig_m6
-$Comp
-L Conn_01x02 J1
-U 1 1 5C72FEA4
-P 6150 1300
-F 0 "J1" H 6150 1400 50  0000 C CNN
-F 1 "sig_m1" H 6150 1100 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.00mm" H 6150 1300 50  0001 C CNN
-F 3 "" H 6150 1300 50  0001 C CNN
-	1    6150 1300
-	1    0    0    -1  
-$EndComp
-$Comp
-L Conn_01x02 J2
-U 1 1 5C72FED7
-P 6150 1700
-F 0 "J2" H 6150 1800 50  0000 C CNN
-F 1 "sig_m2" H 6150 1500 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.00mm" H 6150 1700 50  0001 C CNN
-F 3 "" H 6150 1700 50  0001 C CNN
-	1    6150 1700
-	1    0    0    -1  
-$EndComp
-Text GLabel 5950 1300 0    60   Input ~ 0
-pwm_m1
-Text GLabel 5950 1400 0    60   Input ~ 0
-dig_m1
-Text GLabel 5950 1700 0    60   Input ~ 0
-pwm_m2
-Text GLabel 5950 1800 0    60   Input ~ 0
-dig_m2
-Text GLabel 7000 1300 0    60   Input ~ 0
-m1+
-Text GLabel 7000 1400 0    60   Input ~ 0
-m1-
-Text GLabel 7000 1700 0    60   Input ~ 0
-m2+
-Text GLabel 7000 1800 0    60   Input ~ 0
-m2-
-$Comp
-L Conn_01x02 J3
-U 1 1 5C7303DC
-P 6250 3400
-F 0 "J3" H 6250 3500 50  0000 C CNN
-F 1 "sig_m3" H 6250 3200 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.00mm" H 6250 3400 50  0001 C CNN
-F 3 "" H 6250 3400 50  0001 C CNN
-	1    6250 3400
-	1    0    0    -1  
-$EndComp
-$Comp
-L Conn_01x02 J4
-U 1 1 5C7303E3
-P 6250 3800
-F 0 "J4" H 6250 3900 50  0000 C CNN
-F 1 "sig_m4" H 6250 3600 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.00mm" H 6250 3800 50  0001 C CNN
-F 3 "" H 6250 3800 50  0001 C CNN
-	1    6250 3800
-	1    0    0    -1  
-$EndComp
-Text GLabel 6050 3400 0    60   Input ~ 0
-pwm_m3
-Text GLabel 6050 3500 0    60   Input ~ 0
-dig_m3
-Text GLabel 6050 3800 0    60   Input ~ 0
-pwm_m4
-Text GLabel 6050 3900 0    60   Input ~ 0
-dig_m4
-Text GLabel 7100 3400 0    60   Input ~ 0
-m3+
-Text GLabel 7100 3500 0    60   Input ~ 0
-m3-
-Text GLabel 7100 3800 0    60   Input ~ 0
-m4+
-Text GLabel 7100 3900 0    60   Input ~ 0
-m4-
-$Comp
-L Conn_01x02 J5
-U 1 1 5C7305CB
-P 6300 5600
-F 0 "J5" H 6300 5700 50  0000 C CNN
-F 1 "sig_m5" H 6300 5400 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.00mm" H 6300 5600 50  0001 C CNN
-F 3 "" H 6300 5600 50  0001 C CNN
-	1    6300 5600
-	1    0    0    -1  
-$EndComp
-$Comp
-L Conn_01x02 J6
-U 1 1 5C7305D2
-P 6300 6000
-F 0 "J6" H 6300 6100 50  0000 C CNN
-F 1 "sig_m6" H 6300 5800 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.00mm" H 6300 6000 50  0001 C CNN
-F 3 "" H 6300 6000 50  0001 C CNN
-	1    6300 6000
-	1    0    0    -1  
-$EndComp
-Text GLabel 6100 5600 0    60   Input ~ 0
-pwm_m5
-Text GLabel 6100 5700 0    60   Input ~ 0
-dig_m5
-Text GLabel 6100 6000 0    60   Input ~ 0
-pwm_m6
-Text GLabel 6100 6100 0    60   Input ~ 0
-dig_m6
-Text GLabel 7150 5600 0    60   Input ~ 0
-m5+
-Text GLabel 7150 5700 0    60   Input ~ 0
-m5-
-Text GLabel 7150 6000 0    60   Input ~ 0
-m6+
-Text GLabel 7150 6100 0    60   Input ~ 0
-m6-
-Text GLabel 9250 2550 0    60   Input ~ 0
-ardu5V
-$Comp
-L GND #PWR07
-U 1 1 5C730EC2
-P 9250 2650
-F 0 "#PWR07" H 9250 2400 50  0001 C CNN
-F 1 "GND" H 9100 2600 50  0000 C CNN
-F 2 "" H 9250 2650 50  0001 C CNN
-F 3 "" H 9250 2650 50  0001 C CNN
-	1    9250 2650
-	1    0    0    -1  
-$EndComp
-$Comp
-L Conn_01x03 J13
-U 1 1 5C731181
-P 9450 2550
-F 0 "J13" H 9450 2750 50  0000 C CNN
-F 1 "Conn_01x03" H 9600 2350 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.00mm" H 9450 2550 50  0001 C CNN
-F 3 "" H 9450 2550 50  0001 C CNN
-	1    9450 2550
-	1    0    0    -1  
-$EndComp
-Text GLabel 9250 2450 0    60   Input ~ 0
-en
-Text GLabel 9450 4750 0    60   Input ~ 0
-supply12V
-$Comp
-L GND #PWR08
 U 1 1 5C73152D
-P 9450 4850
-F 0 "#PWR08" H 9450 4600 50  0001 C CNN
-F 1 "GND" H 9300 4800 50  0000 C CNN
-F 2 "" H 9450 4850 50  0001 C CNN
-F 3 "" H 9450 4850 50  0001 C CNN
-	1    9450 4850
+P 6100 5750
+F 0 "#PWR03" H 6100 5500 50  0001 C CNN
+F 1 "GND" H 5950 5700 50  0000 C CNN
+F 2 "" H 6100 5750 50  0001 C CNN
+F 3 "" H 6100 5750 50  0001 C CNN
+	1    6100 5750
 	1    0    0    -1  
 $EndComp
 $Comp
 L Screw_Terminal_01x02 J7
 U 1 1 5C733FF1
-P 7200 1300
-F 0 "J7" H 7200 1400 50  0000 C CNN
-F 1 "m1" H 7200 1100 50  0000 C CNN
-F 2 "Connectors_Terminal_Blocks:TerminalBlock_Altech_AK300-2_P5.00mm" H 7200 1300 50  0001 C CNN
-F 3 "" H 7200 1300 50  0001 C CNN
-	1    7200 1300
+P 6200 1150
+F 0 "J7" H 6200 1250 50  0000 C CNN
+F 1 "m1" H 6200 950 50  0000 C CNN
+F 2 "Connectors_Terminal_Blocks:TerminalBlock_Altech_AK300-2_P5.00mm" H 6200 1150 50  0001 C CNN
+F 3 "" H 6200 1150 50  0001 C CNN
+	1    6200 1150
 	1    0    0    -1  
 $EndComp
 $Comp
 L Screw_Terminal_01x02 J8
 U 1 1 5C7344C5
-P 7200 1700
-F 0 "J8" H 7200 1800 50  0000 C CNN
-F 1 "m2" H 7200 1500 50  0000 C CNN
-F 2 "Connectors_Terminal_Blocks:TerminalBlock_Altech_AK300-2_P5.00mm" H 7200 1700 50  0001 C CNN
-F 3 "" H 7200 1700 50  0001 C CNN
-	1    7200 1700
+P 6200 1550
+F 0 "J8" H 6200 1650 50  0000 C CNN
+F 1 "m2" H 6200 1350 50  0000 C CNN
+F 2 "Connectors_Terminal_Blocks:TerminalBlock_Altech_AK300-2_P5.00mm" H 6200 1550 50  0001 C CNN
+F 3 "" H 6200 1550 50  0001 C CNN
+	1    6200 1550
 	1    0    0    -1  
 $EndComp
 $Comp
 L Screw_Terminal_01x02 J9
 U 1 1 5C73460D
-P 7300 3400
-F 0 "J9" H 7300 3500 50  0000 C CNN
-F 1 "m3" H 7300 3200 50  0000 C CNN
-F 2 "Connectors_Terminal_Blocks:TerminalBlock_Altech_AK300-2_P5.00mm" H 7300 3400 50  0001 C CNN
-F 3 "" H 7300 3400 50  0001 C CNN
-	1    7300 3400
+P 6200 2300
+F 0 "J9" H 6200 2400 50  0000 C CNN
+F 1 "m3" H 6200 2100 50  0000 C CNN
+F 2 "Connectors_Terminal_Blocks:TerminalBlock_Altech_AK300-2_P5.00mm" H 6200 2300 50  0001 C CNN
+F 3 "" H 6200 2300 50  0001 C CNN
+	1    6200 2300
 	1    0    0    -1  
 $EndComp
 $Comp
 L Screw_Terminal_01x02 J10
 U 1 1 5C7346D5
-P 7300 3800
-F 0 "J10" H 7300 3900 50  0000 C CNN
-F 1 "m4" H 7300 3600 50  0000 C CNN
-F 2 "Connectors_Terminal_Blocks:TerminalBlock_Altech_AK300-2_P5.00mm" H 7300 3800 50  0001 C CNN
-F 3 "" H 7300 3800 50  0001 C CNN
-	1    7300 3800
+P 6200 2700
+F 0 "J10" H 6200 2800 50  0000 C CNN
+F 1 "m4" H 6200 2500 50  0000 C CNN
+F 2 "Connectors_Terminal_Blocks:TerminalBlock_Altech_AK300-2_P5.00mm" H 6200 2700 50  0001 C CNN
+F 3 "" H 6200 2700 50  0001 C CNN
+	1    6200 2700
 	1    0    0    -1  
 $EndComp
 $Comp
 L Screw_Terminal_01x02 J11
 U 1 1 5C7347B5
-P 7350 5600
-F 0 "J11" H 7350 5700 50  0000 C CNN
-F 1 "m5" H 7350 5400 50  0000 C CNN
-F 2 "Connectors_Terminal_Blocks:TerminalBlock_Altech_AK300-2_P5.00mm" H 7350 5600 50  0001 C CNN
-F 3 "" H 7350 5600 50  0001 C CNN
-	1    7350 5600
+P 6200 3750
+F 0 "J11" H 6200 3850 50  0000 C CNN
+F 1 "m5" H 6200 3550 50  0000 C CNN
+F 2 "Connectors_Terminal_Blocks:TerminalBlock_Altech_AK300-2_P5.00mm" H 6200 3750 50  0001 C CNN
+F 3 "" H 6200 3750 50  0001 C CNN
+	1    6200 3750
 	1    0    0    -1  
 $EndComp
 $Comp
 L Screw_Terminal_01x02 J12
 U 1 1 5C7348D8
-P 7350 6000
-F 0 "J12" H 7350 6100 50  0000 C CNN
-F 1 "m6" H 7350 5800 50  0000 C CNN
-F 2 "Connectors_Terminal_Blocks:TerminalBlock_Altech_AK300-2_P5.00mm" H 7350 6000 50  0001 C CNN
-F 3 "" H 7350 6000 50  0001 C CNN
-	1    7350 6000
+P 6200 4150
+F 0 "J12" H 6200 4250 50  0000 C CNN
+F 1 "m6" H 6200 3950 50  0000 C CNN
+F 2 "Connectors_Terminal_Blocks:TerminalBlock_Altech_AK300-2_P5.00mm" H 6200 4150 50  0001 C CNN
+F 3 "" H 6200 4150 50  0001 C CNN
+	1    6200 4150
 	1    0    0    -1  
 $EndComp
 $Comp
 L Screw_Terminal_01x02 J14
 U 1 1 5C7349E2
-P 9650 4750
-F 0 "J14" H 9650 4850 50  0000 C CNN
-F 1 "power12v" H 9650 4550 50  0000 C CNN
-F 2 "Connectors_Terminal_Blocks:TerminalBlock_Altech_AK300-2_P5.00mm" H 9650 4750 50  0001 C CNN
-F 3 "" H 9650 4750 50  0001 C CNN
-	1    9650 4750
+P 6300 5650
+F 0 "J14" H 6300 5750 50  0000 C CNN
+F 1 "power12v" H 6300 5450 50  0000 C CNN
+F 2 "Connectors_Terminal_Blocks:TerminalBlock_Altech_AK300-2_P5.00mm" H 6300 5650 50  0001 C CNN
+F 3 "" H 6300 5650 50  0001 C CNN
+	1    6300 5650
 	1    0    0    -1  
 $EndComp
+$Comp
+L GND #PWR04
+U 1 1 5C73FA55
+P 2150 4050
+F 0 "#PWR04" H 2150 3800 50  0001 C CNN
+F 1 "GND" H 2150 3900 50  0000 C CNN
+F 2 "" H 2150 4050 50  0001 C CNN
+F 3 "" H 2150 4050 50  0001 C CNN
+	1    2150 4050
+	0    1    1    0   
+$EndComp
+$Comp
+L L293D U1
+U 1 1 5C73F435
+P 2850 1950
+F 0 "U1" H 3050 3000 60  0000 C CNN
+F 1 "L293D" H 2600 3000 60  0000 C CNN
+F 2 "Housings_DIP:DIP-16_W7.62mm_Socket_LongPads" H 2850 1950 60  0001 C CNN
+F 3 "" H 2850 1950 60  0001 C CNN
+	1    2850 1950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3550 2100 3550 1800
+Wire Wire Line
+	2150 2100 2150 1800
+$Comp
+L GND #PWR05
+U 1 1 5C73F895
+P 3550 1800
+F 0 "#PWR05" H 3550 1550 50  0001 C CNN
+F 1 "GND" H 3550 1650 50  0000 C CNN
+F 2 "" H 3550 1800 50  0001 C CNN
+F 3 "" H 3550 1800 50  0001 C CNN
+	1    3550 1800
+	0    -1   -1   0   
+$EndComp
+$Comp
+L L293D U2
+U 1 1 5C73F9A1
+P 2850 4200
+F 0 "U2" H 3100 5250 60  0000 C CNN
+F 1 "L293D" H 2650 5250 60  0000 C CNN
+F 2 "Housings_DIP:DIP-16_W7.62mm_Socket_LongPads" H 2850 4200 60  0001 C CNN
+F 3 "" H 2850 4200 60  0001 C CNN
+	1    2850 4200
+	1    0    0    -1  
+$EndComp
+$Comp
+L L293D U3
+U 1 1 5C73FA66
+P 2850 6400
+F 0 "U3" H 3100 7450 60  0000 C CNN
+F 1 "L293D" H 2600 7450 60  0000 C CNN
+F 2 "Housings_DIP:DIP-16_W7.62mm_Socket_LongPads" H 2850 6400 60  0001 C CNN
+F 3 "" H 2850 6400 60  0001 C CNN
+	1    2850 6400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3550 4350 3550 4050
+Wire Wire Line
+	2150 4350 2150 4050
+$Comp
+L GND #PWR06
+U 1 1 5C73FF80
+P 3550 4050
+F 0 "#PWR06" H 3550 3800 50  0001 C CNN
+F 1 "GND" H 3550 3900 50  0000 C CNN
+F 2 "" H 3550 4050 50  0001 C CNN
+F 3 "" H 3550 4050 50  0001 C CNN
+	1    3550 4050
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	3550 6550 3550 6250
+Wire Wire Line
+	2150 6550 2150 6250
+$Comp
+L GND #PWR07
+U 1 1 5C74071F
+P 3550 6250
+F 0 "#PWR07" H 3550 6000 50  0001 C CNN
+F 1 "GND" H 3550 6100 50  0000 C CNN
+F 2 "" H 3550 6250 50  0001 C CNN
+F 3 "" H 3550 6250 50  0001 C CNN
+	1    3550 6250
+	0    -1   -1   0   
+$EndComp
+Text GLabel 4900 1050 0    60   Input ~ 0
+pwm_m1
+Text GLabel 4900 1150 0    60   Input ~ 0
+dig_m1
+Text GLabel 4900 1600 0    60   Input ~ 0
+pwm_m2
+Text GLabel 4900 1700 0    60   Input ~ 0
+dig_m2
+$Comp
+L GND #PWR08
+U 1 1 5C741699
+P 4950 5800
+F 0 "#PWR08" H 4950 5550 50  0001 C CNN
+F 1 "GND" V 4950 5600 50  0000 C CNN
+F 2 "" H 4950 5800 50  0001 C CNN
+F 3 "" H 4950 5800 50  0001 C CNN
+	1    4950 5800
+	0    1    1    0   
+$EndComp
+Text GLabel 4950 5600 0    60   Input ~ 0
+en
+$Comp
+L Conn_01x02 J1
+U 1 1 5C742255
+P 5100 1050
+F 0 "J1" H 5100 1150 50  0000 C CNN
+F 1 "Conn_01x02" H 5100 850 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.00mm" H 5100 1050 50  0001 C CNN
+F 3 "" H 5100 1050 50  0001 C CNN
+	1    5100 1050
+	1    0    0    -1  
+$EndComp
+$Comp
+L Conn_01x02 J2
+U 1 1 5C742362
+P 5100 1600
+F 0 "J2" H 5100 1700 50  0000 C CNN
+F 1 "Conn_01x02" H 5100 1400 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.00mm" H 5100 1600 50  0001 C CNN
+F 3 "" H 5100 1600 50  0001 C CNN
+	1    5100 1600
+	1    0    0    -1  
+$EndComp
+Text GLabel 4900 2250 0    60   Input ~ 0
+pwm_m3
+Text GLabel 4900 2350 0    60   Input ~ 0
+dig_m3
+Text GLabel 4900 2800 0    60   Input ~ 0
+pwm_m4
+Text GLabel 4900 2900 0    60   Input ~ 0
+dig_m4
+$Comp
+L Conn_01x02 J3
+U 1 1 5C7427DD
+P 5100 2250
+F 0 "J3" H 5100 2350 50  0000 C CNN
+F 1 "Conn_01x02" H 5100 2050 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.00mm" H 5100 2250 50  0001 C CNN
+F 3 "" H 5100 2250 50  0001 C CNN
+	1    5100 2250
+	1    0    0    -1  
+$EndComp
+$Comp
+L Conn_01x02 J4
+U 1 1 5C7427E4
+P 5100 2800
+F 0 "J4" H 5100 2900 50  0000 C CNN
+F 1 "Conn_01x02" H 5100 2600 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.00mm" H 5100 2800 50  0001 C CNN
+F 3 "" H 5100 2800 50  0001 C CNN
+	1    5100 2800
+	1    0    0    -1  
+$EndComp
+Text GLabel 4900 3700 0    60   Input ~ 0
+pwm_m5
+Text GLabel 4900 3800 0    60   Input ~ 0
+dig_m5
+Text GLabel 4900 4250 0    60   Input ~ 0
+pwm_m6
+Text GLabel 4900 4350 0    60   Input ~ 0
+dig_m6
+$Comp
+L Conn_01x02 J5
+U 1 1 5C742D7E
+P 5100 3700
+F 0 "J5" H 5100 3800 50  0000 C CNN
+F 1 "Conn_01x02" H 5100 3500 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.00mm" H 5100 3700 50  0001 C CNN
+F 3 "" H 5100 3700 50  0001 C CNN
+	1    5100 3700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Conn_01x02 J6
+U 1 1 5C742D85
+P 5100 4250
+F 0 "J6" H 5100 4350 50  0000 C CNN
+F 1 "Conn_01x02" H 5100 4050 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.00mm" H 5100 4250 50  0001 C CNN
+F 3 "" H 5100 4250 50  0001 C CNN
+	1    5100 4250
+	1    0    0    -1  
+$EndComp
+$Comp
+L Conn_01x03 J13
+U 1 1 5C742ECF
+P 5150 5700
+F 0 "J13" H 5150 5900 50  0000 C CNN
+F 1 "Conn_01x03" H 5150 5500 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.00mm" H 5150 5700 50  0001 C CNN
+F 3 "" H 5150 5700 50  0001 C CNN
+	1    5150 5700
+	1    0    0    -1  
+$EndComp
+Text GLabel 4950 5700 0    60   Input ~ 0
+ardu5V
 $EndSCHEMATC
