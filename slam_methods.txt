@@ -1,4 +1,7 @@
 --- SLAM METHODS ---
+
+- Differents methods from this page
+https://www.mrpt.org/List_of_SLAM_algorithms
  
 -Large-Scale Direct Monocular SLAM (LSD-SLAM)
  https://github.com/tum-vision/lsd_slam
@@ -24,16 +27,23 @@ https://vision.in.tum.de/data/datasets/rgbd-dataset
 
 http://www.cvlibs.net/datasets/kitti/eval_odometry.php
 
+https://rgbd-dataset.cs.washington.edu/
+
 ------------ MISCELLANEOUS ---------
 
 - G2O is an open-source C++ framework for optimizing graph-based nonlinear error functions
   https://github.com/rainerkuemmerle/g2o
 
 
------------- RUNING SLAM RGB-D ------------------
+------------ RUNNING SLAM RGB-D ------------------
 - PDF to launch freenet with ROS and Kinect
  https://www.choitek.com/uploads/5/0/8/4/50842795/ros_kinect.pdf
 
 - RTabMap forum to optimizate data transfer 
  http://official-rtab-map-forum.67519.x6.nabble.com/RGB-D-SLAM-example-on-ROS-and-Raspberry-Pi-3-td1250.html
+
+ - ApproximateTime Policy to syncronize frames based in timestamp of data. (Can be big trouble!)
+ https://answers.ros.org/question/146356/synchronise-point-cloud-and-rgb-image-from-the-same-camera/
+ http://wiki.ros.org/message_filters/ApproximateTime
+ https://answers.ros.org/question/234294/how-to-sync-two-ros-topics-by-adjusting-the-time-stamp/
 
