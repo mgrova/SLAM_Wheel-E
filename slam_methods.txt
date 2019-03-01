@@ -47,3 +47,7 @@ https://rgbd-dataset.cs.washington.edu/
  http://wiki.ros.org/message_filters/ApproximateTime
  https://answers.ros.org/question/234294/how-to-sync-two-ros-topics-by-adjusting-the-time-stamp/
 
+ - Multimaster fkie
+ http://www.iri.upc.edu/files/scidoc/1607-Multi-master-ROS-systems.pdf
+ https://wiki.ros.org/multimaster_fkie
+ 
