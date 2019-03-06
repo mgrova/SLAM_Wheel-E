@@ -1,0 +1,35 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#
+# L293D
+#
+DEF L293D U 0 40 Y Y 1 F N
+F0 "U" -50 1150 60 H V C CNN
+F1 "L293D" -150 1250 60 H V C CNN
+F2 "" 0 0 60 H I C CNN
+F3 "" 0 0 60 H I C CNN
+DRAW
+T 900 0 50 60 0 0 0 STelectronics~||~@MikeMakes_txt Normal 0 C C
+T 0 -200 -900 30 0 0 0 Supply~Voltage Normal 0 C C
+T 0 150 900 30 0 1 0 Logic~Supply Normal 0 C C
+S -500 1000 500 -1000 0 1 0 N
+X enable 1 -700 900 200 R 50 50 1 1 I
+X input1 2 -700 650 200 R 50 50 1 1 I
+X output1 3 -700 400 200 R 50 50 1 1 w
+X gnd 4 -700 150 200 R 50 50 1 1 P
+X gnd 5 -700 -150 200 R 50 50 1 1 P
+X output2 6 -700 -400 200 R 50 50 1 1 w
+X input2 7 -700 -650 200 R 50 50 1 1 I
+X vs 8 -700 -900 200 R 50 50 1 1 W
+X enable2 9 700 -900 200 L 50 50 1 1 I
+X input3 10 700 -650 200 L 50 50 1 1 I
+X outpu3 11 700 -400 200 L 50 50 1 1 O
+X gnd 12 700 -150 200 L 50 50 1 1 P
+X gnd 13 700 150 200 L 50 50 1 1 P
+X output4 14 700 400 200 L 50 50 1 1 O
+X input4 15 700 650 200 L 50 50 1 1 I
+X vss 16 700 900 200 L 50 50 1 1 W
+ENDDRAW
+ENDDEF
+#
+#End Library

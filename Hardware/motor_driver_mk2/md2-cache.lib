@@ -1,0 +1,121 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#
+# Conn_01x02_Male
+#
+DEF Conn_01x02_Male J 0 40 Y N 1 F N
+F0 "J" 0 100 50 H V C CNN
+F1 "Conn_01x02_Male" 0 -200 50 H V C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+$FPLIST
+ Connector*:*_??x*mm*
+ Connector*:*1x??x*mm*
+ Pin?Header?Straight?1X*
+ Pin?Header?Angled?1X*
+$ENDFPLIST
+DRAW
+S 34 -95 0 -105 1 1 6 F
+S 34 5 0 -5 1 1 6 F
+P 2 1 1 6 50 -100 34 -100 N
+P 2 1 1 6 50 0 34 0 N
+X Pin_1 1 200 0 150 L 50 50 1 1 P
+X Pin_2 2 200 -100 150 L 50 50 1 1 P
+ENDDRAW
+ENDDEF
+#
+# Conn_01x03_Male
+#
+DEF Conn_01x03_Male J 0 40 Y N 1 F N
+F0 "J" 0 200 50 H V C CNN
+F1 "Conn_01x03_Male" 0 -200 50 H V C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+$FPLIST
+ Connector*:*_??x*mm*
+ Connector*:*1x??x*mm*
+ Pin?Header?Straight?1X*
+ Pin?Header?Angled?1X*
+$ENDFPLIST
+DRAW
+S 34 -95 0 -105 1 1 6 F
+S 34 5 0 -5 1 1 6 F
+S 34 105 0 95 1 1 6 F
+P 2 1 1 6 50 -100 34 -100 N
+P 2 1 1 6 50 0 34 0 N
+P 2 1 1 6 50 100 34 100 N
+X Pin_1 1 200 100 150 L 50 50 1 1 P
+X Pin_2 2 200 0 150 L 50 50 1 1 P
+X Pin_3 3 200 -100 150 L 50 50 1 1 P
+ENDDRAW
+ENDDEF
+#
+# GND
+#
+DEF GND #PWR 0 0 Y Y 1 F P
+F0 "#PWR" 0 -250 50 H I C CNN
+F1 "GND" 0 -150 50 H V C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+DRAW
+P 6 0 1 0 0 0 0 -50 50 -50 0 -100 -50 -50 0 -50 N
+X GND 1 0 0 0 D 50 50 1 1 W N
+ENDDRAW
+ENDDEF
+#
+# L293D
+#
+DEF L293D U 0 40 Y Y 1 F N
+F0 "U" -50 1150 60 H V C CNN
+F1 "L293D" -150 1250 60 H V C CNN
+F2 "" 0 0 60 H I C CNN
+F3 "" 0 0 60 H I C CNN
+DRAW
+T 900 0 50 60 0 0 0 STelectronics~||~@MikeMakes_txt Normal 0 C C
+T 0 -200 -900 30 0 0 0 Supply~Voltage Normal 0 C C
+T 0 150 900 30 0 1 0 Logic~Supply Normal 0 C C
+S -500 1000 500 -1000 0 1 0 N
+X enable 1 -700 900 200 R 50 50 1 1 I
+X input1 2 -700 650 200 R 50 50 1 1 I
+X output1 3 -700 400 200 R 50 50 1 1 w
+X gnd 4 -700 150 200 R 50 50 1 1 P
+X gnd 5 -700 -150 200 R 50 50 1 1 P
+X output2 6 -700 -400 200 R 50 50 1 1 w
+X input2 7 -700 -650 200 R 50 50 1 1 I
+X vs 8 -700 -900 200 R 50 50 1 1 W
+X enable2 9 700 -900 200 L 50 50 1 1 I
+X input3 10 700 -650 200 L 50 50 1 1 I
+X outpu3 11 700 -400 200 L 50 50 1 1 O
+X gnd 12 700 -150 200 L 50 50 1 1 P
+X gnd 13 700 150 200 L 50 50 1 1 P
+X output4 14 700 400 200 L 50 50 1 1 O
+X input4 15 700 650 200 L 50 50 1 1 I
+X vss 16 700 900 200 L 50 50 1 1 W
+ENDDRAW
+ENDDEF
+#
+# Screw_Terminal_01x02
+#
+DEF Screw_Terminal_01x02 J 0 40 Y N 1 F N
+F0 "J" 0 100 50 H V C CNN
+F1 "Screw_Terminal_01x02" 0 -200 50 H V C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+$FPLIST
+ Connector*Terminal*Block*:*
+ TerminalBlock*
+$ENDFPLIST
+DRAW
+C 0 -100 25 1 1 6 N
+C 0 0 25 1 1 6 N
+S -50 50 50 -150 1 1 10 f
+P 2 1 1 6 -21 -87 13 -120 N
+P 2 1 1 6 -21 13 13 -20 N
+P 2 1 1 6 -14 -80 20 -113 N
+P 2 1 1 6 -14 20 20 -13 N
+X Pin_1 1 -200 0 150 R 50 50 1 1 P
+X Pin_2 2 -200 -100 150 R 50 50 1 1 P
+ENDDRAW
+ENDDEF
+#
+#End Library
