@@ -34,6 +34,8 @@ https://rgbd-dataset.cs.washington.edu/
 - G2O is an open-source C++ framework for optimizing graph-based nonlinear error functions
   https://github.com/rainerkuemmerle/g2o
 
+- Building Arduino projects over command shell
+  https://github.com/arduino/Arduino/blob/master/build/shared/manpage.adoc
 
 ------------ RUNNING SLAM RGB-D ------------------
 - PDF to launch freenet with ROS and Kinect
