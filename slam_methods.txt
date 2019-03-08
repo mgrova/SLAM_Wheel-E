@@ -34,7 +34,9 @@ https://rgbd-dataset.cs.washington.edu/
 - G2O is an open-source C++ framework for optimizing graph-based nonlinear error functions
   https://github.com/rainerkuemmerle/g2o
 
-
+- The OctoMap library implements a 3D occupancy grid mapping approach, providing data structures and mapping algorithms in C++ particularly suited for robotics.
+  http://octomap.github.io/ 
+  http://www2.informatik.uni-freiburg.de/~hornunga/pub/hornung13auro.pdf
 ------------ RUNNING SLAM RGB-D ------------------
 - PDF to launch freenet with ROS and Kinect
  https://www.choitek.com/uploads/5/0/8/4/50842795/ros_kinect.pdf

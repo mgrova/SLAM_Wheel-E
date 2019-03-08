@@ -1,0 +1,11 @@
+especificaciones motor dc
+
+ 1. tensión : CC 3V - 6v
+ 2. corriente : 100 mA- 120mA
+ 3. tasa de reducción : 48 : 1
+ 4. rpm (con neumáticos ) : 100-240
+ 5. diámetro de los neumáticos : 65mm
+ 6. la velocidad del vehículo (m / minuto ) : 20-48
+ 7. peso del motor ( g): 29 / cada una
+ 8. tamaño del motor : 70mm x 22mm x 18mm
+ 9. Ruido: \u003c65db
