@@ -12,6 +12,10 @@ https://www.mrpt.org/List_of_SLAM_algorithms
 - ORB-SLAM
  http://webdiis.unizar.es/~raulmur/orbslam/
 
+- RatSLAM
+ https://github.com/davidmball/ratslam/blob/wiki/RatSLAMROS.md
+ https://wiki.qut.edu.au/display/cyphy/RatSLAM
+
 - CNN-SLAM (Convolutional Neural Network)
  https://github.com/Lishunkai/CNN-SLAM
  http://openaccess.thecvf.com/content_cvpr_2017/papers/Tateno_CNN-SLAM_Real-Time_Dense_CVPR_2017_paper.pdf
