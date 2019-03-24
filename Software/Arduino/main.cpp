@@ -12,13 +12,13 @@ ENABLE(PWM) |      A       |     B        |   STATUS           |
  */
 
 /* Define the pin numbers */
-#define m3L_a 35
-#define m3L_b 34
-#define m3L_en 2
+#define m3L_a 39//35
+#define m3L_b 38//34
+#define m3L_en 3//2
 
-#define m2L_a 39
-#define m2L_b 38
-#define m2L_en 3
+#define m2L_a 35//39
+#define m2L_b 34//38
+#define m2L_en 2//3
 
 #define m1L_a 43
 #define m1L_b 42
@@ -77,18 +77,25 @@ void control_motor(int enable,int speed, int dir1, int dir2){
 /* Bucle infinito */
 void loop() {
 
-    static int speed[6]={120,120,120,120,120,120};
-    static char buff[30];
+    static int speed[6]={0,0,0,0,0,0};
+    static int buff;
     int counter = 0;
+
+    if (Serial.available()){
+      buff=Serial.read();
+
+      Serial.print("Arduino received: ");
+      Serial.println(buff); //see what was received
+    }
 
 
     // control motors
     control_motor(m1L_en,speed[0], m1L_a,m1L_b);
-    control_motor(m1R_en,speed[0], m1R_a,m1R_b);
-    control_motor(m2L_en,speed[0], m2L_a,m2L_b);
-    control_motor(m2R_en,speed[0], m2R_a,m2R_b);
-    control_motor(m3L_en,speed[0], m3L_a,m3L_b);
-    control_motor(m3R_en,speed[0], m3R_a,m3R_b);
+    control_motor(m1R_en,speed[1], m1R_a,m1R_b);
+    control_motor(m2L_en,speed[2], m2L_a,m2L_b);
+    control_motor(m2R_en,speed[3], m2R_a,m2R_b);
+    control_motor(m3L_en,speed[4], m3L_a,m3L_b);
+    control_motor(m3R_en,speed[5], m3R_a,m3R_b);
 
 
     delay(100);
