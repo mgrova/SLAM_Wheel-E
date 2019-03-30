@@ -1,32 +1,29 @@
 #include <iostream>
-
 #include <pigpio.h>
 
 #include "encoder.hpp"
 
-/*
-
-             +---------+         +---------+      0
-             |         |         |         |
-   A         |         |         |         |
-             |         |         |         |
-   +---------+         +---------+         +----- 1
-
-       +---------+         +---------+            0
-       |         |         |         |
-   B   |         |         |         |
-       |         |         |         |
-   ----+         +---------+         +---------+  1
-
-*/
+#define SEP_MUESCAS 10 //Separacion en grados de las muescas del encoder
 
 void re_decoder::_pulse(int gpio, int level, uint32_t tick)
 {
-    /*TODO: calcular delta_t*/
+    /**/
    lev = level;
-   (mycallback)(1);
-   /*Traza*/
-   std::cout << "callback llamado" << '\n';
+   if(lastlev>0){
+     /*Solo calcula la "valocidad" en los flancos de bajada*/
+     delta_t=gpioTick()/1000-last_t;
+
+     vel=(float(SEP_MUESCAS)/(float)delta_t)*1000;
+
+     (mycallback)(1); //No es necesario en el robot, solo está para contar pasos
+     /*Traza*/
+     std::cout <<"tiempo de paso: "<< delta_t<<'\n';
+     std::cout <<"velocidad de paso: "<<vel<<std::endl;
+     }
+   lastlev=lev;
+   last_t=gpioTick()/1000;
+
+
    return;
 
 }
@@ -46,9 +43,10 @@ re_decoder::re_decoder(int gpio, re_decoderCB_t callback)
 {
    mygpio = gpio;
    mycallback = callback;
-   lev=0;
 
-   lastlev=-1;
+   lev=0;lastlev=-1;
+   delta_t=0;last_t=0;vel=.0;
+
 
    gpioSetMode(mygpio, PI_INPUT);
 

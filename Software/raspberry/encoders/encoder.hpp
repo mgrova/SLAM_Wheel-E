@@ -2,14 +2,13 @@
 #define ROTARY_ENCODER_HPP
 
 #include <stdint.h>
-#include <ctime.h>
 
 typedef void (*re_decoderCB_t)(int);
 
-/*TODO programar contadores, inicializarlos en el constructor, etc*/ 
 class re_decoder
 {
-   int mygpio, lev, lastlev;
+   int mygpio, lev, lastlev, delta_t, last_t;
+   float vel;
 
    re_decoderCB_t mycallback;
 
@@ -22,16 +21,9 @@ class re_decoder
    public:
 
    re_decoder(int gpio, re_decoderCB_t callback);
-   /*
-      This function establishes a rotary encoder on gpioA and gpioB.
-
-      When the encoder is turned the callback function is called.
-   */
 
    void re_cancel(void);
-   /*
-      This function releases the resources used by the decoder.
-   */
+
 };
 
 #endif
