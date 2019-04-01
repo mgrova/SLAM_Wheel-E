@@ -18,7 +18,7 @@ int main(int argc, char **argv)
   re_decoder *encoders;
 
   GPIO_vect = (int*) malloc((argc-1)*sizeof(int));
-  encoders= (re_decoder*) malloc((argc-1)*sizeof(re_decoder::re_decoder))
+  encoders= (re_decoder*) malloc((argc-1)*sizeof(re_decoder));
 
   ros::Publisher encoder_pub = n.advertise<std_msgs::Float32>("ticks_read", 1000);
 
@@ -50,7 +50,7 @@ int main(int argc, char **argv)
 
   /* If something doesnt work, close. */
   for (int i=1;i<=argc;i++){
-    encoders[i-1].re_cancel()
+    encoders[i-1].re_cancel();
   }
   gpioTerminate();
   free(encoders);

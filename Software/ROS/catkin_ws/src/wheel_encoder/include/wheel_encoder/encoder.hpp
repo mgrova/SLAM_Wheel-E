@@ -17,7 +17,7 @@ class re_decoder
 
 
   public:
-    float send_vel(void) {return vel;}
+    float send_vel(void);
 
     re_decoder(int gpio);
     void re_cancel(void);
