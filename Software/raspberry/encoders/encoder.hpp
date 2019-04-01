@@ -19,7 +19,7 @@ class re_decoder
 
 
    public:
-
+   get_speed();
    re_decoder(int gpio, re_decoderCB_t callback);
 
    void re_cancel(void);

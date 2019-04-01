@@ -64,3 +64,6 @@ void re_decoder::re_cancel(void)
 {
    gpioSetAlertFuncEx(mygpio, 0, this);
 }
+float re_decoder::get_speed(void){
+return  
+}

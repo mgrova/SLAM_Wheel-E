@@ -1,27 +1,11 @@
 #include <iostream>
 #include <unistd.h>
 #include <pigpio.h>
-
+#include <stdio.h>
 #include "encoder.hpp"
 
-/*
 
-REQUIRES
-
-A rotary encoder contacts A and B connected to separate gpios and
-the common contact connected to Pi ground.
-
-TO BUILD
-
-g++ -o rot_enc_cpp test_rotary_encoder.cpp rotary_encoder.cpp -lpigpio -lrt
-
-TO RUN
-
-sudo ./rot_enc_cpp
-
-*/
-
-void callback(int inc)
+void encoCb(int inc)
 {
    static int pos = 0;
 
@@ -32,13 +16,23 @@ void callback(int inc)
 
 int main(int argc, char *argv[])
 {
+   int GPIO_vect[6];
+   re_decoder *encoder;
+
    if (gpioInitialise() < 0) return 1;
 
-   re_decoder dec(7, callback);
+   /*Data type conversion*/
+   for (int i=1;i<=argc;i++){
+     sscanf(argv[i],"%i",&GPIO_vect[i-1]);
+   }
 
+   /*Encoders initialization*/
+   for(int i=0;i;i++){
+     encoder[i]=re_decoder(GPIO_vect[i],encoCb) ;
+   }
    sleep(3000);
-
-   dec.re_cancel();
+   encoder[1].
+   // dec.re_cancel();
 
    gpioTerminate();
 }
