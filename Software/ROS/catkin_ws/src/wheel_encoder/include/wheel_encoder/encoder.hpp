@@ -3,14 +3,12 @@
 
 #include <stdint.h>
 
-typedef void (*re_decoderCB_t)(int);
 
 class re_decoder
 {
   int mygpio, lev, lastlev, delta_t, last_t;
   float vel;
 
-  re_decoderCB_t mycallback;
 
   void _pulse(int gpio, int level, uint32_t tick);
 
@@ -19,9 +17,9 @@ class re_decoder
 
 
   public:
-    float send_vel() {return vel;}
+    float send_vel(void);
 
-    re_decoder(int gpio, re_decoderCB_t read_encoderTh);
+    re_decoder(int gpio);
     void re_cancel(void);
 
 };

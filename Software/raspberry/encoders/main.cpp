@@ -14,7 +14,7 @@ void encoCb(int inc)
    std::cout << "pos=" << pos << std::endl;
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
    int GPIO_vect[6];
    re_decoder *encoder;
