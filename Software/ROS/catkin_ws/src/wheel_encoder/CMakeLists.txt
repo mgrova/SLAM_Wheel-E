@@ -2,20 +2,27 @@ cmake_minimum_required(VERSION 2.8.3)
 project(wheel_encoder)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+#add_compile_options(-std=c++11) #-lpthread -lrt )
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  rospy
+  roscpp
   std_msgs
- # tf2
 )
 
-## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+find_package(Threads REQUIRED)
+if(CMAKE_USE_PTHREADS_INIT)
+	 set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-lpthread")
+endif()
 
+## System dependencies are found with CMake's conventions
+#find_package(Boost REQUIRED COMPONENTS system)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR} )
+find_package(pigpio MODULE REQUIRED)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -103,9 +110,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES wheel_encoder
-#  CATKIN_DEPENDS rospy std_msgs # tf2
+  INCLUDE_DIRS include
+  #LIBRARIES wheel_encoder
+  CATKIN_DEPENDS roscpp std_msgs
 #  DEPENDS system_lib
 )
 
@@ -117,13 +124,13 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
 # include
-  ${catkin_INCLUDE_DIRS}
+	${catkin_INCLUDE_DIRS}
+  include/wheel_encoder/
+	${pigpio_INCLUDE_DIRS} #lib/pigpio/
 )
 
 ## Declare a C++ library
-# add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/<filename>.cpp
-# )
+ add_library(encoder src/encoder.cpp)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -133,7 +140,9 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(<filename> src/<filename>.cpp)
+ add_executable(wheel_encoder
+ src/wheel_encoder.cpp
+ )
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -143,10 +152,16 @@ include_directories(
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+ add_dependencies(wheel_encoder ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} pigpio )
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries( wheel_encoder ${catkin_LIBRARIES} )
+ target_link_libraries( wheel_encoder
+ 			${catkin_LIBRARIES}
+			pigpio
+			encoder
+			Threads::Threads
+			${CMAKE_THREAD_LIBS_INIT} # @TODO Can be an error.
+			)
 
 #############
 ## Install ##
@@ -170,11 +185,11 @@ include_directories(
 # )
 
 ## Mark cpp header files for installation
-# install(DIRECTORY include/${PROJECT_NAME}/
-#   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-#   FILES_MATCHING PATTERN "*.h"
-#   PATTERN ".svn" EXCLUDE
-# )
+ install(DIRECTORY include/${PROJECT_NAME}/
+   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
+   PATTERN ".svn" EXCLUDE
+ )
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES
