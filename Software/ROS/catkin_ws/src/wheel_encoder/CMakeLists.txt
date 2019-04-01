@@ -10,6 +10,8 @@ project(wheel_encoder)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  nav_msgs
+	tf
 )
 
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
@@ -112,7 +114,7 @@ find_package(pigpio MODULE REQUIRED)
 catkin_package(
   INCLUDE_DIRS include
   #LIBRARIES wheel_encoder
-  CATKIN_DEPENDS roscpp std_msgs
+  CATKIN_DEPENDS roscpp std_msgs nav_msgs
 #  DEPENDS system_lib
 )
 
@@ -140,9 +142,9 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
- add_executable(wheel_encoder
- src/wheel_encoder.cpp
- )
+ add_executable(wheel_encoder src/wheel_encoder.cpp )
+ add_executable(wheele_odom   src/wheele_odom.cpp   )
+
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -153,6 +155,7 @@ include_directories(
 ## Add cmake target dependencies of the executable
 ## same as for the library above
  add_dependencies(wheel_encoder ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} pigpio )
+ add_dependencies(wheele_odom   ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}        )
 
 ## Specify libraries to link a library or executable target against
  target_link_libraries( wheel_encoder
@@ -162,6 +165,8 @@ include_directories(
 			Threads::Threads
 			${CMAKE_THREAD_LIBS_INIT} # @TODO Can be an error.
 			)
+
+	target_link_libraries(wheele_odom ${catkin_LIBRARIES} )
 
 #############
 ## Install ##
