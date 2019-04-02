@@ -9,12 +9,9 @@
 #define lenght_btw_wheels 0.025 // [m]
 
 std_msgs::Float32 ticks_x,ticks_y;
-double v_left,v_right,omega_left,omega_right,deltaRight,deltaLeft;
-double _PreviousLeftEncoderCounts,_PreviousRightEncoderCounts;
 
 void ticksCb(const std_msgs::Float32::ConstPtr& tick_data)
 {
-  /* Count ticks in deg/sec */
   ticks_x.data=tick_data->data;
 }
 
@@ -35,7 +32,8 @@ int main(int argc, char **argv) {
   double vy = 0;
   double vth = 0.1;
 
-  double DistancePerCount = (pi * r_wheel) / ticks_per_rev;
+  double v_left,v_right,omega_left,omega_right,deltaRight,deltaLeft;
+  double _PreviousLeftEncoderCounts,_PreviousRightEncoderCounts;
 
   ros::Time current_time, last_time;
   current_time = ros::Time::now();
@@ -49,12 +47,11 @@ int main(int argc, char **argv) {
 
     ros::spinOnce(); // check for incoming messages
     current_time = ros::Time::now();
-
-    // *************************** CHECK THIS PART OF THE CODE **************************
+    double DistancePerCount = (pi * r_wheel) / ticks_per_rev;
 
     // extract the wheel velocities from the tick signals count
-    deltaLeft = ticks_x.data - _PreviousLeftEncoderCounts;
-    deltaRight = ticks_y.data - _PreviousRightEncoderCounts;
+    //deltaLeft = ticks_x - _PreviousLeftEncoderCounts;
+    //deltaRight = ticks_y - _PreviousRightEncoderCounts;
 
     omega_left = (deltaLeft * DistancePerCount) / (current_time - last_time).toSec();
     omega_right = (deltaRight * DistancePerCount) / (current_time - last_time).toSec();
@@ -74,8 +71,6 @@ int main(int argc, char **argv) {
     x += delta_x;
     y += delta_y;
     th += delta_th;
-    // *************************************************************************************
-
 
     geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th);
 
@@ -111,8 +106,8 @@ int main(int argc, char **argv) {
 
     // publish the message
     odom_pub.publish(odom);
-    _PreviousLeftEncoderCounts = ticks_x.data;
-    _PreviousRightEncoderCounts = ticks_y.data;
+    //_PreviousLeftEncoderCounts = ticks_x;
+    //_PreviousRightEncoderCounts = ticks_y;
 
     last_time = current_time;
   }

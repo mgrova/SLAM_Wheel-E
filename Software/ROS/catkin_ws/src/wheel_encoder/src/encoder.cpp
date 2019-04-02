@@ -11,17 +11,16 @@ void re_decoder::_pulse(int gpio, int level, uint32_t tick)
    lev = level;
    if(lastlev>0){
      /*Solo calcula la "valocidad" en los flancos de bajada*/
-     delta_t=gpioTick()/1000-last_t;
+     delta_t=gpioTick()/1000-last_t; //ms
 
      vel=(float(SEP_MUESCAS)/(float)delta_t)*1000;
 
-     (mycallback)(1); //No es necesario en el robot, solo está para contar pasos
      /*Traza*/
      std::cout <<"tiempo de paso: "<< delta_t<<'\n';
      std::cout <<"velocidad de paso: "<<vel<<std::endl;
      }
    lastlev=lev;
-   last_t=gpioTick()/1000;
+   last_t=gpioTick()/1000;  //ms
 
 
    return;
@@ -39,23 +38,17 @@ void re_decoder::_pulseEx(int gpio, int level, uint32_t tick, void *user)
    mySelf->_pulse(gpio, level, tick); /* Call the instance callback. */
 }
 
-re_decoder::re_decoder(int gpio, re_decoderCB_t callback)
+re_decoder::re_decoder(int gpio)
 {
    mygpio = gpio;
-   mycallback = callback;
 
    lev=0;lastlev=-1;
    delta_t=0;last_t=0;vel=.0;
 
-
    gpioSetMode(mygpio, PI_INPUT);
-
-   /* pull up is needed as encoder common is grounded */
-
    gpioSetPullUpDown(mygpio, PI_PUD_UP);
 
    /* monitor encoder level changes */
-
    gpioSetAlertFuncEx(mygpio, _pulseEx, this);
 
 }
@@ -64,3 +57,5 @@ void re_decoder::re_cancel(void)
 {
    gpioSetAlertFuncEx(mygpio, 0, this);
 }
+
+float re_decoder::send_vel(void) {return vel;}
