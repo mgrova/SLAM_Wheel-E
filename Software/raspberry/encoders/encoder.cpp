@@ -15,8 +15,7 @@ void re_decoder::_pulse(int gpio, int level, uint32_t tick)
 
      vel=(float(SEP_MUESCAS)/(float)delta_t)*1000;
 
-     (mycallback)(1); //No es necesario en el robot, solo está para contar pasos
-     /*Traza*/
+     /*Traza. eliminar en el codigo final*/
      std::cout <<"tiempo de paso: "<< delta_t<<'\n';
      std::cout <<"velocidad de paso: "<<vel<<std::endl;
      }
@@ -64,6 +63,7 @@ void re_decoder::re_cancel(void)
 {
    gpioSetAlertFuncEx(mygpio, 0, this);
 }
+
 float re_decoder::get_speed(void){
-return  
+  return vel;
 }
