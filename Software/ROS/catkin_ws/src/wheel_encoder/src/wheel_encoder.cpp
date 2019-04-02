@@ -7,13 +7,7 @@
 #include <encoder.hpp>
 #include <pigpio.h>
 
-/* Thread function */
-void read_encoderTh(int inc)
-{
-  static int pos = 0;
-  pos += inc;
-  std::cout << "pos=" << pos << std::endl;
-}
+
 
 int main(int argc, char *argv[])
 {
@@ -22,7 +16,7 @@ int main(int argc, char *argv[])
 
   if (gpioInitialise() < 0) return 1;
 
-  re_decoder dec(7, read_encoderTh);
+  re_decoder dec(7);
 
   ros::Publisher encoder_pub = n.advertise<std_msgs::Float32>("ticks_read", 1000);
 

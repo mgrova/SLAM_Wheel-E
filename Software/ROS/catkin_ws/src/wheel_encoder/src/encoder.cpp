@@ -15,7 +15,6 @@ void re_decoder::_pulse(int gpio, int level, uint32_t tick)
 
      vel=(float(SEP_MUESCAS)/(float)delta_t)*1000;
 
-     (mycallback)(1); //No es necesario en el robot, solo está para contar pasos
      /*Traza*/
      std::cout <<"tiempo de paso: "<< delta_t<<'\n';
      std::cout <<"velocidad de paso: "<<vel<<std::endl;
@@ -39,10 +38,10 @@ void re_decoder::_pulseEx(int gpio, int level, uint32_t tick, void *user)
    mySelf->_pulse(gpio, level, tick); /* Call the instance callback. */
 }
 
-re_decoder::re_decoder(int gpio, re_decoderCB_t callback)
+re_decoder::re_decoder(int gpio)
 {
    mygpio = gpio;
-   mycallback = callback;
+
 
    lev=0;lastlev=-1;
    delta_t=0;last_t=0;vel=.0;
@@ -64,3 +63,5 @@ void re_decoder::re_cancel(void)
 {
    gpioSetAlertFuncEx(mygpio, 0, this);
 }
+
+float re_decoder::send_vel(void){return vel;}
