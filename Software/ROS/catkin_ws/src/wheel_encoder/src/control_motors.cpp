@@ -7,15 +7,14 @@ geometry_msgs::Twist ref_vel;
 
 void velCb(const std_msgs::Float32::ConstPtr& measure)
 {
-
+  real_vel.data=measure->data;
 
 }
 
 void ref_velCb(const geometry_msgs::Twist::ConstPtr& ref)
 {
-
-
-
+  ref_vel.linear=ref->linear;
+  ref_vel.angular=ref->angular;
 }
 
 int main(int argc, char **argv)
