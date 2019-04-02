@@ -8,13 +8,6 @@
 #include <pigpio.h>
 #include <cstdlib>
 
-/* Thread function */
-void read_encoderTh(int inc)
-{
-  static int pos = 0;
-  pos += inc;
-  std::cout << "pos=" << pos << std::endl;
-}
 
 int main(int argc, char **argv)
 {
@@ -35,7 +28,7 @@ int main(int argc, char **argv)
     sscanf(argv[i],"%i",&GPIO_vect[i-1]);
   }
   for(int i=0;i;i++){
-    encoders[i]=re_decoder(GPIO_vect[i],encoCb) ;
+    encoders[i]=re_decoder(GPIO_vect[i]) ;
   }
 
   //sleep(3000);
@@ -45,7 +38,7 @@ int main(int argc, char **argv)
   {
     std_msgs::Float32 data_vel;
 
-    data_vel.data=dec.send_vel();
+    data_vel.data=encoders[0].send_vel();
 
     encoder_pub.publish(data_vel);
 
@@ -55,9 +48,12 @@ int main(int argc, char **argv)
     loop_rate.sleep();
   }
 
-  /* If something dont work, close. */
-  dec.re_cancel();
+  /* If something doesnt work, close. */
+  for (int i=1;i<=argc;i++){
+    encoders[i-1].re_cancel()
+  }
   gpioTerminate();
-
+  free(encoders);
+  free(GPIO_vect);
 return 0;
 }
