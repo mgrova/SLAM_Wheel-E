@@ -9,10 +9,9 @@
 from i2c import read_byte, write_byte, read_word_2c
 
 class mpu9250:
-    def __init__(self, bus, mpu_i2c_adr=0x68, AK8963_i2c_adr=0x0C):   # Default i2c address of imu6050 is 64(dec) = 40(hex)
+    def __init__(self, bus, i2c_adr=0x68):   # Default i2c address of imu6050 is 64(dec) = 40(hex)
         self.bus = bus  # i2c bus to be used
-        self.mpu_i2c_adr=mpu_i2c_adr
-        self.mag_i2c_adr=AK8963_i2c_adr
+        self.i2c_adr=i2c_adr # i2c addres of mpu9250
         self.range_sensor('GYRO',0)
         self.range_sensor('ACCEL',0)
 
@@ -32,26 +31,6 @@ class mpu9250:
             'GX' : 0x44,
             'GY' : 0x46,
             'GZ' : 0x48,
-            # AK8963 magnetometer registers
-            'WIA' : 0x00, # Device ID of AKM. It is described in one byte and fixed value
-            'INFO' : 0x01, # Device information for AKM
-            'ST1' : 0x02, # Bit DRDY (D0) is '1' when data is ready in single measurement mode or self-test mode. It returns '0' when any one of ST2 register or measurement data register (HXL to HZH) is read
-            'HXL' : 0x03, # X-axis measurement data lower 8bit
-            'HXH' : 0x04, # X-axis measurement data higher 8bit
-            'HYL' : 0x05, # You can guess
-            'HYH' : 0x06, #
-            'HZL' : 0x07, #
-            'HZH' : 0x08, #
-            'ST2' : 0x09, # Bit (D3) 'Magnetic sensor overflow' [magnetic data is not correct if this is '1'] & Bit (D4) 'Output bit setting' [Mirror data of BIT bit of CNTL1 register]
-            'CNTL1' : 0x0A, # Bits (D3-0) 'MODEx' [0001 for single measurement mode] & Bit (D4) 'BIT' [Output bit setting: '0' 14-bit output || '1' 16-bit output]
-            'RSV' : 0x0B, #
-            'ASTC' : 0x0C, #
-            'TS1' : 0x0D, #
-            'TS2' : 0x0E, #
-            'I2CDIS' : 0x0F, #
-            'ASAX' : 0x10, #
-            'ASAY' : 0x11, #
-            'ASAZ' : 0x12, #
             }
 
     # Useful bits
@@ -164,6 +143,7 @@ class mpu9250:
         # if sleep:
         mode = mode & ~self.bits['SLEEP']   # Clear SLEEP bit
         write_byte(self.bus, self.i2c_adr, self.regs['PWR_MGMT_1'], mode)     # power_mgmt_1 reg = X0XX XXXX
+        # Delay after this so the gyros could stabilize & registers have time to reset
 
 
     def range_sensor(self, sensor, fs_sel=0):   # Selects full scale range of gyroscopes ('GYRO') or accelerometer ('ACCEL') with fs_sel = 0,1,2,3
@@ -217,3 +197,31 @@ class mpu9250:
         raw = self.raw_gyro()
         scaled = [i / self.gyro_scale for i in raw]
         return scaled
+
+class ak8963:
+    def __init__(self, bus, i2c_adr=0x68):   # Default i2c address of imu6050 is 64(dec) = 40(hex)
+        self.bus = bus  # i2c bus to be used
+        self.i2c_adr=i2c_adr # i2c address if ak8963
+        self.range_sensor('GYRO',0)
+
+        # Dictionary for ak's registers (low byte, add -1 calling read/write words)
+        regs = {'WIA' : 0x00, # Device ID of AKM. It is described in one byte and fixed value
+                'INFO' : 0x01, # Device information for AKM
+                'ST1' : 0x02, # Bit DRDY (D0) is '1' when data is ready in single measurement mode or self-test mode. It returns '0' when any one of ST2 register or measurement data register (HXL to HZH) is read
+                'HXL' : 0x03, # X-axis measurement data lower 8bit
+                'HXH' : 0x04, # X-axis measurement data higher 8bit
+                'HYL' : 0x05, # You can guess
+                'HYH' : 0x06, #
+                'HZL' : 0x07, #
+                'HZH' : 0x08, #
+                'ST2' : 0x09, # Bit (D3) 'Magnetic sensor overflow' [magnetic data is not correct if this is '1'] & Bit (D4) 'Output bit setting' [Mirror data of BIT bit of CNTL1 register]
+                'CNTL1' : 0x0A, # Bits (D3-0) 'MODEx' [0001 for single measurement mode] & Bit (D4) 'BIT' [Output bit setting: '0' 14-bit output || '1' 16-bit output]
+                'RSV' : 0x0B, # Reserved
+                'ASTC' : 0x0C, # Self test
+                'TS1' : 0x0D, # Test1: TS1 and TS2 registers are test registers for shipment test. Do not use these registers
+                'TS2' : 0x0E, # Test2
+                'I2CDIS' : 0x0F, # i2c disable: 00011011 to disable. i2c enabled by default
+                'ASAX' : 0x10, # X axis sensitivity adjustment value
+                'ASAY' : 0x11, #
+                'ASAZ' : 0x12, #
+                }
