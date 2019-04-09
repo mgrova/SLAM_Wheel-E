@@ -1,12 +1,13 @@
 #!/usr/bin/env python
+
 # 03/2019 @MikeMakes
 # Delivered as it is, without any warranty
 # Serial communication with arduino using CmdMssenger
 # Python library: https://github.com/zivlab/PyCmdMessenger
 # Arduino library: https://github.com/thijse/Arduino-CmdMessenger
 
-import PyCmdMessenger
 import rospy
+import PyCmdMessenger
 from geometry_msgs.msg import Twist
 
 

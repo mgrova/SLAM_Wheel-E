@@ -8,6 +8,7 @@ project(wheele)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  rospy
   roscpp
   std_msgs
   nav_msgs
@@ -115,7 +116,7 @@ find_package(pigpio MODULE REQUIRED)
 catkin_package(
   INCLUDE_DIRS include
   #LIBRARIES wheel_encoder
-  CATKIN_DEPENDS roscpp std_msgs nav_msgs geometry_msgs
+  CATKIN_DEPENDS rospy roscpp std_msgs nav_msgs geometry_msgs
 #  DEPENDS system_lib
 )
 

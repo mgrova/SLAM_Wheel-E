@@ -31,9 +31,10 @@ bool controlling = 1; // 1 if control active & motors can run
 
 // Attach a new CmdMessenger object to the default Serial port
 CmdMessenger cmdMessenger = CmdMessenger(Serial);
+
 enum {
   cmd_off,  // Cmd to deactivate control & motors. Reset needed after this
-  cmd_vel,      // Cmd to change velocities, with left motors vel and right motors vel as arguments (float32)
+  change_vel,      // Cmd to change velocities, with left motors vel and right motors vel as arguments (float32)
 };
 
 /* function to control motor */
@@ -82,7 +83,7 @@ void shutdown_motors() {
 void attachCommandCallbacks()
 {
   cmdMessenger.attach(cmd_off, turn_off);
-  cmdMessenger.attach(cmd_vel, control_vel);
+  cmdMessenger.attach(change_vel, control_vel);
 }
 
 
