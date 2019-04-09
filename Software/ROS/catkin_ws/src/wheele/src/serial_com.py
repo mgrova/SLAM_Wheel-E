@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # 03/2019 @MikeMakes
 # Delivered as it is, without any warranty
-# Serial comunication with arduino using CmdMssenger
+# Serial communication with arduino using CmdMssenger
 # Python library: https://github.com/zivlab/PyCmdMessenger
 # Arduino library: https://github.com/thijse/Arduino-CmdMessenger
 
