@@ -75,8 +75,14 @@ void control_vel() {
   control_motor(m3R_en,right_vel, mR_a,mR_b);
 }
 
-void shutdown_motors() {
-  // Apagar los motores
+void shutdown_motors() { // Apagar los motores
+  control_motor(m1L_en,0, mL_a,mL_b);
+  control_motor(m2L_en,0, mL_a,mL_b);
+  control_motor(m3L_en,0, mL_a,mL_b);
+
+  control_motor(m1R_en,0, mR_a,mR_b);
+  control_motor(m2R_en,0, mR_a,mR_b);
+  control_motor(m3R_en,0, mR_a,mR_b);
 }
 
 // Callbacks define on which received commands we take action
@@ -110,7 +116,7 @@ void setup() {
 void loop() {
 
   if (controlling) cmdMessenger.feedinSerialData();  // Process incoming serial data, and perform callbacks
-  else shutdown_motors();  // Stop controlling and power off motors
+  else shutdown_motors();  // Stop controlling and power off motors: reset needed
 
   delay(1000);
 }
