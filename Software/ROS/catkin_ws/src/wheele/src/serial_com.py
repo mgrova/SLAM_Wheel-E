@@ -30,7 +30,7 @@ if __name__ == '__main__':
     # List of command names (and formats for their associated arguments). These must
     # be in the same order as in the sketch.
     commands = [["cmd_off",""],
-                ["cmd_vel","ff"]]   # Send left & rights motors vel as 2 float arguments (ff)
+                ["change_vel","ff"]]   # Send left & rights motors vel as 2 float arguments (ff)
 
     # Initialize the messenger
     cmd = PyCmdMessenger.CmdMessenger(arduino,commands)
