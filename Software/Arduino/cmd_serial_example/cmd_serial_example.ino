@@ -22,8 +22,8 @@ void turn_off() {
 }
 
 void control_vel() {
-  float left_vel = cmdMessenger.readFloatArg(); // Left motors vel
-  float right_vel = cmdMessenger.readFloatArg();  // Right motors vel
+  float left_vel = cmdMessenger.readBinArg<float>(); // Left motors vel
+  float right_vel = cmdMessenger.readBinArg<float>();  // Right motors vel
   //Aquí controla y lo hace todo
   
 }
@@ -47,8 +47,6 @@ void setup() {
 }
 
 void loop() {
-  if controlling
-    cmdMessenger.feedinSerialData();  // Process incoming serial data, and perform callbacks
-  else
-    shutdown_motors();  // Stop controlling and power off motors
+  if (controlling) cmdMessenger.feedinSerialData();  // Process incoming serial data, and perform callbacks
+  else shutdown_motors();  // Stop controlling and power off motors
 }
