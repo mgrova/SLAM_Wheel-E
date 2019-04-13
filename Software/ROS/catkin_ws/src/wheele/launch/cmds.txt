@@ -1,0 +1,16 @@
+
+roslaunch freenect_launch freenect.launch depth_registration:=true
+
+roslaunch rtabmap_ros rtabmap.launch rtabmap_args:="--delete_db_on_start"
+if i want -> roslaunch rtabmap_ros rtabmap.launch localization:=true
+
+to reset ->rosservice call /rtabmap/reset
+
+If you want to use external odometry (e.g., you want to use odometry from your robot), you can set these arguments: "visual_odometry:=false odom_topic:=/my_odometry". 
+
+->rpi
+roslaunch freenect_throttle.launch rate:=5
+
+
+compiter
+roslaunch rtabmap_ros rtabmap.launch subscribe_rgbd:=true rgbd_topic:=/camera/rgbd_image compressed:=true rtabmap_args:="--delete_db_on_start"
