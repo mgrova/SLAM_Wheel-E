@@ -13,10 +13,10 @@ from geometry_msgs.msg import Twist
 
 def send_vel(data): # cmd_vel topic (type Twist) callback
     linear_vel = data.linear.x   # Retrieve the linear velocity (foward or backwards) that Whelee should have
-    angular_vel = data.linear.z  # Same with angular velocity (clockwise turn is negative)
+    angular_vel = data.angular.z  # Same with angular velocity (clockwise turn is negative)
 
-    left_vel = linear_vel - angular_vel # How much velocity in each side we need for this movement
-    right_vel = linear_vel + angular_vel
+    left_vel = linear_vel - (angular_vel*0.025)/2 # How much velocity in each side we need for this movement
+    right_vel = (linear_vel + (angular_vel*0.025)/2)
 
     cmd.send("change_vel",left_vel, right_vel) # Send velocites of left & right motors to arduino
 
@@ -30,7 +30,7 @@ if __name__ == '__main__':
     # List of command names (and formats for their associated arguments). These must
     # be in the same order as in the sketch.
     commands = [["cmd_off",""],
-                ["cmd_vel","ff"]]   # Send left & rights motors vel as 2 float arguments (ff)
+                ["change_vel","ff"]]   # Send left & rights motors vel as 2 float arguments (ff)
 
     # Initialize the messenger
     cmd = PyCmdMessenger.CmdMessenger(arduino,commands)
