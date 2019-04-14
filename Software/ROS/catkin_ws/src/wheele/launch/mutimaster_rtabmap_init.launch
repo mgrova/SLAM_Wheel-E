@@ -16,7 +16,7 @@
         <arg name="subscribe_rgbd" value="true"/>
         <arg name="rgbd_topic" value="/camera/rgbd_image"/>
         <arg name="compressed" value="true"/>
-        <arg name="rtabmap_args" value="--delete_db_on_start"/>
+        <arg name="rtabmap_args" value="--delete_db_on_start --Vis/MaxFeatures 500 --Mem/ImagePreDecimation 2 --Mem/ImagePostDecimation 2 --Kp/DetectorStrategy 6 --OdomF2M/MaxSize 1000 --Odom/ImageDecimation 2"/>
         <arg name="rtabmapviz" value="false"/>
         <arg name="rviz" value="true"/>
     </include>    
