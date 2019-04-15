@@ -36,5 +36,5 @@ if __name__ == '__main__':
     cmd = PyCmdMessenger.CmdMessenger(arduino,commands)
 
     rospy.init_node('serial_com', anonymous=True)
-    rospy.Subscriber("cmd_vel", Twist, send_vel)
+    rospy.Subscriber("motor_vel", Twist, send_vel)
     rospy.spin()
