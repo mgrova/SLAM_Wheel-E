@@ -20,7 +20,7 @@
 #define pin_e2R 19
 #define pin_e3R 26
 
-#define Tsample_enc 0.5
+#define Tsample_enc 0.1
 
 
 
