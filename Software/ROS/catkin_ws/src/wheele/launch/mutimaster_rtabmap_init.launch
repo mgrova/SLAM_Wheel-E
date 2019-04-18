@@ -1,0 +1,26 @@
+<launch>  
+    <arg name="using_rpi"  default="false"/>
+    
+    <node pkg="master_discovery_fkie" type="zeroconf" name="zeroconf" output="screen"> </node>
+    <node pkg="master_sync_fkie" type="master_sync" name="master_sync" output="screen"> </node>
+
+    <!-- To use RPi -->
+    <include if="$(arg using_rpi)" file="$(find wheele)/launch/freenect_throttle.launch">
+        <arg name="rate"  value="5"/>
+        <arg name="approx_sync" value="true" />
+        <arg name="rgbd_sync" value="true"/> 
+    </include>
+
+    <!-- To use PC -->
+    <include unless="$(arg using_rpi)" file="$(find rtabmap_ros)/launch/rtabmap.launch"> 
+        <arg name="subscribe_rgbd" value="true"/>
+        <arg name="rgbd_topic" value="/camera/rgbd_image"/>
+        <arg name="compressed" value="true"/>
+        <arg name="rtabmap_args" value="--delete_db_on_start --Vis/MaxFeatures 500 --Mem/ImagePreDecimation 2 --Mem/ImagePostDecimation 2 --Kp/DetectorStrategy 6 --OdomF2M/MaxSize 1000 --Odom/ImageDecimation 2"/>
+        <arg name="rtabmapviz" value="false"/>
+        <arg name="rviz" value="true"/>
+    </include>    
+
+
+
+</launch>
