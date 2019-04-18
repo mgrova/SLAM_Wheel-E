@@ -204,7 +204,7 @@ class ak8963:
         self.bus = bus  # i2c bus to be used
         self.i2c_adr=i2c_adr # i2c address if ak8963
         self.output_resolution(16) # 16 bit output
-        self.single_meas()
+        self.cont1_meas()
         self.sens_adj() # Sensitivity adjustment data for each axis is stored to fuse ROM on shipment   Measurement_adjusted = Measurement * ((ASA-128)*0.5 / 128) + 1
 
     # Dictionary for ak's registers (low byte, add -1 calling read/write words)
@@ -237,9 +237,13 @@ class ak8963:
         mode = read_byte(self.bus, self.i2c_adr, self.regs['CNTL1']) & 0b00010000 # Change MODEX bits but copy the output resolution bit setting
         write_byte(self.bus, self.i2c_adr, self.regs['CNTL1'], mode)
 
-    def single_meas(self): # Configure magn for single measurement reads
+    def single_meas(self): # Configure magn for single measurement reads (after a read, magn will go idle so u will have to write to it something to read again)
         mode = read_byte(self.bus, self.i2c_adr, self.regs['CNTL1']) & 0b00010000 # Change MODEX bits but copy the output resolution bit setting
         write_byte(self.bus, self.i2c_adr, self.regs['CNTL1'], mode | 0b00000001) # Sinle measurement: 000X0001 (X is output bit resolution setting)
+
+    def cont1_meas(self): # Configure magn for single measurement reads (there are 2 continus reads mode, idk what they do so I just choose the 1 [0010])
+        mode = read_byte(self.bus, self.i2c_adr, self.regs['CNTL1']) & 0b00010000 # Change MODEX bits but copy the output resolution bit setting
+        write_byte(self.bus, self.i2c_adr, self.regs['CNTL1'], mode | 0b00000010) # Sinle measurement: 000X0001 (X is output bit resolution setting)
 
     def output_resolution(self, res=16):   # Selects output resolution (16 or 14 bit) [res = 14 , res =16]
         self.out_res = res
