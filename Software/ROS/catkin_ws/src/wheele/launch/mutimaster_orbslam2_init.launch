@@ -26,28 +26,23 @@
       <!--  <param name="_ignore_nodes" value="[camera/ir/*,]"/>     -->
     
     </node>
+      <include  if="$(arg using_rpi)" file="$(find freenect_launch)/launch/kinect_orb.launch">
+     <arg name="data_skip" value="2" />
+     <arg name="depth_registration" value="True" />
+   <!--  <arg name="depth_camera_info_url" default="$(find wheele)/config/KINECT.yaml" /> -->
 
-    <include if="$(arg using_rpi)" file="$(find wheele)/launch/freenect_throttle.launch">
-        <arg name="rate"  value="5"/>
-        <arg name="approx_sync" value="true" />
-        <arg name="rgbd_sync" value="true"/> 
-    </include>
+  </include>
 
     <!-- To use PC -->
     <node unless="$(arg using_rpi)" pkg="master_sync_fkie" type="master_sync" name="master_sync" output="screen"> 
     <!-- Can be param or rosparam, idk. -->
      <!--   <param name="_ignore_nodes" value="[camera/ir/*,camera/depth/*]"/>  -->
-    
     </node>
 
-    <include unless="$(arg using_rpi)" file="$(find rtabmap_ros)/launch/rtabmap.launch"> 
-        <arg name="subscribe_rgbd" value="true"/>
-        <arg name="rgbd_topic" value="/camera/rgbd_image"/>
-        <arg name="compressed" value="true"/>
-        <arg name="rtabmap_args" value="--delete_db_on_start --Vis/MaxFeatures 500 --Mem/ImagePreDecimation 2 --Mem/ImagePostDecimation 2 --Kp/DetectorStrategy 6 --OdomF2M/MaxSize 1000 --Odom/ImageDecimation 2"/>
-        <arg name="rtabmapviz" value="false"/>
-        <arg name="rviz" value="true"/>
-    </include>    
+    <!-- PROBLEMS: ORB_SLAM2 ESTA EN UN CATKIN Y WHEELE EN OTRO DISTINTO. ¿COMO PODER HACERLO PSEUDO GENERICO?
+         ESTE LAUNCH SOLO VALIDO PARA EL PC DE MARCO-->
+    <include unless="$(arg using_rpi)" file="/home/marrcogrova/catkinBl_ws/src/orb_slam_2_ros/ros/launch/orb_slam2_kinect_rgbd.launch" />
+    <node unless="$(arg using_rpi)" type="rviz" name="rviz" pkg="rviz" args="-d /home/marrcogrova/SLAM_Wheel-E/Software/ROS/catkin_ws/src/wheele/config/cnfg_orbslam2.rviz" />
 
 
 
