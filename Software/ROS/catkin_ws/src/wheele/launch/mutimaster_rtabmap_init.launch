@@ -19,7 +19,7 @@
 
     <!-- To use PC -->
     <node unless="$(arg using_rpi)" pkg="master_sync_fkie" type="master_sync" name="master_sync" output="screen"> 
-        <param name="_ignore_nodes" value="[camera/ir/*,camera/depth/*]"/>     
+     <!--   <param name="_ignore_nodes" value="[camera/ir/*,camera/depth/*]"/>  -->
     
     </node>
 

@@ -1,6 +1,6 @@
 <launch>
   <include file="$(find freenect_launch)/launch/freenect.launch">
-     <arg name="data_skip" value="True" />
+     <arg name="data_skip" value="2" />
      <arg name="depth_registration" value="True" />
    <!--  <arg name="depth_camera_info_url" default="$(find wheele)/config/KINECT.yaml" /> -->
 
