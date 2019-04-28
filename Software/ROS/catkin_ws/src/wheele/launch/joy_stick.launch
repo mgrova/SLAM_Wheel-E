@@ -1,6 +1,8 @@
 <launch>
 
-    <node pkg="joy" type="joy_node" name="joy_node"/>
+    <node pkg="joy" type="joy_node" name="joy_node">
+	<remap from="cmd_vel" to="motor_vel"/>
+    </node>	
 
     <node pkg="teleop_twist_joy" type="teleop_node" name="teleop_node">
         <rosparam command="load" file="$(find wheele)/config/wheele.yaml"/>

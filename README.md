@@ -52,6 +52,10 @@ git clone https://github.com/muhrix/kinect_aux.git -b indigo
 cd ~/catkin_ws
 catkin_make
 ```
+
+## Dependencias del nodo para usar RaspiCam
+Se ha compilado a mano el paquete, siguiendo las instrucciones del siguiente repo:
+https://github.com/UbiquityRobotics/raspicam_node
 ## Graph SLAM
 Para implementar Graph Slam, se hará uso del framework RTAB-Map, el cual es necesario tener instalado tanto en la RPi como en el PC.
 ```

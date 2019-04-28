@@ -47,7 +47,7 @@ void control_motor(int enable,int speed, int dir1, int dir2){
     else if(speed < 0){
         digitalWrite(dir1, LOW);
         digitalWrite(dir2, HIGH);
-        analogWrite(enable, speed);
+        analogWrite(enable, 255-abs(speed));
     }
     else{
         digitalWrite(dir1, LOW);
