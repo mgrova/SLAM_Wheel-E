@@ -62,8 +62,10 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "wheel_encoder");
   ros::NodeHandle n;
 
-  ros::Publisher encoder_pub = n.advertise<std_msgs::Float32>("ticks_read", 1000);
-  ros::Rate loop_rate(10); //10Hz
+  ros::Publisher encoder_pub_r2L = n.advertise<std_msgs::Float32>("ticks_read_r2L", 100);
+  ros::Publisher encoder_pub_r2R = n.advertise<std_msgs::Float32>("ticks_read_r2R", 100);
+
+  ros::Rate loop_rate(50); //10Hz
 
   while (n.ok()) //can be ros::ok()
   {
@@ -79,9 +81,9 @@ int main(int argc, char **argv)
     data_vel_r3R.data=enc_r3R.send_vel();
 
    // PODER PUBLICAR ESTE VECTOR DE DATOS
-   //    encoder_pub.publish(data_vel);
 
-
+    encoder_pub_r2L.publish(data_vel_r2L);
+    encoder_pub_r2R.publish(data_vel_r2R);
 
 
     t_act = std::chrono::system_clock::now();

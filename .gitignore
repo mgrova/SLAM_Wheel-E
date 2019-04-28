@@ -4,3 +4,4 @@ Hardware/FreeCad/rocker-bogie/*.fcstd1
 Hardware/FreeCad/chasis/*.fcstd1
 Software/ROS/catkin_ws/build/
 Software/ROS/catkin_ws/devel/
+Software/ROS/catkin_ws/src/.vscode

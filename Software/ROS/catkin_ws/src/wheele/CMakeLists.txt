@@ -171,7 +171,8 @@ include_directories(
 			)
 
 	target_link_libraries(wheele_odom ${catkin_LIBRARIES} )
-  target_link_libraries(control_motors ${catkin_LIBRARIES} )
+  target_link_libraries(control_motors ${catkin_LIBRARIES} 
+			encoder )
 
 #############
 ## Install ##

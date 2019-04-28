@@ -3,7 +3,9 @@
 
 #include <encoder.hpp>
 
-#define SEP_MUESCAS 10 //Separacion en grados de las muescas del encoder
+#define SEP_MUESCAS 15 //Separacion en grados de las muescas del encoder
+#define pi 3.14159265358979
+#define n_ticksEnc 22
 
 void re_decoder::_pulse(int gpio, int level, uint32_t tick)
 {
@@ -14,6 +16,7 @@ void re_decoder::_pulse(int gpio, int level, uint32_t tick)
      delta_t=gpioTick()/1000-last_t;
 
      vel=(float(SEP_MUESCAS)/(float)delta_t)*1000;
+     vel=vel*(2*pi)/n_ticksEnc;	// rad/s
 
      /*Traza*/
      std::cout <<"tiempo de paso: "<< delta_t<<'\n';

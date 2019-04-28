@@ -5,6 +5,7 @@
 # This library for mpu9250 is equivalent to this one:
 # https://github.com/MikeMakes/ros-mpu6050-imu
 # but with the magnetometer AK8963 implemented
+# Check out https://github.com/jusgomen/ros-mpu9250-imu too for a more complete c version (Not mine, I looked at it for inspiration)
 
 from i2c import read_byte, write_byte, read_word_2c
 
@@ -202,26 +203,82 @@ class ak8963:
     def __init__(self, bus, i2c_adr=0x68):   # Default i2c address of imu6050 is 64(dec) = 40(hex)
         self.bus = bus  # i2c bus to be used
         self.i2c_adr=i2c_adr # i2c address if ak8963
-        self.range_sensor('GYRO',0)
+        self.output_resolution(16) # 16 bit output
+        self.cont1_meas()
+        self.sens_adj() # Sensitivity adjustment data for each axis is stored to fuse ROM on shipment   Measurement_adjusted = Measurement * ((ASA-128)*0.5 / 128) + 1
 
-        # Dictionary for ak's registers (low byte, add -1 calling read/write words)
-        regs = {'WIA' : 0x00, # Device ID of AKM. It is described in one byte and fixed value
-                'INFO' : 0x01, # Device information for AKM
-                'ST1' : 0x02, # Bit DRDY (D0) is '1' when data is ready in single measurement mode or self-test mode. It returns '0' when any one of ST2 register or measurement data register (HXL to HZH) is read
-                'HXL' : 0x03, # X-axis measurement data lower 8bit
-                'HXH' : 0x04, # X-axis measurement data higher 8bit
-                'HYL' : 0x05, # You can guess
-                'HYH' : 0x06, #
-                'HZL' : 0x07, #
-                'HZH' : 0x08, #
-                'ST2' : 0x09, # Bit (D3) 'Magnetic sensor overflow' [magnetic data is not correct if this is '1'] & Bit (D4) 'Output bit setting' [Mirror data of BIT bit of CNTL1 register]
-                'CNTL1' : 0x0A, # Bits (D3-0) 'MODEx' [0001 for single measurement mode] & Bit (D4) 'BIT' [Output bit setting: '0' 14-bit output || '1' 16-bit output]
-                'RSV' : 0x0B, # Reserved
-                'ASTC' : 0x0C, # Self test
-                'TS1' : 0x0D, # Test1: TS1 and TS2 registers are test registers for shipment test. Do not use these registers
-                'TS2' : 0x0E, # Test2
-                'I2CDIS' : 0x0F, # i2c disable: 00011011 to disable. i2c enabled by default
-                'ASAX' : 0x10, # X axis sensitivity adjustment value
-                'ASAY' : 0x11, #
-                'ASAZ' : 0x12, #
-                }
+    # Dictionary for ak's registers (low byte, add -1 calling read/write words)
+    regs = {'WIA' : 0x00, # Device ID of AKM. It is described in one byte and fixed value
+            'INFO' : 0x01, # Device information for AKM
+            'ST1' : 0x02, # Bit DRDY (D0) is '1' when data is ready in single measurement mode or self-test mode. It returns '0' when any one of ST2 register or measurement data register (HXL to HZH) is read
+            'HXL' : 0x03, # X-axis measurement data lower 8bit
+            'HXH' : 0x04, # X-axis measurement data higher 8bit
+            'HYL' : 0x05, # You can guess
+            'HYH' : 0x06, #
+            'HZL' : 0x07, #
+            'HZH' : 0x08, #
+            'ST2' : 0x09, # Bit (D3) 'Magnetic sensor overflow' [magnetic data is not correct if this is '1'] & Bit (D4) 'Output bit setting' [Mirror data of BIT bit of CNTL1 register]
+            'CNTL1' : 0x0A, # Bits (D3-0) 'MODEx' [0001 for single measurement mode] & Bit (D4) 'BIT' [Output bit setting: '0' 14-bit output || '1' 16-bit output]
+            'RSV' : 0x0B, # Reserved
+            'ASTC' : 0x0C, # Self test
+            'TS1' : 0x0D, # Test1: TS1 and TS2 registers are test registers for shipment test. Do not use these registers
+            'TS2' : 0x0E, # Test2
+            'I2CDIS' : 0x0F, # i2c disable: 00011011 to disable. i2c enabled by default
+            'ASAX' : 0x10, # X axis sensitivity adjustment value
+            'ASAY' : 0x11, #
+            'ASAZ' : 0x12, #
+            }
+
+    bits = {'14bit_out' : 0x00,
+            '16bit_out' : 0x10,
+            }
+
+    def power_off(self):
+        mode = read_byte(self.bus, self.i2c_adr, self.regs['CNTL1']) & 0b00010000 # Change MODEX bits but copy the output resolution bit setting
+        write_byte(self.bus, self.i2c_adr, self.regs['CNTL1'], mode)
+
+    def single_meas(self): # Configure magn for single measurement reads (after a read, magn will go idle so u will have to write to it something to read again)
+        mode = read_byte(self.bus, self.i2c_adr, self.regs['CNTL1']) & 0b00010000 # Change MODEX bits but copy the output resolution bit setting
+        write_byte(self.bus, self.i2c_adr, self.regs['CNTL1'], mode | 0b00000001) # Sinle measurement: 000X0001 (X is output bit resolution setting)
+
+    def cont1_meas(self): # Configure magn for single measurement reads (there are 2 continus reads mode, idk what they do so I just choose the 1 [0010])
+        mode = read_byte(self.bus, self.i2c_adr, self.regs['CNTL1']) & 0b00010000 # Change MODEX bits but copy the output resolution bit setting
+        write_byte(self.bus, self.i2c_adr, self.regs['CNTL1'], mode | 0b00000010) # Sinle measurement: 000X0001 (X is output bit resolution setting)
+
+    def output_resolution(self, res=16):   # Selects output resolution (16 or 14 bit) [res = 14 , res =16]
+        self.out_res = res
+        if res == 14:
+            self.scale = float(10*4912/8190)
+            mode = read_byte(self.bus, self.i2c_adr, self.regs['CNTL1']) | self.bits['14bit_out']  # Copy actual mode but change output bit resolution
+            write_byte(self.bus, self.i2c_adr, self.regs['CNTL1'], mode)
+        elif res == 16:
+            self.scale = float(10*4912/32760)
+            mode = read_byte(self.bus, self.i2c_adr, self.regs['CNTL1']) | self.bits['16bit_out']
+            write_byte(self.bus, self.i2c_adr, self.regs['CNTL1'], mode)
+
+    def sens_adj(self):
+        asax=read_byte(self.bus, self.i2c_adr, self.regs['ASAX'])
+        self.asax = ((asax-128)*0.5 / 128) + 1 # This multiplies measurements for adjustment
+        asay=read_byte(self.bus, self.i2c_adr, self.regs['ASAY'])
+        self.asay = ((asay-128)*0.5 / 128) + 1
+        asaz=read_byte(self.bus, self.i2c_adr, self.regs['ASAZ'])
+        self.asaz = ((asaz-128)*0.5 / 128) + 1
+        return [asax,asay,asaz]
+
+    def raw_magn(self):
+        data_ready = read_byte(self.bus, self.i2c_adr, self.regs['ST1']) & 0x01
+        if data_ready:
+            x = read_word_2c(self.bus, self.i2c_adr, self.regs['HXL'],1)
+            y = read_word_2c(self.bus, self.i2c_adr, self.regs['HYL'],1)
+            z = read_word_2c(self.bus, self.i2c_adr, self.regs['HZL'],1)
+            overflow = read_byte(self.bus, self.i2c_adr, self.regs['ST2']) & 0x08 # Check magnetic sensor overflow
+            if not overflow:
+                return [x,y,z]
+
+    def magn(self):
+        raw = raw_magn()
+        scaled = [ i * self.scale for i in raw ] # scalar multiplication self.scale * raw[]
+        x = scaled[0] * self.asax # Adjust measurements
+        y = scaled[0] * self.asay
+        z = scaled[0] * self.asaz
+        return [x,y,z]
