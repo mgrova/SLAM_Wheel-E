@@ -46,8 +46,10 @@
         <arg name="compressed" value="true"/>
         <arg name="rtabmap_args" value="--delete_db_on_start --Vis/MaxFeatures 500 --Mem/ImagePreDecimation 2 --Mem/ImagePostDecimation 2 --Kp/DetectorStrategy 6 --OdomF2M/MaxSize 1000 --Odom/ImageDecimation 2"/>
         <arg name="rtabmapviz" value="false"/>
-        <arg name="rviz" value="true"/>
+        <arg name="rviz" value="false"/>
     </include>    
+
+      <node unless="$(arg using_rpi)" type="rviz" name="rviz" pkg="rviz" args="-d /home/marrcogrova/SLAM_Wheel-E/Software/ROS/catkin_ws/src/wheele/config/cnfg_rtabmap_octomap.rviz" />
 
 
 

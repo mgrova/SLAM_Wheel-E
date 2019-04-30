@@ -42,6 +42,7 @@
 
       <!-- PROBLEMS: ORB_SLAM2 ESTA EN UN CATKIN Y WHEELE EN OTRO DISTINTO. ¿COMO PODER HACERLO PSEUDO GENERICO?
           ESTE LAUNCH SOLO VALIDO PARA EL PC DE MARCO-->
+      
       <include if="$(arg rgbd)" file="/home/marrcogrova/catkinBl_ws/src/orb_slam_2_ros/ros/launch/orb_slam2_kinect_rgbd.launch" /> 
       <node if="$(arg rgbd)" type="rviz" name="rviz" pkg="rviz" args="-d /home/marrcogrova/SLAM_Wheel-E/Software/ROS/catkin_ws/src/wheele/config/cnfg_orbslam2_rgbd.rviz" />      
 
