@@ -1,5 +1,6 @@
 <launch>  
     <arg name="using_rpi"  default="false"/>
+    <arg name="rgbd"  default="true"/>
 
     <node pkg="master_discovery_fkie" type="master_discovery" name="master_discovery" output="screen"> 
         <param name="mcast_group" value="224.0.0.1" type= "str" />
@@ -24,27 +25,33 @@
     <!-- To use RPi -->
     <node if="$(arg using_rpi)" pkg="master_sync_fkie" type="master_sync" name="master_sync" output="screen"> 
       <!--  <param name="_ignore_nodes" value="[camera/ir/*,]"/>     -->
-    
-    </node>
-      <include  if="$(arg using_rpi)" file="$(find freenect_launch)/launch/kinect_orb.launch">
+    </node>    
+    <include  if="$(arg using_rpi)" file="$(find freenect_launch)/launch/kinect_orb.launch">
      <arg name="data_skip" value="2" />
      <arg name="depth_registration" value="True" />
-   <!--  <arg name="depth_camera_info_url" default="$(find wheele)/config/KINECT.yaml" /> -->
-
-  </include>
+     <!--  <arg name="depth_camera_info_url" default="$(find wheele)/config/KINECT.yaml" /> -->
+     </include>
 
     <!-- To use PC -->
-    <node unless="$(arg using_rpi)" pkg="master_sync_fkie" type="master_sync" name="master_sync" output="screen"> 
-    <!-- Can be param or rosparam, idk. -->
-     <!--   <param name="_ignore_nodes" value="[camera/ir/*,camera/depth/*]"/>  -->
-    </node>
+    <group unless="$(arg using_rpi)">
+      
+      <node pkg="master_sync_fkie" type="master_sync" name="master_sync" output="screen"> 
+      <!-- Can be param or rosparam, idk. -->
+      <!--   <param name="_ignore_nodes" value="[camera/ir/*,camera/depth/*]"/>  -->
+      </node>
 
-    <!-- PROBLEMS: ORB_SLAM2 ESTA EN UN CATKIN Y WHEELE EN OTRO DISTINTO. ¿COMO PODER HACERLO PSEUDO GENERICO?
-         ESTE LAUNCH SOLO VALIDO PARA EL PC DE MARCO-->
-    <include unless="$(arg using_rpi)" file="/home/marrcogrova/catkinBl_ws/src/orb_slam_2_ros/ros/launch/orb_slam2_kinect_rgbd.launch" />
-    <node unless="$(arg using_rpi)" type="rviz" name="rviz" pkg="rviz" args="-d /home/marrcogrova/SLAM_Wheel-E/Software/ROS/catkin_ws/src/wheele/config/cnfg_orbslam2.rviz" />
+      <!-- PROBLEMS: ORB_SLAM2 ESTA EN UN CATKIN Y WHEELE EN OTRO DISTINTO. ¿COMO PODER HACERLO PSEUDO GENERICO?
+          ESTE LAUNCH SOLO VALIDO PARA EL PC DE MARCO-->
+      
+      <include if="$(arg rgbd)" file="/home/marrcogrova/catkinBl_ws/src/orb_slam_2_ros/ros/launch/orb_slam2_kinect_rgbd.launch" /> 
+      <node if="$(arg rgbd)" type="rviz" name="rviz" pkg="rviz" args="-d /home/marrcogrova/SLAM_Wheel-E/Software/ROS/catkin_ws/src/wheele/config/cnfg_orbslam2_rgbd.rviz" />      
+
+      <include unless="$(arg rgbd)" file="/home/marrcogrova/catkinBl_ws/src/orb_slam_2_ros/ros/launch/orb_slam2_kinect_mono.launch" /> 
+      <node unless="$(arg rgbd)" type="rviz" name="rviz" pkg="rviz" args="-d /home/marrcogrova/SLAM_Wheel-E/Software/ROS/catkin_ws/src/wheele/config/cnfg_orbslam2_mono.rviz" />
 
 
 
+      
+    </group>
 
 </launch>
