@@ -11,6 +11,7 @@ import PyCmdMessenger
 from std_msgs.msg import Float64
 
 def send_pwm(data): # cmd_vel topic (type Twist) callback
+    data = data.data
     #linear_vel = data.linear.x   # Retrieve the linear velocity (foward or backwards) that Whelee should have
     #angular_vel = data.angular.z  # Same with angular velocity (clockwise turn is negative)
 
