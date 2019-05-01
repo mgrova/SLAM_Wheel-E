@@ -38,8 +38,8 @@ int main(int argc, char **argv) {
     dt=t_act-t_lastT;
     time=(t_act-t_init);
     if (dt.count() > Tsample_enc){
-      ROS_INFO_STREAM("Muestreo: " << dt.count()<<"\n" );
-      myfile << time.count() <<" "<< pwm <<"\n";
+      ROS_INFO_STREAM("pwm: " << pwm.data <<"\n" );
+      myfile << time.count() <<" "<< pwm.data <<"\n";
       t_lastT=t_act;
    }
 
