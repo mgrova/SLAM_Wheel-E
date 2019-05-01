@@ -1,7 +1,12 @@
 #include "ros/ros.h"
 #include <std_msgs/Float64.h>
+
 #include <chrono>
 #include <ctime>
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
 #include <unistd.h>
 #include <cstdlib>
 
@@ -21,12 +26,13 @@ int main(int argc, char **argv) {
 
   ros::Rate loop_rate(5); //10Hz
 
-  std_msgs::Float64 pwm=-481;
+  std_msgs::Float64 pwm;
+  pwm.data=-481.0;
 
   while (n.ok()) {
-    pwm=pwm+1
+    pwm.data=pwm.data+1.0;
 
-    if (pwm<481) pwm_pub.publish(pwm);
+    if (pwm.data<481) pwm_pub.publish(pwm);
 
     t_act = std::chrono::system_clock::now();
     dt=t_act-t_lastT;

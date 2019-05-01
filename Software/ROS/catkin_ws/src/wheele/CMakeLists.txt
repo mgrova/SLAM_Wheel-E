@@ -147,7 +147,7 @@ include_directories(
  add_executable(wheel_encoder src/wheel_encoder.cpp )
  add_executable(wheele_odom   src/wheele_odom.cpp   )
  add_executable(control_motors   src/control_motors.cpp   )
-
+ add_executable(experiment	src/experiment.cpp	)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -160,9 +160,10 @@ include_directories(
  add_dependencies(wheel_encoder ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} pigpio )
  add_dependencies(wheele_odom   ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}        )
  add_dependencies(control_motors   ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}        )
+ add_dependencies(experiment   ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}        )
 
 ## Specify libraries to link a library or executable target against
- target_link_libraries( wheel_encoder
+ target_link_libraries(wheel_encoder
  			${catkin_LIBRARIES}
 			pigpio
 			encoder
@@ -170,9 +171,11 @@ include_directories(
 			${CMAKE_THREAD_LIBS_INIT} # @TODO Can be an error.
 			)
 
-	target_link_libraries(wheele_odom ${catkin_LIBRARIES} )
-  target_link_libraries(control_motors ${catkin_LIBRARIES} 
-			encoder )
+ target_link_libraries(wheele_odom ${catkin_LIBRARIES} )
+ target_link_libraries(control_motors ${catkin_LIBRARIES}
+			encoder
+			)
+ target_link_libraries(experiment ${catkin_LIBRARIES} )
 
 #############
 ## Install ##
