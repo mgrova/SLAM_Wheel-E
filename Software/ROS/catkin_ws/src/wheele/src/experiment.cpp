@@ -1,5 +1,6 @@
 #include "ros/ros.h"
 #include <std_msgs/Float64.h>
+#include <msg/pwm6>
 
 #include <chrono>
 #include <ctime>

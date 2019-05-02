@@ -9,21 +9,10 @@
 import rospy
 import PyCmdMessenger
 from std_msgs.msg import Float64
+from wheele.msg import pwm6
 
-def send_pwm(data): # cmd_vel topic (type Twist) callback
-    data = data.data
-    #linear_vel = data.linear.x   # Retrieve the linear velocity (foward or backwards) that Whelee should have
-    #angular_vel = data.angular.z  # Same with angular velocity (clockwise turn is negative)
-
-    #left_vel = linear_vel - (angular_vel*0.025)/2 # How much velocity in each side we need for this movement
-    #right_vel = (linear_vel + (angular_vel*0.025)/2)
-    if data > 255:
-        data = 255
-    elif data < -255:
-        data = -255
-
-    cmd.send("change_pwm",data,data,data,data,data,data) # Send velocites of left & right motors to arduino
-
+def send_pwm(pwm): # cmd_vel topic (type Twist) callback
+    cmd.send("change_pwm",pwm.m1l,pwm.m1r,pwm.m2l,pwm.m2r,pwm.m3l,pwm.m3r) # Send pwm of left & right motors to arduino
 
 if __name__ == '__main__':
     # Initialize an ArduinoBoard instance.  This is where you specify baud rate and
@@ -39,5 +28,5 @@ if __name__ == '__main__':
     cmd = PyCmdMessenger.CmdMessenger(arduino,commands)
 
     rospy.init_node('serial_com', anonymous=True)
-    rospy.Subscriber("pwm", Float64, send_pwm)
+    rospy.Subscriber("pwm", pwm6, send_pwm)
     rospy.spin()
