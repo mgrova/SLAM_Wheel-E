@@ -65,12 +65,12 @@ void apply_pwm() {
   float m3R_pwm = cmdMessenger.readBinArg<float>();  // Back right motor pwm
 
   // write pwm 2 motors & directions
-  write_pwm(m1L_en,left_vel, mL_a,mL_b);
-  write_pwm(m2L_en,left_vel, mL_a,mL_b);
-  write_pwm(m3L_en,left_vel, mL_a,mL_b);
-  write_pwm(m1R_en,right_vel, mR_a,mR_b);
-  write_pwm(m2R_en,right_vel, mR_a,mR_b);
-  write_pwm(m3R_en,right_vel, mR_a,mR_b);
+  write_pwm(m1L_en,m1L_pwm, mL_a,mL_b);
+  write_pwm(m2L_en,m2L_pwm, mL_a,mL_b);
+  write_pwm(m3L_en,m3L_pwm, mL_a,mL_b);
+  write_pwm(m1R_en,m1R_pwm, mR_a,mR_b);
+  write_pwm(m2R_en,m2R_pwm, mR_a,mR_b);
+  write_pwm(m3R_en,m3R_pwm, mR_a,mR_b);
 }
 
 void turn_off() {
@@ -78,13 +78,13 @@ void turn_off() {
 }
 
 void shutdown_motors() { // Apagar los motores
-  control_motor(m1L_en,0, mL_a,mL_b);
-  control_motor(m2L_en,0, mL_a,mL_b);
-  control_motor(m3L_en,0, mL_a,mL_b);
+  write_pwm(m1L_en,0, mL_a,mL_b);
+  write_pwm(m2L_en,0, mL_a,mL_b);
+  write_pwm(m3L_en,0, mL_a,mL_b);
 
-  control_motor(m1R_en,0, mR_a,mR_b);
-  control_motor(m2R_en,0, mR_a,mR_b);
-  control_motor(m3R_en,0, mR_a,mR_b);
+  write_pwm(m1R_en,0, mR_a,mR_b);
+  write_pwm(m2R_en,0, mR_a,mR_b);
+  write_pwm(m3R_en,0, mR_a,mR_b);
 }
 
 // Callbacks define on which received commands we take action
