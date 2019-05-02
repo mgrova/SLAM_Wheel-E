@@ -40,11 +40,13 @@ enum {
 /* function to write pwm 2 motors & manage directions */
 void write_pwm(int enable,int pwm, int dir1, int dir2){
     if(pwm > 0){
+      if (pwm>255) pwm=255;
         digitalWrite(dir1, HIGH);
         digitalWrite(dir2, LOW);
         analogWrite(enable, pwm);
     }
     else if(pwm < 0){
+      if (pwm<-255) pwm=-255;
         digitalWrite(dir1, LOW);
         digitalWrite(dir2, HIGH);
         analogWrite(enable, abs(pwm));

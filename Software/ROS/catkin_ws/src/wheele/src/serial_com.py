@@ -12,7 +12,9 @@ from std_msgs.msg import Float64
 from wheele.msg import pwm6
 
 def send_pwm(pwm): # cmd_vel topic (type Twist) callback
-    cmd.send("change_pwm",pwm.m1l,pwm.m1r,pwm.m2l,pwm.m2r,pwm.m3l,pwm.m3r) # Send pwm of left & right motors to arduino
+    ##data=float(pwm.m1l)
+    cmd.send("change_pwm",float(pwm.m1l),float(pwm.m1r),float(pwm.m2l),float(pwm.m2r),float(pwm.m3l),float(pwm.m3r)) # Send pwm of left & right motors to arduino
+    ##cmd.send("change_pwm",data,data,data,data,data,data)
 
 if __name__ == '__main__':
     # Initialize an ArduinoBoard instance.  This is where you specify baud rate and
