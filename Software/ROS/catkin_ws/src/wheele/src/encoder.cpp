@@ -3,7 +3,7 @@
 
 #include <encoder.hpp>
 
-#define SEP_MUESCAS 15 //Separacion en grados de las muescas del encoder
+#define SEP_MUESCAS 7.5 //Separacion en grados de las muescas del encoder
 #define pi 3.14159265358979
 #define n_ticksEnc 22
 
