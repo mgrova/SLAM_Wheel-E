@@ -1,6 +1,6 @@
 #include "ros/ros.h"
 #include <std_msgs/Float64.h>
-#include <msg/pwm6>
+#include <wheele/pwm6.h>
 
 #include <chrono>
 #include <ctime>
@@ -23,23 +23,23 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "experiment");
   ros::NodeHandle n;
 
-  ros::Publisher pwm_pub = n.advertise<pwm6>("pwm", 100);
+  ros::Publisher pwm_pub = n.advertise<wheele::pwm6>("pwm", 100);
 
   ros::Rate loop_rate(5); //10Hz
 
   std_msgs::Float64 pwm;
-  pwm=-481.0;
-  pwm6 pwm_msg;
+  pwm.data=-481.0;
+  wheele::pwm6 pwm_msg;
 
   while (n.ok()) {
-    pwm_msg.m1l=pwm;
-    pwm_msg.m1r=pwm;
-    pwm_msg.m2l=pwm;
-    pwm_msg.m2r=pwm;
-    pwm_msg.m3l=pwm;
-    pwm_msg.m3r=pwm;
+    pwm_msg.m1l=pwm.data;
+    pwm_msg.m1r=pwm.data;
+    pwm_msg.m2l=pwm.data;
+    pwm_msg.m2r=pwm.data;
+    pwm_msg.m3l=pwm.data;
+    pwm_msg.m3r=pwm.data;
 
-    if (pwm<481) pwm_pub.publish(pwm_msg);
+    if (pwm.data<481) pwm_pub.publish(pwm_msg);
 
     t_act = std::chrono::system_clock::now();
     dt=t_act-t_lastT;
@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
       myfile << time.count() <<" "<< pwm.data <<"\n";
       t_lastT=t_act;
 
-    pwm=pwm+1.0;
+    pwm.data++;
    }
 
     ros::spinOnce();
