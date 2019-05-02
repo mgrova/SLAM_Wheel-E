@@ -22,7 +22,7 @@ def send_pwm(data): # cmd_vel topic (type Twist) callback
     elif data < -255:
         data = -255
 
-    cmd.send("change_vel",data, data) # Send velocites of left & right motors to arduino
+    cmd.send("change_pwm",data,data,data,data,data,data) # Send velocites of left & right motors to arduino
 
 
 if __name__ == '__main__':
@@ -34,8 +34,7 @@ if __name__ == '__main__':
     # List of command names (and formats for their associated arguments). These must
     # be in the same order as in the sketch.
     commands = [["cmd_off",""],
-                ["change_vel","ff"]]   # Send left & rights motors vel as 2 float arguments (ff)
-
+                ["change_pwm","ffffff"]]   # Send pwm 2 motors (m1l, m1r, m2l, m2r, m3l, m3r,)
     # Initialize the messenger
     cmd = PyCmdMessenger.CmdMessenger(arduino,commands)
 

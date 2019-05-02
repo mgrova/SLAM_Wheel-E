@@ -22,17 +22,23 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "experiment");
   ros::NodeHandle n;
 
-  ros::Publisher pwm_pub = n.advertise<std_msgs::Float64>("pwm", 100);
+  ros::Publisher pwm_pub = n.advertise<pwm6>("pwm", 100);
 
   ros::Rate loop_rate(5); //10Hz
 
   std_msgs::Float64 pwm;
-  pwm.data=-481.0;
+  pwm=-481.0;
+  pwm6 pwm_msg;
 
   while (n.ok()) {
-    pwm.data=pwm.data+1.0;
+    pwm_msg.m1l=pwm;
+    pwm_msg.m1r=pwm;
+    pwm_msg.m2l=pwm;
+    pwm_msg.m2r=pwm;
+    pwm_msg.m3l=pwm;
+    pwm_msg.m3r=pwm;
 
-    if (pwm.data<481) pwm_pub.publish(pwm);
+    if (pwm<481) pwm_pub.publish(pwm_msg);
 
     t_act = std::chrono::system_clock::now();
     dt=t_act-t_lastT;
@@ -41,6 +47,8 @@ int main(int argc, char **argv) {
       ROS_INFO_STREAM("pwm: " << pwm.data <<"\n" );
       myfile << time.count() <<" "<< pwm.data <<"\n";
       t_lastT=t_act;
+
+    pwm=pwm+1.0;
    }
 
     ros::spinOnce();
