@@ -15,7 +15,7 @@ void re_decoder::_pulse(int gpio, int level, uint32_t tick)
      /*Solo calcula la "valocidad" en los flancos de bajada*/
      delta_t=gpioTick()/1000-last_t;
 
-     vel=(float(SEP_MUESCAS)/(float)delta_t)*1000;
+     vel=(float(SEP_MUESCAS)/(float)delta_t)*1000; //ticks /s
      vel=vel*(2*pi)/n_ticksEnc;	// rad/s
 
      }

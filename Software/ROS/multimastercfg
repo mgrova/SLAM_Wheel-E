@@ -1,0 +1,73 @@
+#!/bin/bash
+
+#http://www.iri.upc.edu/files/scidoc/1607-Multi-master-ROS-systems.pdf
+
+# 1 bind names and ips moding /etc/hosts
+# 2 multicast on
+# 3 multicast adress using parameter (default 226.0.0.0)
+# 4 ros local network routes
+
+#### 1 #### 
+sudo nano /etc/hosts
+# Copias, pegas esto y descomentas las ips:
+### Things for ros multimaster
+## ip address	hostname
+#192.168.1.39	chavalmi
+#192.168.1.66	pi-desktop
+#192.168.1.12	marrcogrova
+###
+
+#### 1.5 ####
+gedit ~/.zshrc # or ~/.bashrc
+# add this command at the end: export ROS_MASTER_URI=http://pi-desktop:11311
+source ~/.zshrc
+
+#### 2 ####
+# check multicast is enable (next command return 0 if so)
+cat /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
+# temporary multicast (until restart): sudo sh -c "echo 0 >/proc/sys/net/ipv4/icmp_echo_ignore_broadcasts"
+# permanently enable: mod this command or write it: net.ipv4.icmp_echo_ignore_broadcasts=0
+sudo gedit /etc/sysctl.conf
+sudo service procps restart # make changes to take effect
+netstat -g # check which multicast groups are already defined in a computer
+ping 224.0.0.1 # check multicast works, 224.0.0.1 is the standard ip, u will see it or not in previous cmd
+# maybe u see (DUP!) tag, its ok 2 have duplicate pkgs
+
+#### test ####
+roscore
+rosrun master_discovery_fkie master_discovery _mcast_group:=224.0.0.1 # in rpi
+rosrun master_sync_fkie master_sync # in pc
+rosservice call /master_discovery/list_masters # Check
+
+#### 4 #### NO HAGAI NA DE ESTO
+
+### DONT DO THIS ON THE GATEWAY!!
+### to temporary set the default gateway:
+#route add default gw <IP address>
+## whereIP addressis the IP address of the device working as the gateway
+## If multiple network interfaces are available, append dev <interface> to the previous command
+#route add default gw <IP address> dev <interface>
+## where interface is the one through which the current computer is connected to the gateway
+### to permanently set the default gateway:
+sudo nano /etc/network/if-up.d/multimaster_things
+## copy this:
+# #!/bin/bash
+#
+# if [ "$IFACE" = "<interface>" ]; then
+# 	route add default gw <IP address>
+# fi
+chmod a+x /etc/network/if-up.d/multimaster_things
+
+### Enable ip_forward on the gateway
+# check ip_foward is enabled (next command return 1 if so)
+cat /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
+# temporary ip_foward (until restart): 
+sudo sh -c "echo 1 >/proc/sys/net/ipv4/ip_forward"
+# permanently enable: mod this command or write it: net.ipv4.ip_forward=1
+#sudo nano /etc/sysctl.conf
+#sudo service procps restart # make changes to take effect
+
+###Add static routes between networks
+#route add -net <local network> netmask 255.255.255.0 gw <common network gateway>
+## or if it is a router work your own shit out
+

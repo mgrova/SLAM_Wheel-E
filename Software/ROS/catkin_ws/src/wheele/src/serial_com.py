@@ -8,18 +8,11 @@
 
 import rospy
 import PyCmdMessenger
-from geometry_msgs.msg import Twist
+from std_msgs.msg import Float64
+from wheele.msg import pwm6
 
-
-def send_vel(data): # cmd_vel topic (type Twist) callback
-    linear_vel = data.linear.x   # Retrieve the linear velocity (foward or backwards) that Whelee should have
-    angular_vel = data.angular.z  # Same with angular velocity (clockwise turn is negative)
-
-    left_vel = linear_vel - (angular_vel*0.025)/2 # How much velocity in each side we need for this movement
-    right_vel = (linear_vel + (angular_vel*0.025)/2)
-
-    cmd.send("change_vel",left_vel, right_vel) # Send velocites of left & right motors to arduino
-
+def send_pwm(pwm): # cmd_vel topic (type Twist) callback
+    cmd.send("change_pwm",pwm.m1l,pwm.m1r,pwm.m2l,pwm.m2r,pwm.m3l,pwm.m3r) # Send pwm of left & right motors to arduino
 
 if __name__ == '__main__':
     # Initialize an ArduinoBoard instance.  This is where you specify baud rate and
@@ -30,11 +23,10 @@ if __name__ == '__main__':
     # List of command names (and formats for their associated arguments). These must
     # be in the same order as in the sketch.
     commands = [["cmd_off",""],
-                ["change_vel","ff"]]   # Send left & rights motors vel as 2 float arguments (ff)
-
+                ["change_pwm","ffffff"]]   # Send pwm 2 motors (m1l, m1r, m2l, m2r, m3l, m3r,)
     # Initialize the messenger
     cmd = PyCmdMessenger.CmdMessenger(arduino,commands)
 
     rospy.init_node('serial_com', anonymous=True)
-    rospy.Subscriber("motor_vel", Twist, send_vel)
+    rospy.Subscriber("pwm", pwm6, send_pwm)
     rospy.spin()

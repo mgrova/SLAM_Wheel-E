@@ -1,10 +1,32 @@
 <launch>  
     <arg name="using_rpi"  default="false"/>
-    
-    <node pkg="master_discovery_fkie" type="zeroconf" name="zeroconf" output="screen"> </node>
-    <node pkg="master_sync_fkie" type="master_sync" name="master_sync" output="screen"> </node>
+
+    <node pkg="master_discovery_fkie" type="master_discovery" name="master_discovery" output="screen"> 
+        <param name="mcast_group" value="224.0.0.1" type= "str" />
+         <!-- the test rate of ROS master state in Hz (Default: 1 Hz). -->
+        <param name="rosmaster_hz" value="1" />
+        <!-- the send rate of the heartbeat packets in hz. Zero disables the heartbeats. (Default: 0.02 Hz)
+        Only values between 0.1 and 25.5 are used to detemine the link quality. -->
+        <param name="heartbeat_hz" value="0.02" />
+        <!-- the count of intervals (1 sec) used for a quality calculation. If
+        `HEARTBEAT_HZ` is smaller then 1, `MEASUREMENT_INTERVALS` will be divided
+        by `HEARTBEAT_HZ` value.
+        (Default: 5 sec are used to determine the link qaulity) -->
+        <param name="measurement_intervals" value="5" />
+        <!-- the timeout is defined by calculated measurement duration multiplied by `TIMEOUT_FAKTOR`. -->
+        <param name="timeout_factor" value="10" />
+        <!-- remove an offline host after this time in [sec] (Default: 300 sec). -->
+        <param name="remove_after" value="300" />
+        <!-- send an update request, if after this time no heartbeats are received [sec] (Default: 60 sec). -->
+        <param name="active_request_after" value="60" />
+    </node>
 
     <!-- To use RPi -->
+    <node if="$(arg using_rpi)" pkg="master_sync_fkie" type="master_sync" name="master_sync" output="screen"> 
+      <!--  <param name="_ignore_nodes" value="[camera/ir/*,]"/>     -->
+    
+    </node>
+
     <include if="$(arg using_rpi)" file="$(find wheele)/launch/freenect_throttle.launch">
         <arg name="rate"  value="5"/>
         <arg name="approx_sync" value="true" />
@@ -12,14 +34,23 @@
     </include>
 
     <!-- To use PC -->
+    <node unless="$(arg using_rpi)" pkg="master_sync_fkie" type="master_sync" name="master_sync" output="screen"> 
+    <!-- Can be param or rosparam, idk. -->
+     <!--   <param name="_ignore_nodes" value="[camera/ir/*,camera/depth/*]"/>  -->
+    
+    </node>
+
     <include unless="$(arg using_rpi)" file="$(find rtabmap_ros)/launch/rtabmap.launch"> 
         <arg name="subscribe_rgbd" value="true"/>
         <arg name="rgbd_topic" value="/camera/rgbd_image"/>
         <arg name="compressed" value="true"/>
         <arg name="rtabmap_args" value="--delete_db_on_start --Vis/MaxFeatures 500 --Mem/ImagePreDecimation 2 --Mem/ImagePostDecimation 2 --Kp/DetectorStrategy 6 --OdomF2M/MaxSize 1000 --Odom/ImageDecimation 2"/>
         <arg name="rtabmapviz" value="false"/>
-        <arg name="rviz" value="true"/>
+        <arg name="rviz" value="false"/>
     </include>    
+
+      <node unless="$(arg using_rpi)" type="rviz" name="rviz" pkg="rviz" args="-d /home/marrcogrova/SLAM_Wheel-E/Software/ROS/catkin_ws/src/wheele/config/cnfg_rtabmap_octomap.rviz" />
+
 
 
 

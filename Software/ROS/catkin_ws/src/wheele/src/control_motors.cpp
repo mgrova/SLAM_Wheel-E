@@ -1,5 +1,6 @@
 #include "ros/ros.h"
 #include <std_msgs/Float32.h>
+#include <msg/pwm6>
 #include <geometry_msgs/Twist.h>
 #include <chrono>
 #include <ctime>
@@ -14,25 +15,21 @@ std_msgs::Float32 real_velR,real_velL;
 geometry_msgs::Twist ref_vel,sc_vel;
 
 
-void velCb_r2L(const std_msgs::Float32::ConstPtr& measure2)
-{
+void velCb_r2L(const std_msgs::Float32::ConstPtr& measure2){
   real_vel_r2L.data=measure2->data;
 }
-void velCb_r2R(const std_msgs::Float32::ConstPtr& measure5)
-{
+void velCb_r2R(const std_msgs::Float32::ConstPtr& measure5){
   real_vel_r2R.data=measure5->data;
 
 }
 
 
-void ref_velCb(const geometry_msgs::Twist::ConstPtr& ref)
-{
+void ref_velCb(const geometry_msgs::Twist::ConstPtr& ref){
   ref_vel.linear.x=ref->linear.x;
   ref_vel.angular.z=ref->angular.z;
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv){
   float lin_x_ref,ang_z_ref,velL_ref,velR_ref,sc_vL,sc_vR,sc_lin_x,sc_ang_z;
   static float err_vR,Int_e_vR,err_vL,Int_e_vL;
   float Kp=2.05;
@@ -40,7 +37,7 @@ int main(int argc, char **argv)
 
   std::chrono::time_point<std::chrono::system_clock> t_init,t_act,t_lastC;
   t_init = std::chrono::system_clock::now();
-  t_act=t_lastC=t_init;  
+  t_act=t_lastC=t_init;
   std::chrono::duration<double> dt,time;
 
 
@@ -55,11 +52,10 @@ int main(int argc, char **argv)
 
   ros::Rate loop_rate(50); //10Hz
 
-  while (n.ok()) //can be ros::ok()
-  {
+  while (n.ok()) {//can be ros::ok()
     lin_x_ref=ref_vel.linear.x;
     ang_z_ref=ref_vel.angular.z;
-    
+
     //ROS_INFO_STREAM("ref "<< lin_x_ref <<"\n");
     /* Se desmonta el mensaje, se controla en la relacion PWM-rad/s y se reconstruye el twist */
     velL_ref =lin_x_ref - (ang_z_ref*0.025)/2.0;
@@ -73,21 +69,21 @@ int main(int argc, char **argv)
     if (dt.count() > Ts_control){
 	real_velR.data=real_vel_r2R.data;
   	real_velL.data=real_vel_r2L.data;
-	
+
 	/*Apply control ONLY for 1 motor in the right! */
-	
+
 	err_vR=velR_ref-real_velR.data;
-        
-	Int_e_vR += err_vR*dt.count();   
-	
+
+	Int_e_vR += err_vR*dt.count();
+
 	sc_vR=Kp*(err_vR + Int_e_vR/Ti);
 
         err_vL=velL_ref-real_velL.data;
-	Int_e_vL += err_vL*dt.count();   
-	
+	Int_e_vL += err_vL*dt.count();
+
 	sc_vL=Kp*(err_vL + Int_e_vL/Ti);
- 	
-        t_lastC=t_act;	
+
+        t_lastC=t_act;
   }
 
   sc_lin_x=(sc_vR+sc_vL)/2.0;
@@ -107,6 +103,6 @@ int main(int argc, char **argv)
 
     ros::spinOnce();
     loop_rate.sleep();
-  }	
+  }
   return 0;
 }
