@@ -6,6 +6,8 @@
 #include <unistd.h>
 #include <cstdlib>
 #include <std_msgs/Float32.h>
+#include <std_msgs/Float32MultiArray.h>
+
 #include <encoder.hpp>
 #include <pigpio.h>
 
@@ -20,6 +22,8 @@
 #define pin_e2R 19
 #define pin_e3R 26
 
+#define def_gpio_value {pin_e1L,pin_e2L,pin_e3L,pin_e1R,pin_e2R,pin_e3R}
+
 #define Tsample_enc 0.1
 
 
@@ -33,57 +37,67 @@ int main(int argc, char **argv)
   t_act=t_lastT=t_init;  
   std::chrono::duration<double> dt,time;
 
-/*
-   std::vector<re_decoder> encoders;
-   std::vector<int> GPIO_vect;
+  std::vector<int> GPIO_vect;
+  std::cout <<"tamaño de GPIO_vect antes de inicializar: " << GPIO_vect.size() << '\n';
+  std_msgs::Float32MultiArray encoder_msg;
+  std_msgs::Float32MultiArray encoder_msg_test;
 
-   n.param("/e1",e1 ,13);
-*/
-/*
-  for(int i=1;i<=argc;i++){
-    GPIO_vect.push_back(atoi(argv[i]));
-  }
+  encoder_msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
+  encoder_msg.layout.dim[0].label="encoders";
+  encoder_msg.layout.dim[0].stride=1;
 
- for(int i=0;i<argc;i++){
-   re_decoder tmp_enc = re_decoder(GPIO_vect[i]);
-   encoders.push_back(tmp_enc);
-  }
-*/
+  encoder_msg_test.layout.dim.push_back(std_msgs::MultiArrayDimension());
+  encoder_msg_test.layout.dim[0].label="encoders";
+  encoder_msg_test.layout.dim[0].stride=1;
+
 
   if (gpioInitialise() < 0) return 1;
-
-  re_decoder enc_r1L=re_decoder(pin_e1L);
-  re_decoder enc_r2L=re_decoder(pin_e2L);
-  re_decoder enc_r3L=re_decoder(pin_e3L);
-  re_decoder enc_r1R=re_decoder(pin_e1R);
-  re_decoder enc_r2R=re_decoder(pin_e2R);
-  re_decoder enc_r3R=re_decoder(pin_e3R);
-
+  
   ros::init(argc, argv, "wheel_encoder");
   ros::NodeHandle n;
 
-  ros::Publisher encoder_pub_r2L = n.advertise<std_msgs::Float32>("ticks_read_r2L", 100);
-  ros::Publisher encoder_pub_r2R = n.advertise<std_msgs::Float32>("ticks_read_r2R", 100);
+  n.param<std::vector<int>>("gpio",GPIO_vect,def_gpio_value);
+  int no_encd=GPIO_vect.size();
+
+  encoder_msg.data.resize(no_encd);
+  encoder_msg_test.data.resize(no_encd);
+
+  // std::vector<re_decoder> encoders;
+// ESTO NO TIRA
+  // for(int i=0;i<no_encd;i++){
+  //   //inicializa instancias de encoders
+  //   encoders.push_back(re_decoder(GPIO_vect[i]));
+  // }
+
+  re_decoder enc_r1L=re_decoder(GPIO_vect[0]);
+  re_decoder enc_r2L=re_decoder(GPIO_vect[1]);
+  re_decoder enc_r3L=re_decoder(GPIO_vect[2]);
+  re_decoder enc_r1R=re_decoder(GPIO_vect[3]);
+  re_decoder enc_r2R=re_decoder(GPIO_vect[4]);
+  re_decoder enc_r3R=re_decoder(GPIO_vect[5]);
+
+
+  ros::Publisher pub_encoder = n.advertise<std_msgs::Float32MultiArray>("encoders_ticks",100);
+  // ros::Publisher pub_2_encoder = n.advertise<std_msgs::Float32MultiArray>("encoder_test",100);
 
   ros::Rate loop_rate(50); //10Hz
 
-  while (n.ok()) //can be ros::ok()
+  while (n.ok())
   {
-    std_msgs::Float32 data_vel_r1L,data_vel_r2L,data_vel_r3L;
-    std_msgs::Float32 data_vel_r1R,data_vel_r2R,data_vel_r3R;
 
-    data_vel_r1L.data=enc_r1L.send_vel();
-    data_vel_r2L.data=enc_r2L.send_vel();
-    data_vel_r3L.data=enc_r3L.send_vel();
+    encoder_msg.data[0]=enc_r1L.getVel();
+    encoder_msg.data[1]=enc_r2L.getVel();
+    encoder_msg.data[2]=enc_r3L.getVel();
 
-    data_vel_r1R.data=enc_r1R.send_vel();
-    data_vel_r2R.data=enc_r2R.send_vel();
-    data_vel_r3R.data=enc_r3R.send_vel();
+    encoder_msg.data[3]=enc_r1R.getVel();
+    encoder_msg.data[4]=enc_r2R.getVel();
+    encoder_msg.data[5]=enc_r3R.getVel();
 
-   // PODER PUBLICAR ESTE VECTOR DE DATOS
-
-    encoder_pub_r2L.publish(data_vel_r2L);
-    encoder_pub_r2R.publish(data_vel_r2R);
+    // for(int i=0;i<no_encd;i++){
+    //   encoder_msg_test.data[i]=encoders[i].getVel();
+    // }
+    pub_encoder.publish(encoder_msg);
+    // pub_2_encoder.publish(encoder_msg_test);
 
 
     t_act = std::chrono::system_clock::now();
@@ -93,8 +107,11 @@ int main(int argc, char **argv)
 
     if (dt.count() > Tsample_enc){
       ROS_INFO_STREAM("Muestreo: " << dt.count()<<"\n" );
-      myfile << time.count() <<" "<< data_vel_r1L.data <<" "<< data_vel_r2L.data <<" "<< data_vel_r3L.data <<" "<< data_vel_r1R.data <<" "<< data_vel_r2R.data <<" "<< data_vel_r3R.data << "\n"; 
-
+      myfile << time.count()<< " ";
+      for (int i=0;i<no_encd;i++){
+        myfile << encoder_msg.data[i] << " ";
+        if(i==no_encd-1) myfile << std::endl;
+      }
       t_lastT=t_act;
    }
 

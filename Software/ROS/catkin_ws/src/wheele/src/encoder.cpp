@@ -18,9 +18,6 @@ void re_decoder::_pulse(int gpio, int level, uint32_t tick)
      vel=(float(SEP_MUESCAS)/(float)delta_t)*1000;
      vel=vel*(2*pi)/n_ticksEnc;	// rad/s
 
-     /*Traza*/
-     std::cout <<"tiempo de paso: "<< delta_t<<'\n';
-     std::cout <<"velocidad de paso: "<<vel<<std::endl;
      }
    lastlev=lev;
    last_t=gpioTick()/1000;
@@ -67,4 +64,4 @@ void re_decoder::re_cancel(void)
    gpioSetAlertFuncEx(mygpio, 0, this);
 }
 
-float re_decoder::send_vel(void){return vel;}
+float re_decoder::getVel(void){return vel;}
