@@ -21,7 +21,7 @@ void re_decoder::_pulse(int gpio, int level, uint32_t tick)
      }
    lastlev=lev;
    last_t=gpioTick()/1000;
-
+   if(level==2) vel==0.0;
 
    return;
 
