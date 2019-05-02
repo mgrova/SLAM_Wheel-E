@@ -1,0 +1,20 @@
+Using the following options:
+
+hub_diameter = 10.5
+set_screw_nut_thickness = 2
+set_screw = 0
+set_screw_nut_diameter = 5
+set_screw_diameter = 3
+slit_ratio = 0.5
+shaft_type = 2
+shaft_flat_depth = 0.8
+hub_height = 4
+outer_diameter = 30
+slit_length = 6
+shaft_diameter = 5.3
+shaft_goes_through_encoder = 1
+rim_width = 1.75
+wheel_height = 2.6
+set_screw_nut = 1
+slit_count = 24
+
