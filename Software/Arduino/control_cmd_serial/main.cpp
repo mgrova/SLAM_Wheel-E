@@ -52,27 +52,30 @@ void write_pwm(int enable,int pwm, int dir1, int dir2){
         analogWrite(enable, abs(pwm));
     }
     else{
-        digitalWrite(dir1, LOW);
-        digitalWrite(dir2, LOW);
+        //digitalWrite(dir1, LOW);
+        //digitalWrite(dir2, LOW);
         digitalWrite(enable, LOW);
     }
 }
 
 void apply_pwm() {
   float m1L_pwm = cmdMessenger.readBinArg<float>(); // Front left motor pwm
-  float m1R_pwm = cmdMessenger.readBinArg<float>();  // Front right motor pwm
-  float m2L_pwm = cmdMessenger.readBinArg<float>(); // Mid left motor pwm
-  float m2R_pwm = cmdMessenger.readBinArg<float>();  //  Mid right motor pwm
-  float m3L_pwm = cmdMessenger.readBinArg<float>(); // Back left motor pwm
-  float m3R_pwm = cmdMessenger.readBinArg<float>();  // Back right motor pwm
+  write_pwm(m1L_en, m1L_pwm, mL_a,mL_b);
 
-  // write pwm 2 motors & directions
-  write_pwm(m1L_en,m1L_pwm, mL_a,mL_b);
-  write_pwm(m2L_en,m2L_pwm, mL_a,mL_b);
-  write_pwm(m3L_en,m3L_pwm, mL_a,mL_b);
-  write_pwm(m1R_en,m1R_pwm, mR_a,mR_b);
-  write_pwm(m2R_en,m2R_pwm, mR_a,mR_b);
-  write_pwm(m3R_en,m3R_pwm, mR_a,mR_b);
+  float m1R_pwm = cmdMessenger.readBinArg<float>();  // Front right motor pwm
+  write_pwm(m1R_en, m1R_pwm, mR_a,mR_b);
+
+  float m2L_pwm = cmdMessenger.readBinArg<float>(); // Mid left motor pwm
+  write_pwm(m2L_en, m2L_pwm, mL_a,mL_b);
+
+  float m2R_pwm = cmdMessenger.readBinArg<float>();  //  Mid right motor pwm
+  write_pwm(m2R_en, m2R_pwm, mR_a,mR_b);
+
+  float m3L_pwm = cmdMessenger.readBinArg<float>(); // Back left motor pwm
+  write_pwm(m3L_en, m3L_pwm, mL_a,mL_b);
+
+  float m3R_pwm = cmdMessenger.readBinArg<float>();  // Back right motor pwm
+  write_pwm(m3R_en, m3R_pwm, mR_a,mR_b);
 }
 
 void turn_off() {
