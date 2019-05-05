@@ -29,7 +29,7 @@ void get_ticks(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
 float ms2ticks(float ms){
   float tickss;
   tickss=ms/radius; // [m/s] to [rad/s] (wheel radius = 0.035)
-  tickss=ticks*(enc_slits/2*pi); // [rad/s] to [ticks/s] (encoders have 22 slits)
+  tickss=tickss*(enc_slits/2*pi); // [rad/s] to [ticks/s] (encoders have 22 slits)
   return tickss;
 }
 
@@ -41,6 +41,8 @@ int main(int argc, char **argv){
   ros::Publisher pwm_pub = n.advertise<wheele::pwm6>("pwm", 100);
   ros::Rate loop_rate(10); //10Hz
 
+static float sat_err=0,uk1=0;
+
 while(n.ok()) {
   float lin, ang, left_ref_ms, right_ref_ms, left_ref_ticks, right_ref_ticks;
   lin=ref_ms.linear.x;
@@ -50,24 +52,22 @@ while(n.ok()) {
   left_ref_ticks = ms2ticks(left_ref_ms);
   right_ref_ticks = ms2ticks(right_ref_ms);
 
-  float u0k,u1k,u2k,u0k1,u1k1,u2k1,ukns,ukreal,sat_err_integrated,ek;
-  float ueq=0,sat_err=0;
-  float nd=0.0783;
-  float p1=1, p2=0.8948;
+  static float uk1,ukns,ukreal,sat_err_integrated,ek,ek1;
+static float ukns1;
+  float p1=1, z1=1.3433, nd1=121.5684;
   sat_err_integrated=sat_err*0.1;
   ek=left_ref_ticks-ticks;
-  u0k=nd*ek;
-  u1k=p1*u1k1+u0k;
-  u2k=p2*u2k1+u1k;
-  ukns=u2k+(sat_err_integrated/0.1)+ueq;
-    ROS_INFO_STREAM("ukns:  "<<ukns <<"\n");
+  ukns=p1*uk1+(z1+nd1)*ek1;
+  ukns=ukns+(sat_err_integrated/0.1)+ueq;
+//ukns=ukns+ueq;
+  ROS_INFO_STREAM("ukns:  "<<ukns <<"\n");
   if(ukns<-255) ukreal=-255;
   else if(ukns>255) ukreal=255;
   else ukreal=ukns;
   sat_err=ukreal-ukns;
-  u2k1=u2k;
-  u1k1=u1k;
-  u0k1=u0k;
+//ukns1=ukns;
+  uk1=ukreal;
+ek1=ek;
 
   ROS_INFO_STREAM("ukreal:  "<<ukreal <<"\n");
 
