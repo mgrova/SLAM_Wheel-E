@@ -50,8 +50,8 @@ while(n.ok()) {
   left_ref_ticks = ms2ticks(left_ref_ms);
   right_ref_ticks = ms2ticks(right_ref_ms);
 
-  float u0k,u1k,u2k,u0k1,u1k1,u2k1,ukns,ukreal,sat_err,sat_err_integrated,ek;
-  float ueq=0;
+  float u0k,u1k,u2k,u0k1,u1k1,u2k1,ukns,ukreal,sat_err_integrated,ek;
+  float ueq=0,sat_err=0;
   float nd=0.0783;
   float p1=1, p2=0.8948;
   sat_err_integrated=sat_err*0.1;
@@ -60,6 +60,7 @@ while(n.ok()) {
   u1k=p1*u1k1+u0k;
   u2k=p2*u2k1+u1k;
   ukns=u2k+(sat_err_integrated/0.1)+ueq;
+    ROS_INFO_STREAM("ukns:  "<<ukns <<"\n");
   if(ukns<-255) ukreal=-255;
   else if(ukns>255) ukreal=255;
   else ukreal=ukns;
@@ -71,11 +72,11 @@ while(n.ok()) {
   ROS_INFO_STREAM("ukreal:  "<<ukreal <<"\n");
 
   pwm_msg.m1l=ukreal;
-  pwm_msg.m1r=ukreal;
-  pwm_msg.m2l=ukreal;
-  pwm_msg.m2r=ukreal;
-  pwm_msg.m3l=ukreal;
-  pwm_msg.m3r=ukreal;
+  //pwm_msg.m1r=ukreal;
+  //pwm_msg.m2l=ukreal;
+  //pwm_msg.m2r=ukreal;
+  //pwm_msg.m3l=ukreal;
+  //pwm_msg.m3r=ukreal;
   pwm_pub.publish(pwm_msg);
 
   ros::spinOnce();
