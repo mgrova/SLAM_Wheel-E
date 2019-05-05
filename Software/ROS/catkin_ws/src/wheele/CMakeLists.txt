@@ -150,6 +150,7 @@ include_directories(
  add_executable(control_motors   src/control_motors.cpp   )
  add_executable(experiment	src/experiment.cpp	)
  add_executable(experiment_step	src/experiment_step.cpp	)
+ add_executable(control	src/control.cpp	)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -164,6 +165,7 @@ include_directories(
  add_dependencies(control_motors   ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}        )
  add_dependencies(experiment   ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}        )
  add_dependencies(experiment_step   ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}        )
+ add_dependencies(control   ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}        )
 
 ## Specify libraries to link a library or executable target against
  target_link_libraries(wheel_encoder
@@ -180,6 +182,8 @@ include_directories(
 			)
  target_link_libraries(experiment ${catkin_LIBRARIES} )
  target_link_libraries(experiment_step ${catkin_LIBRARIES} )
+ target_link_libraries(control ${catkin_LIBRARIES} )
+
 
 
 #############

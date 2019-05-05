@@ -5,8 +5,8 @@
 #include <sstream>
 #include <unistd.h>
 #include <cstdlib>
-#include <std_msgs/Float32.h>
-#include <std_msgs/Float32MultiArray.h>
+#include <std_msgs/Float64.h>
+#include <std_msgs/Float64MultiArray.h>
 
 #include <encoder.hpp>
 #include <pigpio.h>
@@ -34,13 +34,13 @@ int main(int argc, char **argv)
   std::ofstream myfile ("ticks.txt",std::ios::app |std::ios::out);
   std::chrono::time_point<std::chrono::system_clock> t_init,t_act,t_lastT;
   t_init = std::chrono::system_clock::now();
-  t_act=t_lastT=t_init;  
+  t_act=t_lastT=t_init;
   std::chrono::duration<double> dt,time;
 
   std::vector<int> GPIO_vect;
   std::cout <<"tamaño de GPIO_vect antes de inicializar: " << GPIO_vect.size() << '\n';
-  std_msgs::Float32MultiArray encoder_msg;
-  std_msgs::Float32MultiArray encoder_msg_test;
+  std_msgs::Float64MultiArray encoder_msg;
+  std_msgs::Float64MultiArray encoder_msg_test;
 
   encoder_msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
   encoder_msg.layout.dim[0].label="encoders";
@@ -52,7 +52,7 @@ int main(int argc, char **argv)
 
 
   if (gpioInitialise() < 0) return 1;
-  
+
   ros::init(argc, argv, "wheel_encoder");
   ros::NodeHandle n;
 
@@ -77,7 +77,7 @@ int main(int argc, char **argv)
   re_decoder enc_r3R=re_decoder(GPIO_vect[5]);
 
 
-  ros::Publisher pub_encoder = n.advertise<std_msgs::Float32MultiArray>("encoders_ticks",100);
+  ros::Publisher pub_encoder = n.advertise<std_msgs::Float64MultiArray>("encoders_ticks",100);
   // ros::Publisher pub_2_encoder = n.advertise<std_msgs::Float32MultiArray>("encoder_test",100);
 
   ros::Rate loop_rate(50); //10Hz
