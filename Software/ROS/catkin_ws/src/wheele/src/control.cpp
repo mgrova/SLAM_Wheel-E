@@ -12,7 +12,7 @@
 #define enc_slits 22
 #define pi 3.141592
 geometry_msgs::Twist ref_ms;
-//std_msgs::float64 ref_ticks;
+std_msgs::Float64 pidkp,pidki,pidkd;
 wheele::pwm6 pwm_msg;
 float ticks;
 float kp=0.0,ki=0.0,kd=0.0;
@@ -26,11 +26,18 @@ void get_ticks(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
   ticks=ticks_read->data[0];
 }
 
-void get_pid(const std_msgs::Float64MultiArray::ConstPtr& pid){
-  kp=pid->data[0];
-  ki=pid->data[1];
-  kd=pid->data[2];
+void get_kp(const std_msgs::Float64::ConstPtr& pidkp){
+  kp=pidkp->data;
 }
+
+void get_ki(const std_msgs::Float64::ConstPtr& pidki){
+  ki=pidki->data;
+}
+
+void get_kd(const std_msgs::Float64::ConstPtr& pidkd){
+  kd=pidkd->data;
+}
+
 
 float ms2ticks(float ms){
   float tickss;
@@ -52,7 +59,9 @@ int main(int argc, char **argv){
   ros::Subscriber ticks_sub = n.subscribe("encoders_ticks",100,get_ticks);
   ros::Publisher pwm_pub = n.advertise<wheele::pwm6>("pwm", 100);
 
-  ros::Subscriber pid_sub = n.subscribe("pid",10,get_pid);
+  ros::Subscriber kp_sub = n.subscribe("kp",10,get_kp);
+  ros::Subscriber ki_sub = n.subscribe("ki",10,get_ki);
+  ros::Subscriber kd_sub = n.subscribe("kd",10,get_kd);
 
   ros::Rate loop_rate(10); //10Hz
 
