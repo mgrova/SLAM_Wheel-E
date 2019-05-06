@@ -72,6 +72,11 @@ while(n.ok()) {
   t_act = std::chrono::system_clock::now();
   dt=t_act-t_lastT;
 
+  ROS_INFO_STREAM("dt:  "<<dt.count() <<"\n");
+  ROS_INFO_STREAM("kp:  "<<kp <<"\n");
+  ROS_INFO_STREAM("ki:  "<<ki <<"\n");
+  ROS_INFO_STREAM("kd:  "<<kd <<"\n");
+
   sat_err_integrated=sat_err*dt.count();
   ek=left_ref_ticks-ticks;
 
