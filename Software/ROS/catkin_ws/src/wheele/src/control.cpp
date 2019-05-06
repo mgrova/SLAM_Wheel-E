@@ -8,14 +8,16 @@
 #include <unistd.h>
 #include <cstdlib>
 
-#define radius 0.035
-#define enc_slits 22
-#define pi 3.141592
+#define radius 0.035  // Radius of your wheels
+#define enc_slits 22  // nº of slits in your encoders
+#define pi 3.141592   // un arco de circunferencia entre su radio o algo asi
+
+float kp=0.0,ki=0.0,kd=0.0; // pid gains
+std_msgs::Float64 pidkp,pidki,pidkd;  // pid gains tunnable by topic
+
 geometry_msgs::Twist ref_ms;
-std_msgs::Float64 pidkp,pidki,pidkd;
 wheele::pwm6 pwm_msg;
-float ticks;
-float kp=0.0,ki=0.0,kd=0.0;
+wheele::pwm6 ticks;
 
 void get_ref(const geometry_msgs::Twist::ConstPtr& ref){
   ref_ms.linear.x=ref->linear.x;
@@ -23,7 +25,7 @@ void get_ref(const geometry_msgs::Twist::ConstPtr& ref){
 }
 
 void get_ticks(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
-  ticks=ticks_read->data[0];
+  ticks=ticks_read;
 }
 
 void get_kp(const std_msgs::Float64::ConstPtr& pidkp){
@@ -38,7 +40,6 @@ void get_kd(const std_msgs::Float64::ConstPtr& pidkd){
   kd=pidkd->data;
 }
 
-
 float ms2ticks(float ms){
   float tickss;
   tickss=ms/radius; // [m/s] to [rad/s] (wheel radius = 0.035)
@@ -46,8 +47,8 @@ float ms2ticks(float ms){
   return tickss;
 }
 
+
 int main(int argc, char **argv){
-  //std::ofstream myfile ("pwm.log",std::ios::app |std::ios::out);
   std::chrono::time_point<std::chrono::system_clock> t_init,t_act,t_lastT;
   t_init = std::chrono::system_clock::now();
   t_act=t_lastT=t_init;
@@ -55,9 +56,9 @@ int main(int argc, char **argv){
 
   ros::init(argc, argv, "control");
   ros::NodeHandle n;
-  ros::Subscriber ref_sub = n.subscribe("cmd_vel",100,get_ref);
-  ros::Subscriber ticks_sub = n.subscribe("encoders_ticks",100,get_ticks);
-  ros::Publisher pwm_pub = n.advertise<wheele::pwm6>("pwm", 100);
+  ros::Subscriber ref_sub = n.subscribe("cmd_vel",10,get_ref);
+  ros::Subscriber ticks_sub = n.subscribe("encoders_ticks",10,get_ticks);
+  ros::Publisher pwm_pub = n.advertise<wheele::pwm6>("pwm", 10);
 
   ros::Subscriber kp_sub = n.subscribe("kp",10,get_kp);
   ros::Subscriber ki_sub = n.subscribe("ki",10,get_ki);
@@ -78,31 +79,31 @@ while(n.ok()) {
   left_ref_ticks = ms2ticks(left_ref_ms);
   right_ref_ticks = ms2ticks(right_ref_ms);
 
-  t_act = std::chrono::system_clock::now();
-  dt=t_act-t_lastT;
-
   ROS_INFO_STREAM("dt:  "<<dt.count() <<"\n");
   ROS_INFO_STREAM("kp:  "<<kp <<"\n");
   ROS_INFO_STREAM("ki:  "<<ki <<"\n");
   ROS_INFO_STREAM("kd:  "<<kd <<"\n");
 
-  sat_err_integrated=sat_err*dt.count();
-  ek=left_ref_ticks-ticks;
+  t_act = std::chrono::system_clock::now();
+  dt=t_act-t_lastT;
 
+  // Control law with conditional integration antiwindup
+  sat_err_integrated=sat_err*dt.count();  // Integration of how much we satured
+  ek=left_ref_ticks-ticks;  // Error = Desired - Actual
   p = kp*ek;
   i = ki*(i+ek*dt.count());
   d = kd*((ek-ek1)/dt.count());
-  ukns=p+i+d+(sat_err_integrated/0.1)+ueq;
+  ukns=p+i+d+(sat_err_integrated/0.1)+ueq;  // PID + antiwindup + offset'
   ROS_INFO_STREAM("ukns:  "<<ukns <<"\n");
-  if(ukns<-255) ukreal=-255;
+  if(ukns<-255) ukreal=-255;  // Saturation
   else if(ukns>255) ukreal=255;
   else ukreal=ukns;
-  sat_err=ukreal-ukns;
-  ek1=ek;
+  sat_err=ukreal-ukns;  // Saturation error
+  ek1=ek; // Error update
 
   ROS_INFO_STREAM("ukreal:  "<<ukreal <<"\n");
 
-  pwm_msg.m1l=ukreal;
+  pwm_msg.m1l=ukreal; // Apply control publishing
   //pwm_msg.m1r=ukreal;
   //pwm_msg.m2l=ukreal;
   //pwm_msg.m2r=ukreal;
