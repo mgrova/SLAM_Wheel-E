@@ -15,6 +15,15 @@
 float kp=0.0,ki=0.0,kd=0.0; // pid gains
 std_msgs::Float64 pidkp,pidki,pidkd;  // pid gains tunnable by topic
 
+float p,d,sat_err_integrated,ek,ukns,ukreal,ueq=0;
+//static float ek1_m1l, sat_err=0,i=0;
+static float ek1_m1l,sat_err_m1l=0,i_m1l=0;
+static float ek1_m1r,sat_err_m1r=0,i_m1r=0;
+static float ek1_m2l,sat_err_m2l=0,i_m2l=0;
+static float ek1_m2r,sat_err_m2r=0,i_m2r=0;
+static float ek1_m3l,sat_err_m3l=0,i_m3l=0;
+static float ek1_m3r,sat_err_m3r=0,i_m3r=0;
+
 geometry_msgs::Twist ref_ms;
 wheele::pwm6 pwm_msg;
 wheele::pwm6 ticks;
@@ -25,7 +34,12 @@ void get_ref(const geometry_msgs::Twist::ConstPtr& ref){
 }
 
 void get_ticks(const wheele::pwm6::ConstPtr& ticks_read){
-  ticks=ticks_read;
+  ticks.m1l=ticks_read->m1l;
+  ticks.m1r=ticks_read->m1r;
+  ticks.m2l=ticks_read->m2l;
+  ticks.m2r=ticks_read->m2r;
+  ticks.m3l=ticks_read->m3l;
+  ticks.m3r=ticks_read->m3r;
 }
 
 void get_kp(const std_msgs::Float64::ConstPtr& pidkp){
@@ -107,15 +121,6 @@ int main(int argc, char **argv){
 
   ros::Rate loop_rate(10); //10Hz
 
-  float p,d,sat_err_integrated,ek,ukns,ukreal,ueq=0;
-  //static float ek1_m1l, sat_err=0,i=0;
-  static float ek1_m1l,sat_err_m1l=0,i_m1l=0;
-  static float ek1_m1r,sat_err_m1r=0,i_m1r=0;
-  static float ek1_m2l,sat_err_m2l=0,i_m2l=0;
-  static float ek1_m2r,sat_err_m2r=0,i_m2r=0;
-  static float ek1_m3l,sat_err_m3l=0,i_m3l=0;
-  static float ek1_m3r,sat_err_m3r=0,i_m3r=0;
-
 while(n.ok()) {
   float lin, ang, left_ref_ms, right_ref_ms, left_ref_ticks, right_ref_ticks;
   lin=ref_ms.linear.x;
@@ -134,23 +139,17 @@ while(n.ok()) {
   dt=t_act-t_lastT;
   t_lastT=t_act;
 
-  tocks = ticks.m1l;
-  pwm_msg.m1l=claw(1 ,dt, left_ref_ticks, tocks, ek1_m1l, sat_err_m1l, i_m1l);
+  pwm_msg.m1l=claw(1 ,dt, left_ref_ticks, ticks.m1l, ek1_m1l, sat_err_m1l, i_m1l);
   ROS_INFO_STREAM("pwm m1l:  "<<pwm_msg.m1l <<"\n");
-  tocks = ticks.m1r;
-  pwm_msg.m1r=claw(2 ,dt, right_ref_ticks, tocks, ek1_m1r, sat_err_m1r, i_m1r);
+  pwm_msg.m1r=claw(2 ,dt, right_ref_ticks, ticks.m1r, ek1_m1r, sat_err_m1r, i_m1r);
   ROS_INFO_STREAM("pwm m1r:  "<<pwm_msg.m1r <<"\n");
-  tocks = ticks.m2l;
-  pwm_msg.m2l=claw(3 ,dt, left_ref_ticks, tocks, ek1_m2l, sat_err_m2l, i_m2l);
+  pwm_msg.m2l=claw(3 ,dt, left_ref_ticks, ticks.m2l, ek1_m2l, sat_err_m2l, i_m2l);
   ROS_INFO_STREAM("pwm m2l:  "<<pwm_msg.m2l <<"\n");
-  tocks = ticks.m2r;
-  pwm_msg.m2r=claw(4 ,dt, right_ref_ticks, tocks, ek1_m2r, sat_err_m2r, i_m2r);
+  pwm_msg.m2r=claw(4 ,dt, right_ref_ticks, ticks.m2r, ek1_m2r, sat_err_m2r, i_m2r);
   ROS_INFO_STREAM("pwm m2r:  "<<pwm_msg.m2r <<"\n");
-  tocks = ticks.m3l;
-  pwm_msg.m3l=claw(5 ,dt, left_ref_ticks, tocks, ek1_m3l, sat_err_m3l, i_m3l);
+  pwm_msg.m3l=claw(5 ,dt, left_ref_ticks, ticks.m3l, ek1_m3l, sat_err_m3l, i_m3l);
   ROS_INFO_STREAM("pwm m3l:  "<<pwm_msg.m3l <<"\n");
-  tocks = ticks.m3r;
-  pwm_msg.m3r=claw(6 ,dt, right_ref_ticks, tocks, ek1_m3r, sat_err_m3r, i_m3r);
+  pwm_msg.m3r=claw(6 ,dt, right_ref_ticks, ticks.m3r, ek1_m3r, sat_err_m3r, i_m3r);
   ROS_INFO_STREAM("pwm m3r:  "<<pwm_msg.m3r <<"\n");
 
   pwm_pub.publish(pwm_msg);
