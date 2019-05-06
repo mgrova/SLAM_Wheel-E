@@ -3,7 +3,7 @@ tickslog=load('ticks.txt');
 pwmlog=load('pwm.log');
 data_end = 1500; % Last column data to be read
 n_ticks_rev=22; % Number of slits in the encoders [ticks/s]*(2*pi)[rad]/n_ticks_rev[ticks] = [rad/s]
-tm=0.1 % Sample time is (at least) 0.1s
+tm=0.1; % Sample time is (at least) 0.1s
 
 %% Lets take pwm data (control signal, saturate at [-255,255])
 tp=pwmlog(1:data_end,1);    % Note that the order of data its different from ticks.txt
@@ -47,6 +47,11 @@ sim models.slx
 %%
 figure(); plot(ticks,'g'); grid; hold on; plot(pwm,'-r'); title('Models'); plot(mod1); plot(mod2); plot(mod3); legend('ticks','pwm','m1','m2','m3'); hold off;
 
+% %% Contiunuos contro
+% c=tf([3/0.1],[1 0]);
+% c1=c/m1; c2=c/m2; c3=c/m3;
+% [c1num,c1den]=tfdata(c1,'v'); [c2num,c2den]=tfdata(c2,'v'); [c3num,c3den]=tfdata(c3,'v');
+
 %% Discrete contol
 m1z=c2d(m1,tm,'zoh');
 m2z=c2d(m2,tm,'zoh');
@@ -54,11 +59,11 @@ m3z=c2d(m3,tm,'zoh');
 
 c=tf([1],[1 -1],tm);
 
-c1=c*m1z;
+c1=c/m1z;
 [c1num,c1den]=tfdata(c1,'v')
-c2=c*m2z;
+c2=c/m2z;
 [c2num,c2den]=tfdata(c2,'v')
-c3=c*m3z;
+c3=c/m3z;
 [c3num,c3den]=tfdata(c3,'v')
 
 %[z1,p1,nd1]=residue(c1num,c1den);
@@ -67,6 +72,7 @@ c3=c*m3z;
 [z1,p1,nd1]=tf2zp(c1num,c1den)
 [z2,p2,nd2]=tf2zp(c2num,c2den)
 [z3,p3,nd3]=tf2zp(c3num,c3den)
+
 
 
 %%
