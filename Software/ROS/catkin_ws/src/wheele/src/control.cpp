@@ -24,7 +24,7 @@ void get_ref(const geometry_msgs::Twist::ConstPtr& ref){
   ref_ms.angular.z=ref->angular.z;
 }
 
-void get_ticks(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
+void get_ticks(const wheele::pwm6::ConstPtr& ticks_read){
   ticks=ticks_read;
 }
 
@@ -47,11 +47,52 @@ float ms2ticks(float ms){
   return tickss;
 }
 
+float claw(int m, std::chrono::duration<double> dt, float ref, float out, float ek1, float sat_err, float i){ // Control law with conditional integration antiwindup
+  sat_err_integrated=sat_err*dt.count();  // Integration of how much we satured
+  ek=ref-out;  // Error = Desired - Actual  (output)
+  p = kp*ek;
+  i = ki*(i+ek*dt.count());
+  d = kd*((ek-ek1)/dt.count());
+  ukns=p+i+d+(sat_err_integrated/0.01)+ueq;  // PID + antiwindup + offset'
+  ROS_INFO_STREAM("ukns:  "<<ukns <<"\n");
+  if(ukns<-255) ukreal=-255;  // Saturation
+  else if(ukns>255) ukreal=255;
+  else ukreal=ukns;
+  sat_err=ukreal-ukns;  // Saturation error
+  ek1=ek; // Error update
+  switch(1) {
+    case 1: sat_err_m1l=sat_err;
+            i_m1l=i;
+            ek1_m1l=ek1;
+            break;
+    case 2: sat_err_m1r=sat_err;
+            i_m1r=i;
+            ek1_m1l=ek1;
+            break;
+    case 3: sat_err_m2l=sat_err;
+            i_m2l=i;
+            ek1_m2l=ek1;
+            break;
+    case 4: sat_err_m2r=sat_err;
+            i_m2r=i;
+            ek1_m2r=ek1;
+            break;
+    case 5: sat_err_m3l=sat_err;
+            i_m3l=i;
+            ek1_m3l=ek1;
+            break;
+    case 6: sat_err_m3r=sat_err;
+            i_m3r=i;
+            ek1_m3r=ek1;
+            break;
+  }
+  return ukreal;
+}
+
 
 int main(int argc, char **argv){
-  std::chrono::time_point<std::chrono::system_clock> t_init,t_act,t_lastT;
-  t_init = std::chrono::system_clock::now();
-  t_act=t_lastT=t_init;
+  std::chrono::time_point<std::chrono::system_clock> t_act,t_lastT;
+  t_act=t_lastT;
   std::chrono::duration<double> dt;
 
   ros::init(argc, argv, "control");
@@ -66,9 +107,14 @@ int main(int argc, char **argv){
 
   ros::Rate loop_rate(10); //10Hz
 
-  static float sat_err=0,uk1=0,i=0;
-  static float ukns,ukreal,sat_err_integrated,ek,ek1;
-  float p,d,ueq=0;
+  float p,d,sat_err_integrated,ek,ukns,ukreal,ueq=0;
+  //static float ek1_m1l, sat_err=0,i=0;
+  static float ek1_m1l,sat_err_m1l=0,i_m1l=0;
+  static float ek1_m1r,sat_err_m1r=0,i_m1r=0;
+  static float ek1_m2l,sat_err_m2l=0,i_m2l=0;
+  static float ek1_m2r,sat_err_m2r=0,i_m2r=0;
+  static float ek1_m3l,sat_err_m3l=0,i_m3l=0;
+  static float ek1_m3r,sat_err_m3r=0,i_m3r=0;
 
 while(n.ok()) {
   float lin, ang, left_ref_ms, right_ref_ms, left_ref_ticks, right_ref_ticks;
@@ -86,34 +132,31 @@ while(n.ok()) {
 
   t_act = std::chrono::system_clock::now();
   dt=t_act-t_lastT;
+  t_lastT=t_act;
 
-  // Control law with conditional integration antiwindup
-  sat_err_integrated=sat_err*dt.count();  // Integration of how much we satured
-  ek=left_ref_ticks-ticks;  // Error = Desired - Actual
-  p = kp*ek;
-  i = ki*(i+ek*dt.count());
-  d = kd*((ek-ek1)/dt.count());
-  ukns=p+i+d+(sat_err_integrated/0.1)+ueq;  // PID + antiwindup + offset'
-  ROS_INFO_STREAM("ukns:  "<<ukns <<"\n");
-  if(ukns<-255) ukreal=-255;  // Saturation
-  else if(ukns>255) ukreal=255;
-  else ukreal=ukns;
-  sat_err=ukreal-ukns;  // Saturation error
-  ek1=ek; // Error update
+  tocks = ticks.m1l;
+  pwm_msg.m1l=claw(1 ,dt, left_ref_ticks, tocks, ek1_m1l, sat_err_m1l, i_m1l);
+  ROS_INFO_STREAM("pwm m1l:  "<<pwm_msg.m1l <<"\n");
+  tocks = ticks.m1r;
+  pwm_msg.m1r=claw(2 ,dt, right_ref_ticks, tocks, ek1_m1r, sat_err_m1r, i_m1r);
+  ROS_INFO_STREAM("pwm m1r:  "<<pwm_msg.m1r <<"\n");
+  tocks = ticks.m2l;
+  pwm_msg.m2l=claw(3 ,dt, left_ref_ticks, tocks, ek1_m2l, sat_err_m2l, i_m2l);
+  ROS_INFO_STREAM("pwm m2l:  "<<pwm_msg.m2l <<"\n");
+  tocks = ticks.m2r;
+  pwm_msg.m2r=claw(4 ,dt, right_ref_ticks, tocks, ek1_m2r, sat_err_m2r, i_m2r);
+  ROS_INFO_STREAM("pwm m2r:  "<<pwm_msg.m2r <<"\n");
+  tocks = ticks.m3l;
+  pwm_msg.m3l=claw(5 ,dt, left_ref_ticks, tocks, ek1_m3l, sat_err_m3l, i_m3l);
+  ROS_INFO_STREAM("pwm m3l:  "<<pwm_msg.m3l <<"\n");
+  tocks = ticks.m3r;
+  pwm_msg.m3r=claw(6 ,dt, right_ref_ticks, tocks, ek1_m3r, sat_err_m3r, i_m3r);
+  ROS_INFO_STREAM("pwm m3r:  "<<pwm_msg.m3r <<"\n");
 
-  ROS_INFO_STREAM("ukreal:  "<<ukreal <<"\n");
-
-  pwm_msg.m1l=ukreal; // Apply control publishing
-  //pwm_msg.m1r=ukreal;
-  //pwm_msg.m2l=ukreal;
-  //pwm_msg.m2r=ukreal;
-  //pwm_msg.m3l=ukreal;
-  //pwm_msg.m3r=ukreal;
   pwm_pub.publish(pwm_msg);
 
   ros::spinOnce();
   loop_rate.sleep();
-  t_lastT=t_act;
   }
   return 0;
 }
