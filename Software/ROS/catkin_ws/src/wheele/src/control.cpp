@@ -37,6 +37,7 @@ static float ki_m1L,ki_m2L,ki_m3L,ki_m1R,ki_m2R,ki_m3R;
 
 geometry_msgs::Twist ref_ms;
 wheele::pwm6 pwm_msg;
+std_msgs::Float64 error_m1L;
 wheele::pwm6 ticks;
 
 /* ROS CALLBACKS */
@@ -121,6 +122,7 @@ float claw(int m, std::chrono::duration<double> dt, float ref, float out, float 
             break;
    
   }
+  std::cout << "kp: " << kp << "ki: " << ki << "kd: " << kd << std::endl;
   p = kp*ek;
   i = ki*(i+ek*dt.count());
   d = kd*((ek-ek1)/dt.count());
@@ -210,8 +212,8 @@ while(n.ok()) {
   //ROS_INFO_STREAM("pwm m3l:  "<<pwm_msg.m3l <<"\n");
   //pwm_msg.m3r=claw(6 ,dt, right_ref_ticks, ticks.m3r, ek1_m3r, sat_err_m3r, i_m3r);
   //ROS_INFO_STREAM("pwm m3r:  "<<pwm_msg.m3r <<"\n");
-
-  pub_err.publish(ek1_m1l);
+  error_m1L.data=ek1_m1l;
+  pub_err.publish(error_m1L);
   pwm_pub.publish(pwm_msg);
 
   ros::spinOnce();
