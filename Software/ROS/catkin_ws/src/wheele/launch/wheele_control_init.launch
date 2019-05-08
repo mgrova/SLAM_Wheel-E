@@ -1,0 +1,38 @@
+<launch>
+    <arg name="joystick" default="true"/>
+
+    <!-- Node to read encoders -->
+    <node pkg="wheele" type="wheel_encoder" name="wheel_encoder" output="screen" launch-prefix="sudo -E">
+        <param name="gpio" default="[16,20,21,13,19,26]"/>
+    </node>
+
+    <!-- Establish RPi-Arduino serial communication -->
+    <node pkg="wheele" type="serial_com" name="serial_com" output="screen" />
+
+    <!-- PI controller implemented in wheele motors -->
+    <node pkg="wheele" type="control" name="control" output="screen" >
+        <param name="Kp_m1L" default="0"/>
+        <param name="Ki_m1L" default="0"/>
+        <param name="Kp_m2L" default="0"/>
+        <param name="Ki_m2L" default="0"/>
+        <param name="Kp_m3L" default="0"/>
+        <param name="Ki_m3L" default="0"/>
+
+        <param name="Kp_m1R" default="0"/>
+        <param name="Ki_m1R" default="0"/>
+        <param name="Kp_m2R" default="0"/>
+        <param name="Ki_m2R" default="0"/>
+        <param name="Kp_m3R" default="0"/>
+        <param name="Ki_m3R" default="0"/>
+    </node>
+
+    <!-- Odometry of diff robot (Wheele)-->
+    <node pkg="wheele" type="wheele_odom" name="wheele_odom" output="screen">
+    </node> 
+
+    <!-- Teleoperation nodes -->
+<!--     <node pkg="" type="" name="" output="screen"> -->
+        
+    </node>
+
+</launch>
