@@ -15,8 +15,7 @@
 #define enc_slits 22  // nº of slits in your encoders
 #define pi 3.141592   // un arco de circunferencia entre su radio o algo asi
 
-float kp=0.0,ki=0.0,kd=0.0; // pid gains
-float kp_topic=0.0, ki_topic=0.0,kd_topic=0.0;
+float kp=0.0,ki=0.0,kd=0.0; // pid gains  
 float kp_m1l=0.12, ki_m1l=0.14;
 std_msgs::Float64 pidkp,pidki,pidkd;  // pid gains tunnable by topic
 
@@ -137,7 +136,9 @@ float claw(int m, std::chrono::duration<double> dt, float ref, float out, float 
   p = kp*ek;
   i = ki*(i+ek*dt.count());
   d = kd*((ek-ek1)/dt.count());
+  std::cout << "p:" << p << "i:" << i << "d:" << d << std::endl;
   ukns=p+i+d+(sat_err_integrated/0.01)+ueq;  // PID + antiwindup + offset'
+
   ROS_INFO_STREAM("ukns:  "<<ukns <<"\n");
   if(ukns<-255) ukreal=-255;  // Saturation
   else if(ukns>255) ukreal=255;
