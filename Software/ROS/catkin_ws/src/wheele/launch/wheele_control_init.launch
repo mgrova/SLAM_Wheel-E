@@ -1,5 +1,5 @@
 <launch>
-    <arg name="joystick" default="true"/>
+    <arg name="joystick" default="false"/>
 
     <!-- Node to read encoders -->
     <node pkg="wheele" type="wheel_encoder" name="wheel_encoder" output="screen" launch-prefix="sudo -E">
@@ -31,8 +31,7 @@
     </node> 
 
     <!-- Teleoperation nodes -->
-<!--     <node pkg="" type="" name="" output="screen"> -->
-        
-    </node>
+    <include if="(arg joystick)" file="$(find teleop_twist_joy)/launch/teleop.launch"xºxº/>
+    <node unless="(arg joystick)" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard.py" output="screen" />
 
 </launch>
