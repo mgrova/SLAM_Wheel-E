@@ -58,4 +58,5 @@ int main(int argc, char **argv) {
 
   /* If something dont work, close. */
   myfile.close();
-  return 0;}
+  return 0;
+}

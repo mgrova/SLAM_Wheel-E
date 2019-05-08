@@ -13,7 +13,13 @@ from wheele.msg import pwm6
 
 def send_pwm(pwm): # cmd_vel topic (type Twist) callback
     ##data=float(pwm.m1l)
-    cmd.send("change_pwm",float(pwm.m1l),float(pwm.m1r),float(pwm.m2l),float(pwm.m2r),float(pwm.m3l),float(pwm.m3r)) # Send pwm of left & right motors to arduino
+    rospy.loginfo(pwm.m1l)
+    rospy.loginfo(pwm.m1r)
+    rospy.loginfo(pwm.m2l)
+    rospy.loginfo(pwm.m2r)
+    rospy.loginfo(pwm.m3l)
+    rospy.loginfo(pwm.m3r)
+    cmd.send("change_pwm",pwm.m1l,pwm.m1r,pwm.m2l,pwm.m2r,pwm.m3l,pwm.m3r) # Send pwm of left & right motors to arduino
     ##cmd.send("change_pwm",data,data,data,data,data,data)
 
 if __name__ == '__main__':
@@ -25,7 +31,7 @@ if __name__ == '__main__':
     # List of command names (and formats for their associated arguments). These must
     # be in the same order as in the sketch.
     commands = [["cmd_off",""],
-                ["change_pwm","ffffff"]]   # Send pwm 2 motors (m1l, m1r, m2l, m2r, m3l, m3r,)
+                ["change_pwm","dddddd"]]   # Send pwm 2 motors (m1l, m1r, m2l, m2r, m3l, m3r,)
     # Initialize the messenger
     cmd = PyCmdMessenger.CmdMessenger(arduino,commands)
 

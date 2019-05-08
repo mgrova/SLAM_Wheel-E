@@ -49,9 +49,9 @@
         <arg name="rviz" value="false"/>
     </include>    
 
-      <node unless="$(arg using_rpi)" type="rviz" name="rviz" pkg="rviz" args="-d $(find wheele)/config/cnfg_rtabmap_octomap.rviz" />
+    <node unless="$(arg using_rpi)" type="rviz" name="rviz" pkg="rviz" args="-d $(find wheele)/config/cnfg_rtabmap_octomap.rviz" />
 
-
+    <!-- need to add FAKE LASER SCAN MEASURE -->
 
 
 </launch>
