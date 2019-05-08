@@ -74,7 +74,7 @@ float claw(int m, std::chrono::duration<double> dt, float ref, float out, float 
   else ukreal=ukns;
   sat_err=ukreal-ukns;  // Saturation error
   ek1=ek; // Error update
-  switch(1) {
+  switch(m) {
     case 1: sat_err_m1l=sat_err;
             i_m1l=i;
             ek1_m1l=ek1;
