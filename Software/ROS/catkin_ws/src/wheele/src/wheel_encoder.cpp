@@ -27,6 +27,7 @@
 #define Tsample_enc 0.1
 
 
+int re_decoder::no_encoders=0;
 
 int main(int argc, char **argv)
 {
@@ -42,7 +43,7 @@ int main(int argc, char **argv)
   std_msgs::Float32MultiArray encoder_msg;
 
 
-  re_decoder::no_encoders=0;
+
   encoder_msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
   encoder_msg.layout.dim[0].label="encoders";
   encoder_msg.layout.dim[0].stride=1;
