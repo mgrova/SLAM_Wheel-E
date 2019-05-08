@@ -13,6 +13,8 @@
 #define pi 3.141592   // un arco de circunferencia entre su radio o algo asi
 
 float kp=0.0,ki=0.0,kd=0.0; // pid gains
+float kp_topic, ki_topic,kd_topic;
+float kp_m1l=0.12, ki_m1l=0.14;
 std_msgs::Float64 pidkp,pidki,pidkd;  // pid gains tunnable by topic
 
 float p,d,sat_err_integrated,ek,ukns,ukreal,ueq=0;
@@ -35,23 +37,23 @@ void get_ref(const geometry_msgs::Twist::ConstPtr& ref){
 
 void get_ticks(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
   ticks.m1l=ticks_read->data[0];
-  ticks.m1r=ticks_read->data[1];
-  ticks.m2l=ticks_read->data[2];
-  ticks.m2r=ticks_read->data[3];
-  ticks.m3l=ticks_read->data[4];
+  ticks.m2l=ticks_read->data[1];
+  ticks.m3l=ticks_read->data[2];
+  ticks.m1r=ticks_read->data[3];
+  ticks.m2r=ticks_read->data[4];
   ticks.m3r=ticks_read->data[5];
 }
 
 void get_kp(const std_msgs::Float64::ConstPtr& pidkp){
-  kp=pidkp->data;
+  kp_topic=pidkp->data;
 }
 
 void get_ki(const std_msgs::Float64::ConstPtr& pidki){
-  ki=pidki->data;
+  ki_topic=pidki->data;
 }
 
 void get_kd(const std_msgs::Float64::ConstPtr& pidkd){
-  kd=pidkd->data;
+  kd_topic=pidkd->data;
 }
 
 float ms2ticks(float ms){
@@ -64,6 +66,16 @@ float ms2ticks(float ms){
 float claw(int m, std::chrono::duration<double> dt, float ref, float out, float ek1, float sat_err, float i){ // Control law with conditional integration antiwindup
   sat_err_integrated=sat_err*dt.count();  // Integration of how much we satured
   ek=ref-out;  // Error = Desired - Actual  (output)
+  switch(m) {
+    case 1: kp=kp_m1l;
+            ki=ki_m1l;
+            kd=kd_topic;
+            break;
+    default:  kp=kp_topic;
+              ki=ki_topic;
+              kd=kd_topic;
+              break;
+  }
   p = kp*ek;
   i = ki*(i+ek*dt.count());
   d = kd*((ek-ek1)/dt.count());
@@ -105,6 +117,7 @@ float claw(int m, std::chrono::duration<double> dt, float ref, float out, float 
 
 
 int main(int argc, char **argv){
+
   std::chrono::time_point<std::chrono::system_clock> t_act,t_lastT;
   t_act=t_lastT;
   std::chrono::duration<double> dt;
