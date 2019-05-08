@@ -99,7 +99,7 @@ void get_kd(const std_msgs::Float64::ConstPtr& pidkd){
 float ms2ticks(float ms){
   float tickss;
   tickss=ms/(2*pi*radius); // [m/s] to [rad/s] (wheel radius = 0.035)
-  tickss=tickss*(enc_slits/2*pi); // [rad/s] to [ticks/s] (encoders have 22 slits)
+  tickss=tickss*(enc_slits/(2*pi)); // [rad/s] to [ticks/s] (encoders have 22 slits)
   return tickss;
 }
 
@@ -206,27 +206,23 @@ while(n.ok()) {
   left_ref_ticks = ms2ticks(left_ref_ms);
   right_ref_ticks = ms2ticks(right_ref_ms);
 
-  ROS_INFO_STREAM("dt:  "<<dt.count() <<"\n");
-  ROS_INFO_STREAM("kp:  "<<kp <<"\n");
-  ROS_INFO_STREAM("ki:  "<<ki <<"\n");
-  ROS_INFO_STREAM("kd:  "<<kd <<"\n");
 
   t_act = std::chrono::system_clock::now();
   dt=t_act-t_lastT;
   t_lastT=t_act;
 
   pwm_msg.m1l=claw(1 ,dt, left_ref_ticks, ticks.m1l, ek1_m1l, sat_err_m1l, i_m1l);
-  ROS_INFO_STREAM("pwm m1l:  "<<pwm_msg.m1l <<"\n");
+//  ROS_INFO_STREAM("pwm m1l:  "<<pwm_msg.m1l <<"\n");
   pwm_msg.m1r=claw(2 ,dt, right_ref_ticks, ticks.m1r, ek1_m1r, sat_err_m1r, i_m1r);
-  ROS_INFO_STREAM("pwm m1r:  "<<pwm_msg.m1r <<"\n");
+ // ROS_INFO_STREAM("pwm m1r:  "<<pwm_msg.m1r <<"\n");
   pwm_msg.m2l=claw(3 ,dt, left_ref_ticks, ticks.m2l, ek1_m2l, sat_err_m2l, i_m2l);
-  ROS_INFO_STREAM("pwm m2l:  "<<pwm_msg.m2l <<"\n");
+  //ROS_INFO_STREAM("pwm m2l:  "<<pwm_msg.m2l <<"\n");
   pwm_msg.m2r=claw(4 ,dt, right_ref_ticks, ticks.m2r, ek1_m2r, sat_err_m2r, i_m2r);
-  ROS_INFO_STREAM("pwm m2r:  "<<pwm_msg.m2r <<"\n");
+  //ROS_INFO_STREAM("pwm m2r:  "<<pwm_msg.m2r <<"\n");
   pwm_msg.m3l=claw(5 ,dt, left_ref_ticks, ticks.m3l, ek1_m3l, sat_err_m3l, i_m3l);
-  ROS_INFO_STREAM("pwm m3l:  "<<pwm_msg.m3l <<"\n");
+  //ROS_INFO_STREAM("pwm m3l:  "<<pwm_msg.m3l <<"\n");
   pwm_msg.m3r=claw(6 ,dt, right_ref_ticks, ticks.m3r, ek1_m3r, sat_err_m3r, i_m3r);
-  ROS_INFO_STREAM("pwm m3r:  "<<pwm_msg.m3r <<"\n");
+  //ROS_INFO_STREAM("pwm m3r:  "<<pwm_msg.m3r <<"\n");
 
   pwm_pub.publish(pwm_msg);
 
