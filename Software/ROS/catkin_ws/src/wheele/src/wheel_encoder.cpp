@@ -5,8 +5,8 @@
 #include <sstream>
 #include <unistd.h>
 #include <cstdlib>
-#include <std_msgs/Float32.h>
-#include <std_msgs/Float32MultiArray.h>
+#include <std_msgs/Float64.h>
+#include <std_msgs/Float64MultiArray.h>
 
 #include <encoder.hpp>
 #include <pigpio.h>
@@ -40,7 +40,7 @@ int main(int argc, char **argv)
   std::chrono::duration<double> dt,time;
   std::vector<int> GPIO_vect;
   std::cout <<"tamaño de GPIO_vect antes de inicializar: " << GPIO_vect.size() << '\n';
-  std_msgs::Float32MultiArray encoder_msg;
+  std_msgs::Float64MultiArray encoder_msg;
 
 
 
@@ -70,7 +70,7 @@ int main(int argc, char **argv)
   re_decoder enc_r3R=re_decoder(GPIO_vect[5]);
 
 
-  ros::Publisher pub_encoder = n.advertise<std_msgs::Float32MultiArray>("encoders_ticks",100);
+  ros::Publisher pub_encoder = n.advertise<std_msgs::Float64MultiArray>("encoders_ticks",100);
 
   ros::Rate loop_rate(50); //10Hz
 
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
     encoder_msg.data[3]=enc_r1R.getVel();
     encoder_msg.data[4]=enc_r2R.getVel();
     encoder_msg.data[5]=enc_r3R.getVel();
-
+    pub_encoder.publish(encoder_msg);
     t_act = std::chrono::system_clock::now();
 
     dt=t_act-t_lastT;
@@ -100,7 +100,7 @@ int main(int argc, char **argv)
       t_lastT=t_act;
 
    }
-    pub_encoder.publish(encoder_msg);
+    
     ros::spinOnce();
     loop_rate.sleep();
   }
