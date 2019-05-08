@@ -10,19 +10,24 @@
 void re_decoder::_pulse(int gpio, int level, uint32_t tick)
 {
     /**/
+   float tmpVel;
+   gpioSetTimerFuncEx(enc_timer_ID,500,_zeroVel,this);
+
    lev = level;
    if(lastlev>0){
-     /*Solo calcula la "valocidad" en los flancos de bajada*/
-     delta_t=gpioTick()/1000-last_t;
+      /*Solo calcula la "valocidad" en los flancos de bajada*/
+      delta_t=(float)gpioTick()/1000-last_t;
+      
+      tmpVel=(float(SEP_MUESCAS)/(float)delta_t)*1000; //ticks /s
+      tmpVel=tmpVel*(2*pi)/n_ticksEnc;	// rad/s
 
-     vel=(float(SEP_MUESCAS)/(float)delta_t)*1000; //ticks /s
-     vel=vel*(2*pi)/n_ticksEnc;	// rad/s
+      if(delta_t==0.0) tmpVel=0.0;
 
-     }
+      }
    lastlev=lev;
    last_t=gpioTick()/1000;
-   if(level==2) vel==0.0;
 
+   vel=tmpVel;
    return;
 
 }
@@ -37,6 +42,12 @@ void re_decoder::_pulseEx(int gpio, int level, uint32_t tick, void *user)
 
    mySelf->_pulse(gpio, level, tick); /* Call the instance callback. */
 }
+void re_decoder::_zeroVel(void *userdata){
+   re_decoder *self = (re_decoder *) userdata;
+   
+   self->vel=0.0;
+   gpioSetTimerFuncEx(self->enc_timer_ID,0,NULL,NULL);
+}
 
 re_decoder::re_decoder(int gpio)
 {
@@ -46,6 +57,9 @@ re_decoder::re_decoder(int gpio)
    lev=0;lastlev=-1;
    delta_t=0;last_t=0;vel=.0;
 
+   enc_timer_ID=no_encoders;
+   no_encoders++;
+
 
    gpioSetMode(mygpio, PI_INPUT);
 
@@ -54,7 +68,7 @@ re_decoder::re_decoder(int gpio)
    gpioSetPullUpDown(mygpio, PI_PUD_UP);
 
    /* monitor encoder level changes */
-
+   gpioSetTimerFuncEx(no_encoders,300,_zeroVel,this);
    gpioSetAlertFuncEx(mygpio, _pulseEx, this);
 
 }
