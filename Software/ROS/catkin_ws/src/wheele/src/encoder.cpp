@@ -46,7 +46,7 @@ void re_decoder::_zeroVel(void *userdata){
    re_decoder *self = (re_decoder *) userdata;
    
    self->vel=0.0;
-   gpioSetTimerFuncEx(self->enc_timer_ID,0,NULL,NULL);
+   gpioSetTimerFuncEx(self->enc_timer_ID,500,NULL,NULL);
 }
 
 re_decoder::re_decoder(int gpio)
