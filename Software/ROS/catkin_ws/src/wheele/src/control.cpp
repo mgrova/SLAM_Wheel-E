@@ -83,18 +83,6 @@ void dynCb(wheele::controlParamsConfig &config, uint32_t level)
 }
 
 /* FUNCTIONS */
-void get_kp(const std_msgs::Float64::ConstPtr& pidkp){
-  kp_topic=pidkp->data;
-}
-
-void get_ki(const std_msgs::Float64::ConstPtr& pidki){
-  ki_topic=pidki->data;
-}
-
-void get_kd(const std_msgs::Float64::ConstPtr& pidkd){
-  kd_topic=pidkd->data;
-}
-
 float ms2ticks(float ms){
   float tickss;
   tickss=ms/(2*pi*radius); // [m/s] to [rad/s] (wheel radius = 0.035)
@@ -136,10 +124,10 @@ float claw(int m, std::chrono::duration<double> dt, float ref, float out, float 
   p = kp*ek;
   i = ki*(i+ek*dt.count());
   d = kd*((ek-ek1)/dt.count());
-  std::cout << "p:" << p << "i:" << i << "d:" << d << std::endl;
+  std::cout << "p: " << p << "i: " << i << "d: " << d << std::endl;
   ukns=p+i+d+(sat_err_integrated/0.01)+ueq;  // PID + antiwindup + offset'
 
-  ROS_INFO_STREAM("ukns:  "<<ukns <<"\n");
+  //ROS_INFO_STREAM("ukns:  "<<ukns <<"\n");
   if(ukns<-255) ukreal=-255;  // Saturation
   else if(ukns>255) ukreal=255;
   else ukreal=ukns;
@@ -187,10 +175,6 @@ int main(int argc, char **argv){
   ros::Subscriber ticks_sub = n.subscribe("encoders_ticks",10,ticksCb);
   ros::Publisher pwm_pub = n.advertise<wheele::pwm6>("pwm", 10);
 
-  ros::Subscriber kp_sub = n.subscribe("kp",10,get_kp);
-  ros::Subscriber ki_sub = n.subscribe("ki",10,get_ki);
-  ros::Subscriber kd_sub = n.subscribe("kd",10,get_kd);
-
   dynamic_reconfigure::Server<wheele::controlParamsConfig> srv;
   dynamic_reconfigure::Server<wheele::controlParamsConfig>::CallbackType f;
   f = boost::bind(&dynCb, _1, _2);
@@ -214,15 +198,15 @@ while(n.ok()) {
 
   pwm_msg.m1l=claw(1 ,dt, left_ref_ticks, ticks.m1l, ek1_m1l, sat_err_m1l, i_m1l);
 //  ROS_INFO_STREAM("pwm m1l:  "<<pwm_msg.m1l <<"\n");
-  pwm_msg.m1r=claw(2 ,dt, right_ref_ticks, ticks.m1r, ek1_m1r, sat_err_m1r, i_m1r);
+  //pwm_msg.m1r=claw(2 ,dt, right_ref_ticks, ticks.m1r, ek1_m1r, sat_err_m1r, i_m1r);
  // ROS_INFO_STREAM("pwm m1r:  "<<pwm_msg.m1r <<"\n");
-  pwm_msg.m2l=claw(3 ,dt, left_ref_ticks, ticks.m2l, ek1_m2l, sat_err_m2l, i_m2l);
+  //pwm_msg.m2l=claw(3 ,dt, left_ref_ticks, ticks.m2l, ek1_m2l, sat_err_m2l, i_m2l);
   //ROS_INFO_STREAM("pwm m2l:  "<<pwm_msg.m2l <<"\n");
-  pwm_msg.m2r=claw(4 ,dt, right_ref_ticks, ticks.m2r, ek1_m2r, sat_err_m2r, i_m2r);
+  //pwm_msg.m2r=claw(4 ,dt, right_ref_ticks, ticks.m2r, ek1_m2r, sat_err_m2r, i_m2r);
   //ROS_INFO_STREAM("pwm m2r:  "<<pwm_msg.m2r <<"\n");
-  pwm_msg.m3l=claw(5 ,dt, left_ref_ticks, ticks.m3l, ek1_m3l, sat_err_m3l, i_m3l);
+  //pwm_msg.m3l=claw(5 ,dt, left_ref_ticks, ticks.m3l, ek1_m3l, sat_err_m3l, i_m3l);
   //ROS_INFO_STREAM("pwm m3l:  "<<pwm_msg.m3l <<"\n");
-  pwm_msg.m3r=claw(6 ,dt, right_ref_ticks, ticks.m3r, ek1_m3r, sat_err_m3r, i_m3r);
+  //pwm_msg.m3r=claw(6 ,dt, right_ref_ticks, ticks.m3r, ek1_m3r, sat_err_m3r, i_m3r);
   //ROS_INFO_STREAM("pwm m3r:  "<<pwm_msg.m3r <<"\n");
 
   pwm_pub.publish(pwm_msg);
