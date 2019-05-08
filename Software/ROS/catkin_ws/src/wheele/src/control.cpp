@@ -33,13 +33,13 @@ void get_ref(const geometry_msgs::Twist::ConstPtr& ref){
   ref_ms.angular.z=ref->angular.z;
 }
 
-void get_ticks(const wheele::pwm6::ConstPtr& ticks_read){
-  ticks.m1l=ticks_read->m1l;
-  ticks.m1r=ticks_read->m1r;
-  ticks.m2l=ticks_read->m2l;
-  ticks.m2r=ticks_read->m2r;
-  ticks.m3l=ticks_read->m3l;
-  ticks.m3r=ticks_read->m3r;
+void get_ticks(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
+  ticks.m1l=ticks_read->data[0];
+  ticks.m1r=ticks_read->data[1];
+  ticks.m2l=ticks_read->data[2];
+  ticks.m2r=ticks_read->data[3];
+  ticks.m3l=ticks_read->data[4];
+  ticks.m3r=ticks_read->data[5];
 }
 
 void get_kp(const std_msgs::Float64::ConstPtr& pidkp){
