@@ -175,6 +175,8 @@ int main(int argc, char **argv){
   ros::Subscriber ticks_sub = n.subscribe("encoders_ticks",10,ticksCb);
   ros::Publisher pwm_pub = n.advertise<wheele::pwm6>("pwm", 10);
 
+  ros::Publisher pub_err = n.advertise<std_msgs::Float64>("error_m1L", 10);
+
   dynamic_reconfigure::Server<wheele::controlParamsConfig> srv;
   dynamic_reconfigure::Server<wheele::controlParamsConfig>::CallbackType f;
   f = boost::bind(&dynCb, _1, _2);
@@ -209,6 +211,7 @@ while(n.ok()) {
   //pwm_msg.m3r=claw(6 ,dt, right_ref_ticks, ticks.m3r, ek1_m3r, sat_err_m3r, i_m3r);
   //ROS_INFO_STREAM("pwm m3r:  "<<pwm_msg.m3r <<"\n");
 
+  pub_err.publish(ek1_m1l);
   pwm_pub.publish(pwm_msg);
 
   ros::spinOnce();
