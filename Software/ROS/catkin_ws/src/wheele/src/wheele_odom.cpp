@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
   current_time = ros::Time::now();
   last_time = ros::Time::now();
 
-  ros::Subscriber sub = n.subscribe("ticks_read", 1000, ticksCb);
+  ros::Subscriber sub = n.subscribe("encoders_ticks", 1000, ticksCb);
 
   ros::Rate r(1.0); // 1Hz
 

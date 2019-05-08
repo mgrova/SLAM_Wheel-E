@@ -8,7 +8,7 @@ class re_decoder
 {
   
   int mygpio, lev, lastlev, delta_t, last_t, enc_timer_ID;
-  float vel;
+  double vel;
 
 
   void _pulse(int gpio, int level, uint32_t tick);
@@ -19,7 +19,7 @@ class re_decoder
 
   public:
     static int no_encoders;
-    float getVel(void);
+    double getVel(void);
 
     re_decoder(int gpio);
     void re_cancel(void);

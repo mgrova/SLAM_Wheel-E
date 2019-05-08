@@ -10,15 +10,15 @@
 void re_decoder::_pulse(int gpio, int level, uint32_t tick)
 {
     /**/
-   float tmpVel;
+   double tmpVel;
    gpioSetTimerFuncEx(enc_timer_ID,500,_zeroVel,this);
 
    lev = level;
    if(lastlev>0){
       /*Solo calcula la "valocidad" en los flancos de bajada*/
-      delta_t=(float)gpioTick()/1000-last_t;
+      delta_t=(double)gpioTick()/1000-last_t;
       
-      tmpVel=(float(SEP_MUESCAS)/(float)delta_t)*1000; //ticks /s
+      tmpVel=(double(SEP_MUESCAS)/(double)delta_t)*1000; //ticks /s
       tmpVel=tmpVel*(2*pi)/n_ticksEnc;	// rad/s
 
       if(delta_t==0.0) tmpVel=0.0;
@@ -78,4 +78,4 @@ void re_decoder::re_cancel(void)
    gpioSetAlertFuncEx(mygpio, 0, this);
 }
 
-float re_decoder::getVel(void){return vel;}
+double re_decoder::getVel(void){return vel;}
