@@ -2,12 +2,15 @@
 #define ROTARY_ENCODER_HPP
 
 #include <stdint.h>
+#include <unistd.h>
+#include <cstdlib>
 
 
 class re_decoder
 {
   
   int mygpio, lev, lastlev, delta_t, last_t;
+  std::vector<double> buffer_vel;
   double vel;
 
 

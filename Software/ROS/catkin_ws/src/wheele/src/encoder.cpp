@@ -6,7 +6,7 @@
 #define SEP_MUESCAS 7.5 //Separacion en grados de las muescas del encoder
 #define pi 3.14159265358979
 #define n_ticksEnc 22
-#define timeout_encoder 100
+#define timeout_encoder 500
 
 
 void re_decoder::_turnOffVel(){
@@ -20,8 +20,8 @@ void re_decoder::_pulse(int gpio, int level, uint32_t tick)
 {
     
    double tmpVel;
-   std::cout<<"Enciendo timer: "<< enc_timer_ID << std::endl;
-   gpioSetTimerFuncEx(enc_timer_ID,timeout_encoder,_zeroVel,this);
+
+   gpioSetTimerFuncEx(enc_timer_ID,timeout_encoder,NULL,this);
 
    lev = level;
    if(lastlev>0){
@@ -38,6 +38,8 @@ void re_decoder::_pulse(int gpio, int level, uint32_t tick)
    last_t=gpioTick()/1000;
 
    vel=tmpVel;
+   gpioSetTimerFuncEx(enc_timer_ID,timeout_encoder,_zeroVel,this);
+
    return;
 
 }
@@ -57,8 +59,7 @@ void re_decoder::_zeroVel(void *userdata){
 re_decoder::re_decoder(int gpio)
 {
    mygpio = gpio;
-
-
+   buffer_vel.resize();
    lev=0;lastlev=-1;
    delta_t=0;last_t=0;vel=.0;
 
