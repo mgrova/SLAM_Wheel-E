@@ -8,6 +8,9 @@
 #include <unistd.h>
 #include <cstdlib>
 
+#include <dynamic_reconfigure/server.h>
+#include <wheele/controlParamsConfig.h>
+
 #define radius 0.035  // Radius of your wheels
 #define enc_slits 22  // nº of slits in your encoders
 #define pi 3.141592   // un arco de circunferencia entre su radio o algo asi
@@ -26,16 +29,24 @@ static float ek1_m2r,sat_err_m2r=0,i_m2r=0;
 static float ek1_m3l,sat_err_m3l=0,i_m3l=0;
 static float ek1_m3r,sat_err_m3r=0,i_m3r=0;
 
+static float kp_m1L,kp_m2L,kp_m3L,kp_m1R,kp_m2R,kp_m3R;
+static float ki_m1L,ki_m2L,ki_m3L,ki_m1R,ki_m2R,ki_m3R;
+
+
+//kp_m1L=kp_m2L=kp_m3L=kp_m1R=kp_m2R=kp_m3R=0.0;
+//ki_m1L=ki_m2L=ki_m3L=ki_m1R=ki_m2R=ki_m3R=0.0;
+
 geometry_msgs::Twist ref_ms;
 wheele::pwm6 pwm_msg;
 wheele::pwm6 ticks;
 
-void get_ref(const geometry_msgs::Twist::ConstPtr& ref){
+/* ROS CALLBACKS */
+void refCb(const geometry_msgs::Twist::ConstPtr& ref){
   ref_ms.linear.x=ref->linear.x;
   ref_ms.angular.z=ref->angular.z;
 }
 
-void get_ticks(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
+void ticksCb(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
   ticks.m1l=ticks_read->data[0];
   ticks.m2l=ticks_read->data[1];
   ticks.m3l=ticks_read->data[2];
@@ -44,6 +55,35 @@ void get_ticks(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
   ticks.m3r=ticks_read->data[5];
 }
 
+void dynCb(wheele::controlParamsConfig &config, uint32_t level)
+{
+  kp_m1L=config.Kp_m1L;
+  ki_m1L=config.Ki_m1L;
+
+  kp_m2L=config.Kp_m2L;
+  ki_m2L=config.Ki_m2L;
+
+  kp_m3L=config.Kp_m3L;
+  ki_m3L=config.Ki_m3L;
+
+  kp_m1R=config.Kp_m1R;
+  ki_m1R=config.Ki_m1R;
+
+  kp_m2R=config.Kp_m2R;
+  ki_m2R=config.Ki_m2R;
+
+  kp_m3R=config.Kp_m3R;
+  ki_m3R=config.Ki_m3R;
+
+  std::cout << "Params control m1L->  Kp:" << kp_m1L <<" Ki:" << ki_m1L <<"\n";
+  std::cout << "Params control m2L->  Kp:" << kp_m2L <<" Ki:" << ki_m2L <<"\n";
+  std::cout << "Params control m3L->  Kp:" << kp_m3L <<" Ki:" << ki_m3L <<"\n";
+  std::cout << "Params control m1R->  Kp:" << kp_m1R <<" Ki:" << ki_m1R <<"\n";
+  std::cout << "Params control m2R->  Kp:" << kp_m2R <<" Ki:" << ki_m2R <<"\n";
+  std::cout << "Params control m3R->  Kp:" << kp_m3R <<" Ki:" << ki_m3R <<"\n"; 
+}
+
+/* FUNCTIONS */
 void get_kp(const std_msgs::Float64::ConstPtr& pidkp){
   kp_topic=pidkp->data;
 }
@@ -58,23 +98,41 @@ void get_kd(const std_msgs::Float64::ConstPtr& pidkd){
 
 float ms2ticks(float ms){
   float tickss;
-  tickss=ms/radius; // [m/s] to [rad/s] (wheel radius = 0.035)
+  tickss=ms/(2*pi*radius); // [m/s] to [rad/s] (wheel radius = 0.035)
   tickss=tickss*(enc_slits/2*pi); // [rad/s] to [ticks/s] (encoders have 22 slits)
   return tickss;
 }
 
+/* Control Law */
 float claw(int m, std::chrono::duration<double> dt, float ref, float out, float ek1, float sat_err, float i){ // Control law with conditional integration antiwindup
   sat_err_integrated=sat_err*dt.count();  // Integration of how much we satured
   ek=ref-out;  // Error = Desired - Actual  (output)
   switch(m) {
-    case 1: kp=kp_m1l;
-            ki=ki_m1l;
-            kd=kd_topic;
+    case 1: kp=kp_m1L;
+            ki=ki_m1L;
+            kd=.0;
             break;
-    default:  kp=kp_topic;
-              ki=ki_topic;
-              kd=kd_topic;
-              break;
+    case 2: kp=kp_m2L;
+            ki=ki_m2L;
+            kd=.0;
+            break;
+    case 3: kp=kp_m3L;
+            ki=ki_m3L;
+            kd=0.0;
+            break;
+    case 4: kp=kp_m1R;
+            ki=ki_m1R;
+            kd=.0;
+            break;                                    
+    case 5: kp=kp_m2R;
+            ki=ki_m2R;
+            kd=.0;
+            break;
+    case 6: kp=kp_m3R;
+            ki=ki_m3R;
+            kd=.0;
+            break;
+   
   }
   p = kp*ek;
   i = ki*(i+ek*dt.count());
@@ -124,13 +182,18 @@ int main(int argc, char **argv){
 
   ros::init(argc, argv, "control");
   ros::NodeHandle n;
-  ros::Subscriber ref_sub = n.subscribe("cmd_vel",10,get_ref);
-  ros::Subscriber ticks_sub = n.subscribe("encoders_ticks",10,get_ticks);
+  ros::Subscriber ref_sub = n.subscribe("cmd_vel",10,refCb);
+  ros::Subscriber ticks_sub = n.subscribe("encoders_ticks",10,ticksCb);
   ros::Publisher pwm_pub = n.advertise<wheele::pwm6>("pwm", 10);
 
   ros::Subscriber kp_sub = n.subscribe("kp",10,get_kp);
   ros::Subscriber ki_sub = n.subscribe("ki",10,get_ki);
   ros::Subscriber kd_sub = n.subscribe("kd",10,get_kd);
+
+  dynamic_reconfigure::Server<wheele::controlParamsConfig> srv;
+  dynamic_reconfigure::Server<wheele::controlParamsConfig>::CallbackType f;
+  f = boost::bind(&dynCb, _1, _2);
+  srv.setCallback(f);
 
   ros::Rate loop_rate(10); //10Hz
 
