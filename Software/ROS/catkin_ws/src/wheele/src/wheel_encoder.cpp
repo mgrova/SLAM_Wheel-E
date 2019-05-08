@@ -84,7 +84,7 @@ int main(int argc, char **argv)
     encoder_msg.data[3]=enc_r1R.getVel();
     encoder_msg.data[4]=enc_r2R.getVel();
     encoder_msg.data[5]=enc_r3R.getVel();
-
+    pub_encoder.publish(encoder_msg);
     t_act = std::chrono::system_clock::now();
 
     dt=t_act-t_lastT;
@@ -100,7 +100,7 @@ int main(int argc, char **argv)
       t_lastT=t_act;
 
    }
-    pub_encoder.publish(encoder_msg);
+    
     ros::spinOnce();
     loop_rate.sleep();
   }

@@ -6,19 +6,29 @@
 #define SEP_MUESCAS 7.5 //Separacion en grados de las muescas del encoder
 #define pi 3.14159265358979
 #define n_ticksEnc 22
+#define timeout_encoder 100
 
+
+void re_decoder::_turnOffVel(){
+
+   vel=0.0;
+   gpioSetTimerFuncEx(enc_timer_ID,timeout_encoder,NULL,this);
+
+   return;
+}
 void re_decoder::_pulse(int gpio, int level, uint32_t tick)
 {
-    /**/
+    
    double tmpVel;
-   gpioSetTimerFuncEx(enc_timer_ID,500,_zeroVel,this);
+   std::cout<<"Enciendo timer: "<< enc_timer_ID << std::endl;
+   gpioSetTimerFuncEx(enc_timer_ID,timeout_encoder,_zeroVel,this);
 
    lev = level;
    if(lastlev>0){
-      /*Solo calcula la "valocidad" en los flancos de bajada*/
+      
       delta_t=(double)gpioTick()/1000-last_t;
       
-      tmpVel=(double(SEP_MUESCAS)/(double)delta_t)*1000; //ticks /s
+      tmpVel=((double)(SEP_MUESCAS)/(double)delta_t)*1000; //ticks /s
       tmpVel=tmpVel*(2*pi)/n_ticksEnc;	// rad/s
 
       if(delta_t==0.0) tmpVel=0.0;
@@ -34,19 +44,14 @@ void re_decoder::_pulse(int gpio, int level, uint32_t tick)
 
 void re_decoder::_pulseEx(int gpio, int level, uint32_t tick, void *user)
 {
-   /*
-      Need a static callback to link with C.
-   */
-
    re_decoder *mySelf = (re_decoder *) user;
 
-   mySelf->_pulse(gpio, level, tick); /* Call the instance callback. */
+   mySelf->_pulse(gpio, level, tick);
 }
 void re_decoder::_zeroVel(void *userdata){
+
    re_decoder *self = (re_decoder *) userdata;
-   
-   self->vel=0.0;
-   gpioSetTimerFuncEx(self->enc_timer_ID,500,NULL,NULL);
+   self->_turnOffVel();
 }
 
 re_decoder::re_decoder(int gpio)
@@ -60,15 +65,12 @@ re_decoder::re_decoder(int gpio)
    enc_timer_ID=no_encoders;
    no_encoders++;
 
-
    gpioSetMode(mygpio, PI_INPUT);
-
-   /* pull up is needed as encoder common is grounded */
 
    gpioSetPullUpDown(mygpio, PI_PUD_UP);
 
-   /* monitor encoder level changes */
-   gpioSetTimerFuncEx(no_encoders,300,_zeroVel,this);
+   gpioSetTimerFuncEx(enc_timer_ID,timeout_encoder,_zeroVel,this);
+   
    gpioSetAlertFuncEx(mygpio, _pulseEx, this);
 
 }

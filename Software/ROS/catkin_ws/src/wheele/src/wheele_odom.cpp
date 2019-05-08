@@ -75,6 +75,7 @@ int main(int argc, char **argv) {
     geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th);
 
     geometry_msgs::TransformStamped odom_trans;
+    current_time = ros::Time::now();
     odom_trans.header.stamp = current_time;
     odom_trans.header.frame_id = "odom";
     odom_trans.child_frame_id = "base_link";
