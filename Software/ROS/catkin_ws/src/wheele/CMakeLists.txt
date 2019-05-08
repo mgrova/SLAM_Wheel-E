@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
 	tf
   message_generation
+  dynamic_reconfigure
 )
 
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
@@ -100,10 +101,10 @@ find_package(pigpio MODULE REQUIRED)
 ##     and list every .cfg file to be processed
 
 ## Generate dynamic reconfigure parameters in the 'cfg' folder
-# generate_dynamic_reconfigure_options(
-#   cfg/DynReconf1.cfg
+ generate_dynamic_reconfigure_options(
+   cfg/controlParams.cfg
 #   cfg/DynReconf2.cfg
-# )
+)
 
 ###################################
 ## catkin specific configuration ##
@@ -132,6 +133,7 @@ include_directories(
 	${catkin_INCLUDE_DIRS}
   include/wheel_encoder/
 	${pigpio_INCLUDE_DIRS} #lib/pigpio/
+  ${dynamic_reconfigure_PACKAGE_PATH}/cmake/cfgbuild.cmake
 )
 
 ## Declare a C++ library
@@ -165,7 +167,7 @@ include_directories(
  add_dependencies(control_motors   ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}        )
  add_dependencies(experiment   ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}        )
  add_dependencies(experiment_step   ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}        )
- add_dependencies(control   ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}        )
+ add_dependencies(control   ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_gencfg  )
 
 ## Specify libraries to link a library or executable target against
  target_link_libraries(wheel_encoder

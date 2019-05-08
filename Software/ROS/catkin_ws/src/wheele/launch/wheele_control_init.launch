@@ -7,7 +7,7 @@
     </node>
 
     <!-- Establish RPi-Arduino serial communication -->
-    <node pkg="wheele" type="serial_com" name="serial_com" output="screen" />
+    <node pkg="wheele" type="serial_com.py" name="serial_com.py" output="screen" />
 
     <!-- PI controller implemented in wheele motors -->
     <node pkg="wheele" type="control" name="control" output="screen" >
@@ -31,7 +31,7 @@
     </node> 
 
     <!-- Teleoperation nodes -->
-    <include if="(arg joystick)" file="$(find teleop_twist_joy)/launch/teleop.launch"xºxº/>
+    <include if="(arg joystick)" file="$(find teleop_twist_joy)/launch/teleop.launch"/>
     <node unless="(arg joystick)" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard.py" output="screen" />
 
 </launch>
