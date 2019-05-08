@@ -13,7 +13,7 @@
 #define pi 3.141592   // un arco de circunferencia entre su radio o algo asi
 
 float kp=0.0,ki=0.0,kd=0.0; // pid gains
-float kp_topic, ki_topic,kd_topic;
+float kp_topic=0.0, ki_topic=0.0,kd_topic=0.0;
 float kp_m1l=0.12, ki_m1l=0.14;
 std_msgs::Float64 pidkp,pidki,pidkd;  // pid gains tunnable by topic
 
