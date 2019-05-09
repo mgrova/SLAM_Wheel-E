@@ -39,9 +39,7 @@ int main(int argc, char **argv)
 
   std::chrono::duration<double> dt,time;
   std::vector<int> GPIO_vect;
-  std::cout <<"tamaño de GPIO_vect antes de inicializar: " << GPIO_vect.size() << '\n';
   std_msgs::Float64MultiArray encoder_msg;
-
 
 
   encoder_msg.layout.dim.push_back(std_msgs::MultiArrayDimension());

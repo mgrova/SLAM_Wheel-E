@@ -2,43 +2,42 @@
 #include <pigpio.h>
 
 #include <encoder.hpp>
-
-#define SEP_MUESCAS 7.5 //Separacion en grados de las muescas del encoder
-#define pi 3.14159265358979
-#define n_ticksEnc 22
-#define timeout_encoder 500
-
+#include <numeric>
 
 void re_decoder::_turnOffVel(){
 
    vel=0.0;
-   gpioSetTimerFuncEx(enc_timer_ID,timeout_encoder,NULL,this);
+   gpioSetTimerFuncEx(enc_timer_ID,TIMEOUT_ENCD,NULL,this);
 
    return;
 }
 void re_decoder::_pulse(int gpio, int level, uint32_t tick)
 {
-    
    double tmpVel;
 
-   gpioSetTimerFuncEx(enc_timer_ID,timeout_encoder,NULL,this);
+   gpioSetTimerFuncEx(enc_timer_ID,TIMEOUT_ENCD,NULL,this);
 
    lev = level;
+
    if(lastlev>0){
       
       delta_t=(double)gpioTick()/1000-last_t;
       
       tmpVel=((double)(SEP_MUESCAS)/(double)delta_t)*1000; //ticks /s
-      tmpVel=tmpVel*(2*pi)/n_ticksEnc;	// rad/s
+      tmpVel=tmpVel*(2*PI)/NUM_TICKS;	// rad/s
 
       if(delta_t==0.0) tmpVel=0.0;
+
+      buffer_vel.pop_back();
+      buffer_vel.insert(buffer_vel.begin(),tmpVel);
 
       }
    lastlev=lev;
    last_t=gpioTick()/1000;
 
-   vel=tmpVel;
-   gpioSetTimerFuncEx(enc_timer_ID,timeout_encoder,_zeroVel,this);
+   vel=std::accumulate(buffer_vel.begin(),buffer_vel.end(),0.0)/(double)buffer_vel.size();
+
+   gpioSetTimerFuncEx(enc_timer_ID,TIMEOUT_ENCD,_zeroVel,this);
 
    return;
 
@@ -59,7 +58,8 @@ void re_decoder::_zeroVel(void *userdata){
 re_decoder::re_decoder(int gpio)
 {
    mygpio = gpio;
-   buffer_vel.resize();
+   buffer_vel.resize(WDW);
+
    lev=0;lastlev=-1;
    delta_t=0;last_t=0;vel=.0;
 
@@ -70,7 +70,7 @@ re_decoder::re_decoder(int gpio)
 
    gpioSetPullUpDown(mygpio, PI_PUD_UP);
 
-   gpioSetTimerFuncEx(enc_timer_ID,timeout_encoder,_zeroVel,this);
+   gpioSetTimerFuncEx(enc_timer_ID,TIMEOUT_ENCD,_zeroVel,this);
    
    gpioSetAlertFuncEx(mygpio, _pulseEx, this);
 
