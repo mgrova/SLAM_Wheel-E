@@ -13,12 +13,12 @@ from wheele.msg import pwm6
 
 def send_pwm(pwm): # cmd_vel topic (type Twist) callback
     ##data=float(pwm.m1l)
-    rospy.loginfo(pwm.m1l)
-    rospy.loginfo(pwm.m1r)
-    rospy.loginfo(pwm.m2l)
-    rospy.loginfo(pwm.m2r)
-    rospy.loginfo(pwm.m3l)
-    rospy.loginfo(pwm.m3r)
+    print "PWM-> m1L: " + str(pwm.m1l) 
+    print "m2L: " + str(pwm.m2l) 
+    print "m3L: " + str(pwm.m3l)
+    print "PWM-> m1R: " + str(pwm.m1r) 
+    print "m2R: " + str(pwm.m2r) 
+    print "m3R: " + str(pwm.m3r)
     cmd.send("change_pwm",pwm.m1l,pwm.m1r,pwm.m2l,pwm.m2r,pwm.m3l,pwm.m3r) # Send pwm of left & right motors to arduino
     ##cmd.send("change_pwm",data,data,data,data,data,data)
 

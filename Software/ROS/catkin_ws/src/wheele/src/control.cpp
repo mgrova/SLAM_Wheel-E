@@ -96,27 +96,27 @@ float claw(int m, std::chrono::duration<double> dt, float ref, float out, float 
   switch(m) {
     case 1: kp=kp_m1L;
             ki=ki_m1L;
-            kd=.0;
+            kd=.01;
             break;
     case 2: kp=kp_m1R;
             ki=ki_m1R;
-            kd=.0;
+            kd=.01;
             break;
     case 3: kp=kp_m2L;
             ki=ki_m2L;
-            kd=0.0;
+            kd=0.01;
             break;
     case 4: kp=kp_m2R;
             ki=ki_m2R;
-            kd=.0;
+            kd=.01;
             break;                                    
     case 5: kp=kp_m3L;
             ki=ki_m3L;
-            kd=.0;
+            kd=.01;
             break;
     case 6: kp=kp_m3R;
             ki=ki_m3R;
-            kd=.0;
+            kd=.01;
             break;
    
   }
@@ -198,15 +198,17 @@ while(n.ok()) {
   dt=t_act-t_lastT;
   t_lastT=t_act;
 
- // pwm_msg.m1l=claw(1 ,dt, left_ref_ticks, ticks.m1l, ek1_m1l, sat_err_m1l, i_m1l);
+  pwm_msg.m1l=claw(1 ,dt, left_ref_ticks, ticks.m1l, ek1_m1l, sat_err_m1l, i_m1l);
 //  ROS_INFO_STREAM("pwm m1l:  "<<pwm_msg.m1l <<"\n");
-  //pwm_msg.m1r=claw(2 ,dt, right_ref_ticks, ticks.m1r, ek1_m1r, sat_err_m1r, i_m1r);
+  pwm_msg.m1r=claw(2 ,dt, right_ref_ticks, ticks.m1r, ek1_m1r, sat_err_m1r, i_m1r);
  // ROS_INFO_STREAM("pwm m1r:  "<<pwm_msg.m1r <<"\n");
   pwm_msg.m2l=claw(3 ,dt, left_ref_ticks, ticks.m2l, ek1_m2l, sat_err_m2l, i_m2l);
   //ROS_INFO_STREAM("pwm m2l:  "<<pwm_msg.m2l <<"\n");
   //pwm_msg.m2r=claw(4 ,dt, right_ref_ticks, ticks.m2r, ek1_m2r, sat_err_m2r, i_m2r);
+  pwm_msg.m2r=pwm_msg.m1r;
   //ROS_INFO_STREAM("pwm m2r:  "<<pwm_msg.m2r <<"\n");
-  //pwm_msg.m3l=claw(5 ,dt, left_ref_ticks, ticks.m3l, ek1_m3l, sat_err_m3l, i_m3l);
+  pwm_msg.m3l=claw(5 ,dt, left_ref_ticks, ticks.m3l, ek1_m3l, sat_err_m3l, i_m3l);
+  pwm_msg.m3r=pwm_msg.m1r;
   //ROS_INFO_STREAM("pwm m3l:  "<<pwm_msg.m3l <<"\n");
   //pwm_msg.m3r=claw(6 ,dt, right_ref_ticks, ticks.m3r, ek1_m3r, sat_err_m3r, i_m3r);
   //ROS_INFO_STREAM("pwm m3r:  "<<pwm_msg.m3r <<"\n");
