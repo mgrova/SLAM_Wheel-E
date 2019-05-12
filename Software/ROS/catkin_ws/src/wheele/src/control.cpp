@@ -40,72 +40,6 @@ wheele::pwm6 pwm_msg;
 std_msgs::Float64 error_m1L;
 wheele::pwm6 ticks;
 
-/* ROS CALLBACKS */
-void refCb(const geometry_msgs::Twist::ConstPtr& ref){
-  ref_ms.linear.x=ref->linear.x;
-  ref_ms.angular.z=ref->angular.z;
-}
-
-void ticksCb(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
-  ticks.m1l=ticks_read->data[0];
-  ticks.m2l=ticks_read->data[1];
-  ticks.m3l=ticks_read->data[2];
-  ticks.m1r=ticks_read->data[3];
-  ticks.m2r=ticks_read->data[4];
-  ticks.m3r=ticks_read->data[5];
-
-  pwm_msg.m1l=claw(1 ,dt, left_ref_ticks, ticks.m1l, ek1_m1l, sat_err_m1l, i_m1l);
-//  ROS_INFO_STREAM("pwm m1l:  "<<pwm_msg.m1l <<"\n");
-  pwm_msg.m1r=claw(2 ,dt, right_ref_ticks, ticks.m1r, ek1_m1r, sat_err_m1r, i_m1r);
- // ROS_INFO_STREAM("pwm m1r:  "<<pwm_msg.m1r <<"\n");
-  pwm_msg.m2l=claw(3 ,dt, left_ref_ticks, ticks.m2l, ek1_m2l, sat_err_m2l, i_m2l);
-  //ROS_INFO_STREAM("pwm m2l:  "<<pwm_msg.m2l <<"\n");
-  //pwm_msg.m2r=claw(4 ,dt, right_ref_ticks, ticks.m2r, ek1_m2r, sat_err_m2r, i_m2r);
-  pwm_msg.m2r=pwm_msg.m1r;
-  //ROS_INFO_STREAM("pwm m2r:  "<<pwm_msg.m2r <<"\n");
-  pwm_msg.m3l=claw(5 ,dt, left_ref_ticks, ticks.m3l, ek1_m3l, sat_err_m3l, i_m3l);
-  pwm_msg.m3r=pwm_msg.m1r;
-  //ROS_INFO_STREAM("pwm m3l:  "<<pwm_msg.m3l <<"\n");
-  //pwm_msg.m3r=claw(6 ,dt, right_ref_ticks, ticks.m3r, ek1_m3r, sat_err_m3r, i_m3r);
-  //ROS_INFO_STREAM("pwm m3r:  "<<pwm_msg.m3r <<"\n");
-
-}
-
-void dynCb(wheele::controlParamsConfig &config, uint32_t level)
-{
-  kp_m1L=config.Kp_m1L;
-  ki_m1L=config.Ki_m1L;
-
-  kp_m1R=config.Kp_m1R;
-  ki_m1R=config.Ki_m1R;
-
-  kp_m2L=config.Kp_m2L;
-  ki_m2L=config.Ki_m2L;
-
-  kp_m2R=config.Kp_m2R;
-  ki_m2R=config.Ki_m2R;
-
-  kp_m3L=config.Kp_m3L;
-  ki_m3L=config.Ki_m3L;
-
-  kp_m3R=config.Kp_m3R;
-  ki_m3R=config.Ki_m3R;
-
-  //std::cout << "Params control m1L->  Kp:" << kp_m1L <<" Ki:" << ki_m1L <<"\n";
-  //std::cout << "Params control m2L->  Kp:" << kp_m2L <<" Ki:" << ki_m2L <<"\n";
-  //std::cout << "Params control m3L->  Kp:" << kp_m3L <<" Ki:" << ki_m3L <<"\n";
-  //std::cout << "Params control m1R->  Kp:" << kp_m1R <<" Ki:" << ki_m1R <<"\n";
-  //std::cout << "Params control m2R->  Kp:" << kp_m2R <<" Ki:" << ki_m2R <<"\n";
-  //std::cout << "Params control m3R->  Kp:" << kp_m3R <<" Ki:" << ki_m3R <<"\n";
-}
-
-/* FUNCTIONS */
-float ms2ticks(float ms){
-  float tickss;
-  tickss=ms/radius; // [m/s] to [rad/s] (wheel radius = 0.035)
-  tickss=tickss*(enc_slits/(2*pi)); // [rad/s] to [ticks/s] (encoders have 22 slits)
-  return tickss;
-}
 
 /* Control Law */
 float claw(int m, std::chrono::duration<double> dt, float ref, float out, float ek1, float sat_err, float i){ // Control law with conditional integration antiwindup
@@ -187,6 +121,72 @@ float claw(int m, std::chrono::duration<double> dt, float ref, float out, float 
   return ukreal;
 }
 
+/* ROS CALLBACKS */
+void refCb(const geometry_msgs::Twist::ConstPtr& ref){
+  ref_ms.linear.x=ref->linear.x;
+  ref_ms.angular.z=ref->angular.z;
+}
+
+void ticksCb(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
+  ticks.m1l=ticks_read->data[0];
+  ticks.m2l=ticks_read->data[1];
+  ticks.m3l=ticks_read->data[2];
+  ticks.m1r=ticks_read->data[3];
+  ticks.m2r=ticks_read->data[4];
+  ticks.m3r=ticks_read->data[5];
+
+  pwm_msg.m1l=claw(1 ,dt, left_ref_ticks, ticks.m1l, ek1_m1l, sat_err_m1l, i_m1l);
+//  ROS_INFO_STREAM("pwm m1l:  "<<pwm_msg.m1l <<"\n");
+  pwm_msg.m1r=claw(2 ,dt, right_ref_ticks, ticks.m1r, ek1_m1r, sat_err_m1r, i_m1r);
+ // ROS_INFO_STREAM("pwm m1r:  "<<pwm_msg.m1r <<"\n");
+  pwm_msg.m2l=claw(3 ,dt, left_ref_ticks, ticks.m2l, ek1_m2l, sat_err_m2l, i_m2l);
+  //ROS_INFO_STREAM("pwm m2l:  "<<pwm_msg.m2l <<"\n");
+  //pwm_msg.m2r=claw(4 ,dt, right_ref_ticks, ticks.m2r, ek1_m2r, sat_err_m2r, i_m2r);
+  pwm_msg.m2r=pwm_msg.m1r;
+  //ROS_INFO_STREAM("pwm m2r:  "<<pwm_msg.m2r <<"\n");
+  pwm_msg.m3l=claw(5 ,dt, left_ref_ticks, ticks.m3l, ek1_m3l, sat_err_m3l, i_m3l);
+  pwm_msg.m3r=pwm_msg.m1r;
+  //ROS_INFO_STREAM("pwm m3l:  "<<pwm_msg.m3l <<"\n");
+  //pwm_msg.m3r=claw(6 ,dt, right_ref_ticks, ticks.m3r, ek1_m3r, sat_err_m3r, i_m3r);
+  //ROS_INFO_STREAM("pwm m3r:  "<<pwm_msg.m3r <<"\n");
+
+}
+
+void dynCb(wheele::controlParamsConfig &config, uint32_t level)
+{
+  kp_m1L=config.Kp_m1L;
+  ki_m1L=config.Ki_m1L;
+
+  kp_m1R=config.Kp_m1R;
+  ki_m1R=config.Ki_m1R;
+
+  kp_m2L=config.Kp_m2L;
+  ki_m2L=config.Ki_m2L;
+
+  kp_m2R=config.Kp_m2R;
+  ki_m2R=config.Ki_m2R;
+
+  kp_m3L=config.Kp_m3L;
+  ki_m3L=config.Ki_m3L;
+
+  kp_m3R=config.Kp_m3R;
+  ki_m3R=config.Ki_m3R;
+
+  //std::cout << "Params control m1L->  Kp:" << kp_m1L <<" Ki:" << ki_m1L <<"\n";
+  //std::cout << "Params control m2L->  Kp:" << kp_m2L <<" Ki:" << ki_m2L <<"\n";
+  //std::cout << "Params control m3L->  Kp:" << kp_m3L <<" Ki:" << ki_m3L <<"\n";
+  //std::cout << "Params control m1R->  Kp:" << kp_m1R <<" Ki:" << ki_m1R <<"\n";
+  //std::cout << "Params control m2R->  Kp:" << kp_m2R <<" Ki:" << ki_m2R <<"\n";
+  //std::cout << "Params control m3R->  Kp:" << kp_m3R <<" Ki:" << ki_m3R <<"\n";
+}
+
+/* FUNCTIONS */
+float ms2ticks(float ms){
+  float tickss;
+  tickss=ms/radius; // [m/s] to [rad/s] (wheel radius = 0.035)
+  tickss=tickss*(enc_slits/(2*pi)); // [rad/s] to [ticks/s] (encoders have 22 slits)
+  return tickss;
+}
 
 int main(int argc, char **argv){
 
