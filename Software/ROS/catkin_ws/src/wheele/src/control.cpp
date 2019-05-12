@@ -191,7 +191,7 @@ int main(int argc, char **argv){
   f = boost::bind(&dynCb, _1, _2);
   srv.setCallback(f);
 
-  ros::Rate loop_rate(100); //10Hz
+  ros::Rate loop_rate(50); //10Hz
 
 while(n.ok()) {
   float lin, ang, left_ref_ms, right_ref_ms, left_ref_ticks, right_ref_ticks;
