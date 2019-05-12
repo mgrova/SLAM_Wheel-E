@@ -32,6 +32,9 @@ static float ki_m1L,ki_m2L,ki_m3L,ki_m1R,ki_m2R,ki_m3R;
 
   float lin, ang, left_ref_ms, right_ref_ms, left_ref_ticks, right_ref_ticks;
 
+std::chrono::duration<double> dt;
+
+
 //kp_m1L=kp_m2L=kp_m3L=kp_m1R=kp_m2R=kp_m3R=0.0;
 //ki_m1L=ki_m2L=ki_m3L=ki_m1R=ki_m2R=ki_m3R=0.0;
 
@@ -192,7 +195,6 @@ int main(int argc, char **argv){
 
   std::chrono::time_point<std::chrono::system_clock> t_act,t_lastT;
   t_act=t_lastT;
-  std::chrono::duration<double> dt;
 
   ros::init(argc, argv, "control");
   ros::NodeHandle n;
