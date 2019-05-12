@@ -30,6 +30,7 @@ static float ek1_m3r=0,sat_err_m3r=0,i_m3r=0;
 static float kp_m1L,kp_m2L,kp_m3L,kp_m1R,kp_m2R,kp_m3R;
 static float ki_m1L,ki_m2L,ki_m3L,ki_m1R,ki_m2R,ki_m3R;
 
+  float lin, ang, left_ref_ms, right_ref_ms, left_ref_ticks, right_ref_ticks;
 
 //kp_m1L=kp_m2L=kp_m3L=kp_m1R=kp_m2R=kp_m3R=0.0;
 //ki_m1L=ki_m2L=ki_m3L=ki_m1R=ki_m2R=ki_m3R=0.0;
@@ -52,6 +53,21 @@ void ticksCb(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
   ticks.m1r=ticks_read->data[3];
   ticks.m2r=ticks_read->data[4];
   ticks.m3r=ticks_read->data[5];
+
+  pwm_msg.m1l=claw(1 ,dt, left_ref_ticks, ticks.m1l, ek1_m1l, sat_err_m1l, i_m1l);
+//  ROS_INFO_STREAM("pwm m1l:  "<<pwm_msg.m1l <<"\n");
+  pwm_msg.m1r=claw(2 ,dt, right_ref_ticks, ticks.m1r, ek1_m1r, sat_err_m1r, i_m1r);
+ // ROS_INFO_STREAM("pwm m1r:  "<<pwm_msg.m1r <<"\n");
+  pwm_msg.m2l=claw(3 ,dt, left_ref_ticks, ticks.m2l, ek1_m2l, sat_err_m2l, i_m2l);
+  //ROS_INFO_STREAM("pwm m2l:  "<<pwm_msg.m2l <<"\n");
+  //pwm_msg.m2r=claw(4 ,dt, right_ref_ticks, ticks.m2r, ek1_m2r, sat_err_m2r, i_m2r);
+  pwm_msg.m2r=pwm_msg.m1r;
+  //ROS_INFO_STREAM("pwm m2r:  "<<pwm_msg.m2r <<"\n");
+  pwm_msg.m3l=claw(5 ,dt, left_ref_ticks, ticks.m3l, ek1_m3l, sat_err_m3l, i_m3l);
+  pwm_msg.m3r=pwm_msg.m1r;
+  //ROS_INFO_STREAM("pwm m3l:  "<<pwm_msg.m3l <<"\n");
+  //pwm_msg.m3r=claw(6 ,dt, right_ref_ticks, ticks.m3r, ek1_m3r, sat_err_m3r, i_m3r);
+  //ROS_INFO_STREAM("pwm m3r:  "<<pwm_msg.m3r <<"\n");
 
 }
 
@@ -194,7 +210,6 @@ int main(int argc, char **argv){
   ros::Rate loop_rate(50); //10Hz
 
 while(n.ok()) {
-  float lin, ang, left_ref_ms, right_ref_ms, left_ref_ticks, right_ref_ticks;
   lin=ref_ms.linear.x;
   ang=ref_ms.angular.z;
   left_ref_ms =lin - (ang*d_wheels)/2.0;
@@ -207,20 +222,6 @@ while(n.ok()) {
   dt=t_act-t_lastT;
   t_lastT=t_act;
 
-  pwm_msg.m1l=claw(1 ,dt, left_ref_ticks, ticks.m1l, ek1_m1l, sat_err_m1l, i_m1l);
-//  ROS_INFO_STREAM("pwm m1l:  "<<pwm_msg.m1l <<"\n");
-  pwm_msg.m1r=claw(2 ,dt, right_ref_ticks, ticks.m1r, ek1_m1r, sat_err_m1r, i_m1r);
- // ROS_INFO_STREAM("pwm m1r:  "<<pwm_msg.m1r <<"\n");
-  pwm_msg.m2l=claw(3 ,dt, left_ref_ticks, ticks.m2l, ek1_m2l, sat_err_m2l, i_m2l);
-  //ROS_INFO_STREAM("pwm m2l:  "<<pwm_msg.m2l <<"\n");
-  //pwm_msg.m2r=claw(4 ,dt, right_ref_ticks, ticks.m2r, ek1_m2r, sat_err_m2r, i_m2r);
-  pwm_msg.m2r=pwm_msg.m1r;
-  //ROS_INFO_STREAM("pwm m2r:  "<<pwm_msg.m2r <<"\n");
-  pwm_msg.m3l=claw(5 ,dt, left_ref_ticks, ticks.m3l, ek1_m3l, sat_err_m3l, i_m3l);
-  pwm_msg.m3r=pwm_msg.m1r;
-  //ROS_INFO_STREAM("pwm m3l:  "<<pwm_msg.m3l <<"\n");
-  //pwm_msg.m3r=claw(6 ,dt, right_ref_ticks, ticks.m3r, ek1_m3r, sat_err_m3r, i_m3r);
-  //ROS_INFO_STREAM("pwm m3r:  "<<pwm_msg.m3r <<"\n");
   error_m1L.data=ek1_m1l;
   pub_err.publish(error_m1L);
   pwm_pub.publish(pwm_msg);
