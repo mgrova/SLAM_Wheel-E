@@ -25,12 +25,19 @@
     <!-- To use RPi -->
     <node if="$(arg using_rpi)" pkg="master_sync_fkie" type="master_sync" name="master_sync" output="screen"> 
       <!--  <param name="_ignore_nodes" value="[camera/ir/*,]"/>     -->
-    </node>    
-    <include  if="$(arg using_rpi)" file="$(find freenect_launch)/launch/kinect_orb.launch">
+    </node>  
+  
+<!--    <include  if="$(arg using_rpi)" file="$(find freenect_launch)/launch/kinect_orb.launch">
      <arg name="data_skip" value="2" />
      <arg name="depth_registration" value="True" />
-     <!--  <arg name="depth_camera_info_url" default="$(find wheele)/config/KINECT.yaml" /> -->
-     </include>
+       <arg name="depth_camera_info_url" default="$(find wheele)/config/KINECT.yaml" />  
+     </include>  -->
+    <include if="$(arg using_rpi)" file="$(find wheele)/launch/freenect_throttle.launch">
+        <arg name="rate"  value="10"/>
+        <arg name="approx_sync" value="true" />
+        <arg name="rgbd_sync" value="true"/>
+        <arg name="orb_slam" value="true"/> 
+    </include> 
 
     <!-- To use PC -->
     <group unless="$(arg using_rpi)">
