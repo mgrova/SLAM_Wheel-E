@@ -1,8 +1,20 @@
 <launch>
+  <arg name="orb_slam"  default="false"/>
+
   <include file="$(find freenect_launch)/launch/freenect.launch">
      <arg name="data_skip" value="2" />
      <arg name="depth_registration" value="True" />
-   <!--  <arg name="depth_camera_info_url" default="$(find wheele)/config/KINECT.yaml" /> -->
+     
+     <arg 		       name="rgb_processing"                  value="true"/>
+     <arg if="$(arg orb_slam)" name="ir_processing" 		      value="false"/>
+     <arg if="$(arg orb_slam)" name="depth_processing"                value="false"/>
+     <arg 		       name="depth_registered_processing"     value="true"/>
+     <arg if="$(arg orb_slam)" name="disparity_processing"            value="false"/>
+     <arg if="$(arg orb_slam)" name="disparity_registered_processing" value="false"/>
+     <arg 		       name="hw_registered_processing"        value="true" />
+     <arg if="$(arg orb_slam)" name="sw_registered_processing"        value="false" />
+<!--  <arg name="rgb_camera_info_url"   default="" />
+     <arg name="depth_camera_info_url" default="" /> -->
 
   </include>
 

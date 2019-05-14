@@ -24,7 +24,7 @@
 
 #define def_gpio_value {pin_e1L,pin_e2L,pin_e3L,pin_e1R,pin_e2R,pin_e3R}
 
-#define Tsample_enc 0.1
+#define Tsample_enc 0.02
 
 
 int re_decoder::no_encoders=0;

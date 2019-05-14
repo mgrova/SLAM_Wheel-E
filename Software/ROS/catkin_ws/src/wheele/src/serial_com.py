@@ -10,7 +10,18 @@ import rospy
 import PyCmdMessenger
 from std_msgs.msg import Float64
 from wheele.msg import pwm6
+from geometry_msgs.msg import Twist
 
+def send_pwm(data): # cmd_vel topic (type Twist) callback
+    linear_vel = data.linear.x   # Retrieve the linear velocity (foward or backwards) that Whelee should have
+    angular_vel = data.angular.z  # Same with angular velocity (clockwise turn is negative)
+
+    left_vel = linear_vel - (angular_vel*0.25)/2 # How much velocity in each side we need for this movement
+    right_vel = (linear_vel + (angular_vel*0.25)/2)
+
+    cmd.send("change_pwm",left_vel, right_vel,left_vel, right_vel,left_vel, 0) # Send velocites of left & right motors to arduino
+
+<<<<<<< HEAD
 def send_pwm(data): # cmd_vel topic (type Twist) callback
     linear_vel = data.linear.x   # Retrieve the linear velocity (foward or backwards) that Whelee should have
     angular_vel = data.angular.z  # Same with angular velocity (clockwise turn is negative)
@@ -20,6 +31,8 @@ def send_pwm(data): # cmd_vel topic (type Twist) callback
 
     cmd.send("change_pwm",left_vel, right_vel,left_vel, right_vel,left_vel, right_vel) # Send velocites of left & right motors to arduino
 
+=======
+>>>>>>> 79d6c8754ae41d5a2952e2e4181796c59e240c98
     ##data=float(pwm.m1l)
     #print "PWM-> m1L: " + str(pwm.m1l) 
     #print "m2L: " + str(pwm.m2l) 

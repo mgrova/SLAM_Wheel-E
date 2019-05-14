@@ -28,9 +28,10 @@
     </node>
 
     <include if="$(arg using_rpi)" file="$(find wheele)/launch/freenect_throttle.launch">
-        <arg name="rate"  value="5"/>
+        <arg name="rate"  value="10"/>
         <arg name="approx_sync" value="true" />
         <arg name="rgbd_sync" value="true"/> 
+        <arg name="orb_slam" value="false"/> 
     </include>
 
     <!-- To use PC -->
