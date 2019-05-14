@@ -54,20 +54,23 @@
         <!-- SLAM with RTAB-Map config. We use fake laser-scan, robot odometry and Kinect -->
         <include file="$(find rtabmap_ros)/launch/rtabmap.launch"> 
         
-    <!--        <arg name="frame_id" value="camera_link"/> -->
+           <arg name="frame_id" value="camera_link"/> 
 
-            <arg name="subscribe_scan" value="false"/> 
+            <!--<arg name="subscribe_scan" value="true"/> 
+            <arg name="scan_topic" default="/kinect_scan"/> -->
 <!--            <arg name="odom_topic" default="/wheele_odom"/> -->
-            <arg name="scan_topic" default="/kinect_scan"/> 
-
             <arg name="queue_size" value="10"/>
 
             <arg name="subscribe_rgbd" value="true"/>
             <arg name="rgbd_topic" value="/camera/rgbd_image"/>
             <arg name="compressed" value="true"/>
-            <arg name="rtabmap_args" value="--delete_db_on_start --Vis/MaxFeatures 500 --Mem/ImagePreDecimation 2 --Mem/ImagePostDecimation 2 --Kp/DetectorStrategy 6 --OdomF2M/MaxSize 1000 --Odom/ImageDecimation 2"/>
+            <arg name="rtabmap_args" value="--delete_db_on_start --Vis/MaxFeatures 500 --Mem/ImagePreDecimation 2 --Mem/ImagePostDecimation 2 --Kp/DetectorStrategy 6 --OdomF2M/MaxSize 1000 --Odom/ImageDecimation 2 --RGBD/AngularUpdate 0.01 --RGBD/LinearUpdate 0.01 --RGBD/OptimizeFromGraphEnd false "/>
             <arg name="rtabmapviz" value="false"/>
             <arg name="rviz" value="false"/>
+          
+         <!-- <remap from="rgb/image"       to="/camera/rgb/image_rect_color"/>
+          <remap from="depth/image"     to="/camera/depth_registered/image_raw"/>
+          <remap from="rgb/camera_info" to="/camera/rgb/camera_info"/> --> 
 </include> 
 
         <!-- Rviz visualization-->

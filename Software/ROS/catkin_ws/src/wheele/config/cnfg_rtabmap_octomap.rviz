@@ -6,6 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /TF1/Frames1
+        - /PointCloud21
       Splitter Ratio: 0.411058009
     Tree Height: 690
   - Class: rviz/Selection
@@ -121,7 +122,7 @@ Visualization Manager:
       Selectable: true
       Size (Pixels): 3
       Size (m): 0.00999999978
-      Style: Spheres
+      Style: Points
       Topic: /rtabmap/scan_map
       Unreliable: false
       Use Fixed Frame: true
