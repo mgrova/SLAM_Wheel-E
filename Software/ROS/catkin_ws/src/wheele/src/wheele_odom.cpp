@@ -2,17 +2,24 @@
 #include <nav_msgs/Odometry.h>
 #include <std_msgs/Float32.h>
 #include <tf/transform_broadcaster.h>
+#include <std_msgs/Float64MultiArray.h>
+#include <wheele/pwm6.h>
 
 #define r_wheel 0.00325         // [m]
 #define ticks_per_rev 2626
 #define pi 3.14159265
 #define lenght_btw_wheels 0.025 // [m]
 
-std_msgs::Float32 ticks_x,ticks_y;
+wheele::pwm6 ticks;
 
-void ticksCb(const std_msgs::Float32::ConstPtr& tick_data)
-{
-  ticks_x.data=tick_data->data;
+void ticksCb(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
+  ticks.m1l=ticks_read->data[0];
+  ticks.m2l=ticks_read->data[1];
+  ticks.m3l=ticks_read->data[2];
+  ticks.m1r=ticks_read->data[3];
+  ticks.m2r=ticks_read->data[4];
+  ticks.m3r=ticks_read->data[5];
+
 }
 
 
@@ -33,14 +40,14 @@ int main(int argc, char **argv) {
   double vth = 0.1;
 
   double v_left,v_right,omega_left,omega_right,deltaRight,deltaLeft;
-  double _PreviousLeftEncoderCounts,_PreviousRightEncoderCounts;
+  double PreviousLeftEncoderCounts,PreviousRightEncoderCounts;
 
   ros::Time current_time, last_time;
   current_time = ros::Time::now();
   last_time = ros::Time::now();
 
-  ros::Subscriber sub = n.subscribe("encoders_ticks", 1000, ticksCb);
-
+  ros::Subscriber ticks_sub = n.subscribe("encoders_ticks",10,ticksCb);
+  
   ros::Rate r(1.0); // 1Hz
 
   while (n.ok()) {
@@ -50,8 +57,8 @@ int main(int argc, char **argv) {
     double DistancePerCount = (pi * r_wheel) / ticks_per_rev;
 
     // extract the wheel velocities from the tick signals count
-    //deltaLeft = ticks_x - _PreviousLeftEncoderCounts;
-    //deltaRight = ticks_y - _PreviousRightEncoderCounts;
+    deltaLeft = ticks.m1l - PreviousLeftEncoderCounts;
+    deltaRight = ticks.m1r - PreviousRightEncoderCounts;
 
     omega_left = (deltaLeft * DistancePerCount) / (current_time - last_time).toSec();
     omega_right = (deltaRight * DistancePerCount) / (current_time - last_time).toSec();
@@ -107,8 +114,8 @@ int main(int argc, char **argv) {
 
     // publish the message
     odom_pub.publish(odom);
-    //_PreviousLeftEncoderCounts = ticks_x;
-    //_PreviousRightEncoderCounts = ticks_y;
+    PreviousLeftEncoderCounts =ticks.m1l;
+    PreviousRightEncoderCounts =ticks.m1r;
 
     last_time = current_time;
   }

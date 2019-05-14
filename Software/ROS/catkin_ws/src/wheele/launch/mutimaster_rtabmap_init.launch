@@ -42,19 +42,20 @@
         <!--   <param name="_ignore_nodes" value="[camera/ir/*,camera/depth/*]"/>  -->
 
         <!-- Kinect cloud to laser scan -->
+        <!-- 
         <node pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" name="depthimage_to_laserscan">
             <remap from="image"       to="/camera/depth_registered/image_raw"/>
             <remap from="camera_info" to="/camera/depth_registered/camera_info"/>
             <remap from="scan"        to="/kinect_scan"/>
             <param name="range_max" type="double" value="4"/>
-        </node>
+        </node>  -->
 
         <!-- SLAM with RTAB-Map config. We use fake laser-scan, robot odometry and Kinect -->
         <include file="$(find rtabmap_ros)/launch/rtabmap.launch"> 
         
-    <!--        <arg name="frame_id" type="string" value="base_footprint"/> -->
+    <!--        <arg name="frame_id" value="camera_link"/> -->
 
-            <arg name="subscribe_scan" value="true"/> 
+            <arg name="subscribe_scan" value="false"/> 
 <!--            <arg name="odom_topic" default="/wheele_odom"/> -->
             <arg name="scan_topic" default="/kinect_scan"/> 
 
@@ -69,15 +70,15 @@
 </include> 
 
         <!-- Rviz visualization-->
-<!--        <node type="rviz" name="rviz" pkg="rviz" args="-d $(find wheele)/config/cnfg_rtabmap_octomap.rviz"/> -->
+        <node type="rviz" name="rviz" pkg="rviz" args="-d $(find wheele)/config/cnfg_rtabmap_octomap.rviz"/> 
             <!-- Construct and voxelize the point cloud (for fast visualization in rviz) -->
-            <node pkg="nodelet" type="nodelet" name="points_xyzrgb" args="standalone rtabmap_ros/point_cloud_xyzrgb">
+            <!--<node pkg="nodelet" type="nodelet" name="points_xyzrgb" args="standalone rtabmap_ros/point_cloud_xyzrgb">
             <remap from="rgbd_image"      to="/rtabmap/rgbd_image/compressed"/>
             <remap from="cloud"           to="voxel_cloud" />
 
             <param name="queue_size" type="int" value="10"/>
-            <param name="voxel_size" type="double" value="0.01"/> 
-        </node>
+            <param name="voxel_size" type="double" value="0.01"/>  
+        </node> -->
 
     </group>
 
