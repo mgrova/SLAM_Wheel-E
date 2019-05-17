@@ -305,7 +305,6 @@ CmdMessenger cmdMessenger = CmdMessenger(Serial); // Attach a new CmdMessenger o
 
 enum {
   cmd_off,  // Cmd to deactivate control & motors. Reset needed after this
-  change_pwm,      // Cmd to change velocities, with left motors vel and right motors vel as arguments (float32)
   receive_ref,
   send_encoder,
 };
@@ -322,30 +321,12 @@ void take_ref(){
   //we could act here (?)
 }
 
-void apply_pwm() {
-  float m1L_pwm = cmdMessenger.readBinArg<float>(); // Front left motor pwm
-  write_pwm(m1L_en, m1L_pwm, mL_a,mL_b);
-
-  float m1R_pwm = cmdMessenger.readBinArg<float>();  // Front right motor pwm
-  write_pwm(m1R_en, m1R_pwm, mR_a,mR_b);
-
-  float m2L_pwm = cmdMessenger.readBinArg<float>(); // Mid left motor pwm
-  write_pwm(m2L_en, m2L_pwm, mL_a,mL_b);
-
-  float m2R_pwm = cmdMessenger.readBinArg<float>();  //  Mid right motor pwm
-  write_pwm(m2R_en, m2R_pwm, mR_a,mR_b);
-
-  float m3L_pwm = cmdMessenger.readBinArg<float>(); // Back left motor pwm
-  write_pwm(m3L_en, m3L_pwm, mL_a,mL_b);
-
-  float m3R_pwm = cmdMessenger.readBinArg<float>();  // Back right motor pwm
-  write_pwm(m3R_en, m3R_pwm, mR_a,mR_b);
-}
 
 void attachCommandCallbacks() { // Callbacks define on which received commands we take action
   cmdMessenger.attach(cmd_off, turn_off);
-  cmdMessenger.attach(change_pwm, apply_pwm);
   cmdMessenger.attach(receive_ref, take_ref);
+  cmdMessenger.attach(send_encoder)
+  cmdMessenger.attach(send_control_sig)
 }
 
 
@@ -425,8 +406,14 @@ void loop() {
       write_pwm(m1R_en,m1r_pwm, mR_a,mR_b);
       write_pwm(m2R_en,m2r_pwm, mR_a,mR_b);
       write_pwm(m3R_en,m3r_pwm, mR_a,mR_b);
+
+      
       //Send rad/s
-      //aqui mandamos rad/s, sc, y lo que haga falta
+      float vector_rads[6]={m1l_rads,m2l_rads,m3l_rads,m1r_rads,m2r_rads,m3r_rads};
+      float vector_pwm[6]={m1l_pwm,m2l_pwm,m3l_pwm,m1r_pwm,m2r_pwm,m3r_pwm};
+
+      cmdMessenger.sendBinCmd(send_encoder,vector_rads)
+      CmdMessenger.sendBinCmd(send_control_sig,vector_pwm)
       // Turn on encoders interrupts again
       setup_isr();
     }
