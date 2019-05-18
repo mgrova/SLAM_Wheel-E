@@ -3,6 +3,7 @@
 #include <CmdMessenger.h>
 #define pi 3.141592
 #define pix2 6.283184  //2pi
+#define t_cntl 0.01
 
 /*
 ENABLE(PWM) |      A       |     B        |   STATUS           |
@@ -62,10 +63,21 @@ volatile boolean m1r_first,m1r_triggered,m2r_first,m2r_triggered,m3r_first,m3r_t
 volatile unsigned long m1l_startTime, m1l_finishTime,m2l_startTime, m2l_finishTime,m3l_startTime, m3l_finishTime;
 volatile unsigned long m1r_startTime, m1r_finishTime,m2r_startTime, m2r_finishTime,m3r_startTime, m3r_finishTime;
 volatile unsigned long overflowCount;
+volatile unsigned int Ts;
+volatile bool flag_cntl;
 
-ISR (TIMER1_OVF_vect) { // timer overflows (every 65536 counts)
+ISR (TIMER2_OVF_vect) { // timer overflows (every 65536 counts)
   overflowCount++;
 }  // end of TIMER1_OVF_vect
+
+ISR( TIMER1_COMPA_vect){
+  flag_cntl = true;
+
+  TCCR1A=0;
+  TCCR1B=0;
+
+  TIMSK1=0;
+}
 
 void m1l_isr () {
   unsigned int counter = TCNT2;  // quickly save it
@@ -236,16 +248,16 @@ void write_pwm(int enable,int pwm, int dir1, int dir2){
     }
 }
 
-unsigned long kp,ki;
+unsigned long kp=1.0,ki=0.01;
 static float sat_err_m1l,i_m1l,sat_err_m2l,i_m2l,sat_err_m3l,i_m3l;
 static float sat_err_m1r,i_m1r,sat_err_m2r,i_m2r,sat_err_m3r,i_m3r;
 
-float control_law(int m, float ref, float out, float i,float sat_err){
+float control_law(int m, float ref, float out, float i,float sat_err, float sample_time){
   float sat_err_integrated, ek, ukns, ukreal, p;
-  sat_err_integrated=(float)sat_err*0.016393;  // Integration of how much we satured
+  sat_err_integrated=(float)sat_err*sample_time;  // Integration of how much we satured
   ek = (float)ref-(float)out;  // Error = Desired - Actual(output)
   p = kp*ek;
-  i = ki*(i+ek*0.016393);
+  i = ki*(i+ek*sample_time);
   //d = kd*((ek-ek1)*61.0);
   ukns=p+i+(sat_err_integrated/0.1);//+d
   if(ukns<-255) ukreal=-255.0;  // Saturation
@@ -306,7 +318,8 @@ CmdMessenger cmdMessenger = CmdMessenger(Serial); // Attach a new CmdMessenger o
 enum {
   cmd_off,  // Cmd to deactivate control & motors. Reset needed after this
   receive_ref,
-  send_encoder,
+  //send_encoder,
+  //send_control_sig
 };
 
 void turn_off() {
@@ -325,12 +338,24 @@ void take_ref(){
 void attachCommandCallbacks() { // Callbacks define on which received commands we take action
   cmdMessenger.attach(cmd_off, turn_off);
   cmdMessenger.attach(receive_ref, take_ref);
-  cmdMessenger.attach(send_encoder)
-  cmdMessenger.attach(send_control_sig)
+  //cmdMessenger.attach(send_encoder);
+  //cmdMessenger.attach(send_control_sig);
 }
 
 
 void setup() {
+  // reset Timer 1
+  TCCR1A = 0;
+  TCCR1B = 0;
+  // Timer 1 - interrupt on compare
+  TIMSK1 = bit (OCIE1A);   // enable Timer1 Interrupt
+  // zero it
+  TCNT1 = 0;
+  // start Timer 1
+  TCCR1A = bit (WGM21); // ctc mode  (Clear The ...)
+  OCR1A  = 255;
+  TCCR1B =  bit (CS20) | bit (CS21) | bit (CS22);  //  no prescaling
+
   // reset Timer 2
   TCCR2A = 0;
   TCCR2B = 0;
@@ -347,7 +372,7 @@ void setup() {
   pinMode(m1r_encoder, INPUT); pinMode(m2r_encoder, INPUT); pinMode(m3r_encoder, INPUT);
 
   /* Motors pin init */
-  pinMode(mL_a, OUTPUT); pinMode(mL_b, OUTPUT);
+  pinMode(mL_a, OUTPUT);   pinMode(mL_b, OUTPUT);
   pinMode(m1L_en, OUTPUT); pinMode(m1R_en, OUTPUT);
   pinMode(m2L_en, OUTPUT); pinMode(m2R_en, OUTPUT);
   pinMode(m3L_en, OUTPUT); pinMode(m3R_en, OUTPUT);
@@ -355,14 +380,14 @@ void setup() {
   Serial.begin(115200); // 115200 is the max speed on Arduino Uno
 
   cmdMessenger.printLfCr();  // Adds newline to every command
-  attachCommandCallbacks(); // Attach my application's user-defined callback methods
+  attachCommandCallbacks();  // Attach my application's user-defined callback methods
 
   setup_isr();
 }
 
 void loop() {
-  float m1l_rads,m2l_rads,m3l_rads,m1r_rads,m2r_rads,m3r_rads;
-  float m1l_pwm,m2l_pwm,m3l_pwm,m1r_pwm,m2r_pwm,m3r_pwm;
+  float m1l_rads=0,m2l_rads=0,m3l_rads=0,m1r_rads=0,m2r_rads=0,m3r_rads=0;
+  float m1l_pwm=0,m2l_pwm=0,m3l_pwm=0,m1r_pwm=0,m2r_pwm=0,m3r_pwm=0;
 
   if (controlling) {
     if (m1l_triggered) {
@@ -390,32 +415,41 @@ void loop() {
       m3r_rads = ((float)slits_arc/((float)elapsedTime*62.5))*((float)pix2/(float)360.0);  // each tick is 62.5 ns at 16 MHz
     }
 
-    if ((m1l_triggered) && (m2l_triggered) && (m3l_triggered) && (m1r_triggered) && (m2r_triggered) && (m3r_triggered)) {
+    if ((m1l_triggered) && (m2l_triggered) && (m3l_triggered) && (m1r_triggered) && (m2r_triggered) && (m3r_triggered) && flag_cntl) {
       cmdMessenger.feedinSerialData();  // Process incoming serial data, and perform callbacks
-      //Compute control
-      m1l_pwm=control_law(1,left_ref,m1l_rads,i_m1l,sat_err_m1l);
-      m1r_pwm=control_law(2,right_ref,m1r_rads,i_m1r,sat_err_m1r);
-      m2l_pwm=control_law(3,left_ref,m2l_rads,i_m2l,sat_err_m2l);
-      m2r_pwm=control_law(4,right_ref,m2r_rads,i_m2r,sat_err_m2r);
-      m3l_pwm=control_law(5,left_ref,m3l_rads,i_m3l,sat_err_m3l);
-      m3r_pwm=control_law(6,right_ref,m3r_rads,i_m3r,sat_err_m3r);
-      //Act
-      write_pwm(m1L_en,m1l_pwm, mL_a,mL_b);
-      write_pwm(m2L_en,m2l_pwm, mL_a,mL_b);
-      write_pwm(m3L_en,m3l_pwm, mL_a,mL_b);
-      write_pwm(m1R_en,m1r_pwm, mR_a,mR_b);
-      write_pwm(m2R_en,m2r_pwm, mR_a,mR_b);
-      write_pwm(m3R_en,m3r_pwm, mR_a,mR_b);
 
-      
+      printf("ref: %d",left_ref);
       //Send rad/s
       float vector_rads[6]={m1l_rads,m2l_rads,m3l_rads,m1r_rads,m2r_rads,m3r_rads};
       float vector_pwm[6]={m1l_pwm,m2l_pwm,m3l_pwm,m1r_pwm,m2r_pwm,m3r_pwm};
 
-      cmdMessenger.sendBinCmd(send_encoder,vector_rads)
-      CmdMessenger.sendBinCmd(send_control_sig,vector_pwm)
-      // Turn on encoders interrupts again
-      setup_isr();
+      //cmdMessenger.sendBinCmd(send_encoder,vector_rads);
+      //cmdMessenger.sendBinCmd(send_control_sig,vector_pwm);
+    }
+
+    if (flag_cntl){
+    //Compute control
+    m1l_pwm=control_law(1,left_ref,m1l_rads,i_m1l,sat_err_m1l,Ts);
+    m1r_pwm=control_law(2,right_ref,m1r_rads,i_m1r,sat_err_m1r,Ts);
+    m2l_pwm=control_law(3,left_ref,m2l_rads,i_m2l,sat_err_m2l,Ts);
+    m2r_pwm=control_law(4,right_ref,m2r_rads,i_m2r,sat_err_m2r,Ts);
+    m3l_pwm=control_law(5,left_ref,m3l_rads,i_m3l,sat_err_m3l,Ts);
+    m3r_pwm=control_law(6,right_ref,m3r_rads,i_m3r,sat_err_m3r,Ts);
+    //Act
+    write_pwm(m1L_en,m1l_pwm, mL_a,mL_b);
+    write_pwm(m2L_en,m2l_pwm, mL_a,mL_b);
+    write_pwm(m3L_en,m3l_pwm, mL_a,mL_b);
+    write_pwm(m1R_en,m1r_pwm, mR_a,mR_b);
+    write_pwm(m2R_en,m2r_pwm, mR_a,mR_b);
+    write_pwm(m3R_en,m3r_pwm, mR_a,mR_b);
+    flag_cntl=false;
+
+    TIMSK1 = bit (OCIE1A);   // enable Timer1 Interrupt
+    }
+
+    if ((m1l_triggered) && (m2l_triggered) && (m3l_triggered) && (m1r_triggered) && (m2r_triggered) && (m3r_triggered)){
+    // Turn on encoders interrupts again
+    setup_isr();
     }
   }
   else shutdown_motors();  // Stop controlling and power off motors: reset needed
