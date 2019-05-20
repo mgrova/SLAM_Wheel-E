@@ -20,11 +20,11 @@ void re_decoder::_pulse(int gpio, int level, uint32_t tick)
    lev = level;
 
    if(lastlev>0){
-      
+
       delta_t=(double)gpioTick()/1000-last_t;
-      
+
       tmpVel=((double)(SEP_MUESCAS)/(double)delta_t)*1000; //ticks /s
-      tmpVel=tmpVel*(2*PI)/NUM_TICKS;	// rad/s
+      tmpVel=tmpVel*(2*PI)/360.0;	// rad/s
 
       if(delta_t==0.0) tmpVel=0.0;
 
@@ -71,7 +71,7 @@ re_decoder::re_decoder(int gpio)
    gpioSetPullUpDown(mygpio, PI_PUD_UP);
 
    gpioSetTimerFuncEx(enc_timer_ID,TIMEOUT_ENCD,_zeroVel,this);
-   
+
    gpioSetAlertFuncEx(mygpio, _pulseEx, this);
 
 }

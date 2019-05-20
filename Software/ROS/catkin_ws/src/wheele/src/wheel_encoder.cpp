@@ -5,8 +5,8 @@
 #include <sstream>
 #include <unistd.h>
 #include <cstdlib>
-#include <std_msgs/Float64.h>
-#include <std_msgs/Float64MultiArray.h>
+#include <std_msgs/Float32.h>
+#include <std_msgs/Float32MultiArray.h>
 
 #include <encoder.hpp>
 #include <pigpio.h>
@@ -24,7 +24,7 @@
 
 #define def_gpio_value {pin_e1L,pin_e2L,pin_e3L,pin_e1R,pin_e2R,pin_e3R}
 
-#define Tsample_enc 0.02
+#define Tsample_enc 0.008
 
 
 int re_decoder::no_encoders=0;
@@ -35,7 +35,7 @@ int main(int argc, char **argv)
   std::ofstream myfile ("ticks.txt",std::ios::app |std::ios::out);
   std::chrono::time_point<std::chrono::system_clock> t_init,t_act,t_lastT;
   t_init = std::chrono::system_clock::now();
-  t_act=t_lastT=t_init;  
+  t_act=t_lastT=t_init;
 
   std::chrono::duration<double> dt,time;
   std::vector<int> GPIO_vect;
@@ -68,9 +68,9 @@ int main(int argc, char **argv)
   re_decoder enc_r3R=re_decoder(GPIO_vect[5]);
 
 
-  ros::Publisher pub_encoder = n.advertise<std_msgs::Float64MultiArray>("encoders_ticks",100);
+  ros::Publisher pub_encoder = n.advertise<std_msgs::Float32MultiArray>("encoders_ticks",100);
 
-  ros::Rate loop_rate(50); //10Hz
+  ros::Rate loop_rate(140); //10Hz
 
   while (n.ok())
   {
@@ -98,7 +98,7 @@ int main(int argc, char **argv)
       t_lastT=t_act;
 
    }
-    
+
     ros::spinOnce();
     loop_rate.sleep();
   }
