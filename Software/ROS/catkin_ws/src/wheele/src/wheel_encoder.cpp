@@ -70,7 +70,7 @@ int main(int argc, char **argv)
 
   ros::Publisher pub_encoder = n.advertise<std_msgs::Float64MultiArray>("encoders_ticks",100);
 
-  ros::Rate loop_rate(140); //10Hz
+  ros::Rate loop_rate(10); //10Hz
 
   while (n.ok())
   {
@@ -89,7 +89,7 @@ int main(int argc, char **argv)
     time=(t_act-t_init);
 
     if (dt.count() > Tsample_enc){
-      ROS_INFO_STREAM("Muestreo: " << dt.count()<<"\n" );
+     // ROS_INFO_STREAM("Muestreo: " << dt.count()<<"\n" );
       myfile << time.count()<< " ";
       for (int i=0;i<no_encd;i++){
         myfile << encoder_msg.data[i] << " ";

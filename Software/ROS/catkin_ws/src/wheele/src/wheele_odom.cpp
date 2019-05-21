@@ -41,6 +41,7 @@ int main(int argc, char **argv) {
 
   double v_left,v_right,omega_left,omega_right,deltaRight,deltaLeft;
   double PreviousLeftEncoderCounts,PreviousRightEncoderCounts;
+  double ticksMean_L,ticksMean_R;
 
   ros::Time current_time, last_time;
   current_time = ros::Time::now();
@@ -56,9 +57,12 @@ int main(int argc, char **argv) {
     current_time = ros::Time::now();
     double DistancePerCount = (pi * r_wheel) / ticks_per_rev;
 
+    ticksMean_L=(ticks.m1l+ticks.m2l+ticks.m3l)/3.0;
+    ticksMean_R=(ticks.m1r+ticks.m2r+ticks.m2r)/3.0;
+
     // extract the wheel velocities from the tick signals count
-    deltaLeft = ticks.m1l - PreviousLeftEncoderCounts;
-    deltaRight = ticks.m1r - PreviousRightEncoderCounts;
+    deltaLeft = ticksMean_L - PreviousLeftEncoderCounts;
+    deltaRight = ticksMean_R - PreviousRightEncoderCounts;
 
     omega_left = (deltaLeft * DistancePerCount) / (current_time - last_time).toSec();
     omega_right = (deltaRight * DistancePerCount) / (current_time - last_time).toSec();
@@ -120,3 +124,4 @@ int main(int argc, char **argv) {
     last_time = current_time;
   }
 }
+

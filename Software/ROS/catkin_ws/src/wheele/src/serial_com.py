@@ -23,7 +23,7 @@ def send_pwm(data): # cmd_vel topic (type Twist) callback
     left_vel = left_vel / 0.035
     right_vel = right_vel / 0.035
 
-    cmd.send("change_pwm",left_vel, right_vel,left_vel, right_vel,left_vel, right_vel) # Send velocites of left & right motors to arduino
+    cmd.send("change_pwm",left_vel, right_vel,left_vel, right_vel,left_vel, 0) # Send velocites of left & right motors to arduino
 
 if __name__ == '__main__':
     # Initialize an ArduinoBoard instance.  This is where you specify baud rate and
