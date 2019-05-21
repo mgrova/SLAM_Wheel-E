@@ -5,14 +5,42 @@
 #include <std_msgs/Float64MultiArray.h>
 #include <wheele/pwm6.h>
 
-#define r_wheel 0.00325         // [m]
+
 #define ticks_per_rev 2626
 #define pi 3.14159265
-#define lenght_btw_wheels 0.025 // [m]
+#define TwoPI 6.28318531
 
 wheele::pwm6 ticks;
 
+ros::Time current_time, last_time;
+
+long _PreviousLeftEncoderCounts = 0;
+long _PreviousRightEncoderCounts = 0;
+
+double x = 0.0;
+double y = 0.0;
+double th = 0.0;
+
+double deltaRight,deltaLeft; // nº of ticks since last update
+double v_left,v_right,vx,vy,vth;
+double vMean_L,vMean_R;
+
+double r_wheel=0.0325;
+double lenght_btw_wheels=0.25;
+
+double dt;
+double delta_distance; //distance moved by robot since last update
+double delta_th;       //corresponging change in heading
+double delta_x;        //corresponding change in x direction
+double delta_y;        //corresponding change in y direction
+
+double DistancePerCount = (pi * (2.0*r_wheel)) / ticks_per_rev;
+
 void ticksCb(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
+
+  current_time = ros::Time::now();
+
+  /* Obtain encoders vel [rad/s] */
   ticks.m1l=ticks_read->data[0];
   ticks.m2l=ticks_read->data[1];
   ticks.m3l=ticks_read->data[2];
@@ -20,6 +48,40 @@ void ticksCb(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
   ticks.m2r=ticks_read->data[4];
   ticks.m3r=ticks_read->data[5];
 
+  vMean_L=ticks.m1l; //vMean_L=(ticks.m1l+ticks.m2l+ticks.m3l)/3.0;
+  vMean_R=ticks.m1r; //vMean_R=(ticks.m1r+ticks.m2r+ticks.m2r)/3.0;
+  /* Convert rad/s->m/s*/
+  vMean_L=vMean_L*r_wheel;
+  vMean_R=vMean_R*r_wheel;
+
+  vx = ((vMean_R + vMean_L) / 2.0); // Can be necessary a scale factor due friccions
+  vy = 0;
+  /* To avoid errors in measure of th */
+  if ((int(vMean_R) - int(vMean_L)) > 10 ){
+    vth = ((vMean_R - vMean_L) / lenght_btw_wheels);
+  }else{
+    vth=0;
+  }
+  
+  std::cout << "vmean R "<< vMean_R << "  vmean L "<< vMean_L << "\n";
+  std::cout << "vx:  "<< vx << "  vth:  "<< vth <<"\n";
+
+  /* Apply differential model */
+  dt = (current_time - last_time).toSec();
+  delta_x = (vx * cos(th)) * dt;
+  delta_y = (vx * sin(th)) * dt;
+  delta_th = vth * dt;
+
+  /* Increase absolute robot position */
+  x += delta_x;
+  y += delta_y;
+  th += delta_th;
+
+  /* Check rotation limits */
+  if (th > pi) {th -= TwoPI;}
+  else if( th <= -pi) {th += TwoPI;}
+
+  last_time = current_time;
 }
 
 
@@ -28,65 +90,20 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "wheele_odom");
 
   ros::NodeHandle n;
-  ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("odom", 50);
-  tf::TransformBroadcaster odom_broadcaster;
-
-  double x = 0.0;
-  double y = 0.0;
-  double th = 0.0;
-
-  double vx = 0.1;
-  double vy = 0;
-  double vth = 0.1;
-
-  double v_left,v_right,omega_left,omega_right,deltaRight,deltaLeft;
-  double PreviousLeftEncoderCounts,PreviousRightEncoderCounts;
-  double ticksMean_L,ticksMean_R;
-
-  ros::Time current_time, last_time;
-  current_time = ros::Time::now();
-  last_time = ros::Time::now();
 
   ros::Subscriber ticks_sub = n.subscribe("encoders_ticks",10,ticksCb);
+  ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("odom", 50);
+  
+  tf::TransformBroadcaster odom_broadcaster;
   
   ros::Rate r(1.0); // 1Hz
 
   while (n.ok()) {
 
-    ros::spinOnce(); // check for incoming messages
-    current_time = ros::Time::now();
-    double DistancePerCount = (pi * r_wheel) / ticks_per_rev;
-
-    ticksMean_L=(ticks.m1l+ticks.m2l+ticks.m3l)/3.0;
-    ticksMean_R=(ticks.m1r+ticks.m2r+ticks.m2r)/3.0;
-
-    // extract the wheel velocities from the tick signals count
-    deltaLeft = ticksMean_L - PreviousLeftEncoderCounts;
-    deltaRight = ticksMean_R - PreviousRightEncoderCounts;
-
-    omega_left = (deltaLeft * DistancePerCount) / (current_time - last_time).toSec();
-    omega_right = (deltaRight * DistancePerCount) / (current_time - last_time).toSec();
-
-    v_left = omega_left;   //*r_wheel
-    v_right = omega_right; //*r_wheel
-
-    vx = ((v_right + v_left) / 2) * 10; //*10 is a scale factor
-    vy = 0;
-    vth = ((v_right - v_left) / lenght_btw_wheels) * 10;
-
-    double dt = (current_time - last_time).toSec();
-    double delta_x = (vx * cos(th)) * dt;
-    double delta_y = (vx * sin(th)) * dt;
-    double delta_th = vth * dt;
-
-    x += delta_x;
-    y += delta_y;
-    th += delta_th;
-
     geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th);
 
     geometry_msgs::TransformStamped odom_trans;
-    current_time = ros::Time::now();
+    
     odom_trans.header.stamp = current_time;
     odom_trans.header.frame_id = "odom";
     odom_trans.child_frame_id = "base_link";
@@ -118,10 +135,11 @@ int main(int argc, char **argv) {
 
     // publish the message
     odom_pub.publish(odom);
-    PreviousLeftEncoderCounts =ticks.m1l;
-    PreviousRightEncoderCounts =ticks.m1r;
 
-    last_time = current_time;
+    ros::spinOnce(); // check for incoming messages
+    r.sleep();
+
+
   }
 }
 

@@ -14,14 +14,21 @@ from wheele.msg import pwm6
 from geometry_msgs.msg import Twist
 
 def send_pwm(data): # cmd_vel topic (type Twist) callback
+    
+    # ref comes in m/s but v_wheels must be in rad/s
+
+    d_wheels= 0.25 # [m]
+    r_wheel=0.0325 # [m]
+
     linear_vel = data.linear.x   # Retrieve the linear velocity (foward or backwards) that Whelee should have
     angular_vel = data.angular.z  # Same with angular velocity (clockwise turn is negative)
 
-    left_vel = linear_vel - (angular_vel*0.25)/2 # How much velocity in each side we need for this movement
-    right_vel = linear_vel + (angular_vel*0.25)/2
+    left_vel = linear_vel - (angular_vel*d_wheels)/2 # How much velocity in each side we need for this movement
+    right_vel = linear_vel + (angular_vel*d_wheels)/2
 
-    left_vel = left_vel / 0.035
-    right_vel = right_vel / 0.035
+    # Convert linear to angular velocity [v=wr -> w=v/r]
+    left_vel = left_vel / r_wheel 
+    right_vel = right_vel / r_wheel
 
     cmd.send("change_pwm",left_vel, right_vel,left_vel, right_vel,left_vel, 0) # Send velocites of left & right motors to arduino
 

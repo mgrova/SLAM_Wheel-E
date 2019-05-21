@@ -9,7 +9,7 @@
 #define PI 3.14159265358979
 #define NUM_TICKS 22
 #define TIMEOUT_ENCD 500 
-#define WDW 5
+#define WDW 10
 
 
 class re_decoder
