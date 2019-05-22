@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 import rospy
 from std_msgs.msg import Int16
-from geometry.msg import Vector3
 from sensor_msgs.msg import Imu
 from i2c import ini2c
-import mpu9250
+import mpu6050
 
 scaImu = rawImu = Imu() # Imu.msg from sensor_msgs.msg
-magn = Vector3()
 
 if __name__ == '__main__':
     try:
@@ -16,16 +14,16 @@ if __name__ == '__main__':
         #rospy.init_node('pca', anonymous=True)
         rate = rospy.Rate(10) # 10hz rate = rospy.Rate(8000) # 8khz
 
-        i2c=ini2c() # Get i2c bus
-        imu1=mpu9250.mpu9250(i2c) # init imu in that i2c bus
-        mag1=mpu9250.ak8963(i2c)  # same for magnetometer
+        i2c=ini2c()
+        imu1=mpu6050.mpu6050(i2c)
         imu1.wakeup()
 
         imu1_rawImu_pub = rospy.Publisher('imu1_rawImu', Imu, queue_size=10)  # Topic 2 publish raw Imu msg of mpu1
-        imu1_scaImu_pub = rospy.Publisher('imu1_scaledImu', Imu, queue_size=10)  # Topic 2 publish scaled Imu msg of mpu1
-        mag1_pub = rospy.Publisher('imu/mag', Vector3, queue_size=10)  # Topic 2 publish scaled Imu msg of mpu1
+        imu1_scaImu_pub = rospy.Publisher('imu1_scaImu', Imu, queue_size=10)  # Topic 2 publish scaled Imu msg of mpu1
         #rospy.Subscriber("imu_cmds", Int16, mpu1.rcv_cmd) # Topic 2 watch for commands relatives to mpu1
         while not rospy.is_shutdown():
+	    #imu1.wakeup()
+
             raw_accel = imu1.raw_accel()
             raw_gyro = imu1.raw_gyro()
             rawImu.header.stamp = rospy.Time.now()
@@ -59,9 +57,6 @@ if __name__ == '__main__':
             scaImu.angular_velocity_covariance[0] = -1
             imu1_scaImu_pub.publish(scaImu)
             scaseq = scaseq + 1
-
-            magn = mag1.magn()
-            magn_pub.publish(magn)
 
             rate.sleep()
 

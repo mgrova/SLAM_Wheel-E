@@ -1,10 +1,4 @@
 #!/usr/bin/env python
-# 03/2019 @MikeMakes
-# Delivered as it is, without any warranty
-# GPU 3.0
-# This library for mpu9250 is equivalent to this one:
-# https://github.com/MikeMakes/ros-mpu6050-imu
-# but with the magnetometer AK8963 implemented
 import smbus
 
 def ini2c(ind = 1):    #Open the i2c bus

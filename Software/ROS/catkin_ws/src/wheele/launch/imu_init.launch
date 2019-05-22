@@ -1,0 +1,12 @@
+<launch>
+
+     <node name="imu_talker" pkg="mpu6050_imu" type="talker.py" output="screen" />
+        
+    <include file="$(find imu_calib)/launch/mpu6050_applyCalib.launch" />
+  
+     <node pkg="imu_filter_madgwick" type="imu_filter_node" name="imu_filter_node" output="screen" >
+	<param name="world_frame" value="nwu"/> <!-- nwu=North-West-Up -->
+	<param name="use_mag" value="false"/>
+
+     </node>
+</launch>

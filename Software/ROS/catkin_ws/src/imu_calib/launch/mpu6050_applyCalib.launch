@@ -1,0 +1,12 @@
+<!-- https://github.com/dpkoch/imu_calib -->
+
+<launch>
+
+    <node pkg="imu_calib" type="apply_calib" name="apply_calib" output="screen">
+        <param name="~calib_file" value="$(find mpu6050_imu)/config/imu_calib.yaml"/>         
+        <remap from="raw" to="imu1_scaImu" />
+        <remap from="corrected" to="imu/data_raw" />
+    </node>
+
+</launch>
+
