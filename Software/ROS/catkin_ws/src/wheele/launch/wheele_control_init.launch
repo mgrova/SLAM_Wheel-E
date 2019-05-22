@@ -2,7 +2,7 @@
     <arg name="joystick" default="false"/>
 
     <!-- Node to read encoders -->
-    <node pkg="wheele" type="wheel_encoder" name="wheel_encoder" output="screen" launch-prefix="sudo -E">
+    <node pkg="wheele" type="wheel_encoder" name="wheel_encoder" output="screen" launch-prefix="sudo su">
         <param name="gpio" default="[16,20,21,13,19,26]"/>
     </node>
 
@@ -10,6 +10,7 @@
     <node pkg="wheele" type="serial_com.py" name="serial_com.py" output="screen" />
 
     <!-- PI controller implemented in wheele motors -->
+<!--
     <node pkg="wheele" type="control" name="control" output="screen" >
         <param name="Kp_m1L" default="0"/>
         <param name="Ki_m1L" default="0"/>
@@ -25,10 +26,19 @@
         <param name="Kp_m3R" default="0"/>
         <param name="Ki_m3R" default="0"/>
     </node>
+-->
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
+    <rosparam command="load" file="$(find wheele)/config/ekf_template_wheele.yaml" />
+
+    <remap from="odometry/filtered" to="odom_ekf"/>
+    <remap from="accel/filtered" to="accel_ekf"/>
+    
+
+  </node>
+    
 
     <!-- Odometry of diff robot (Wheele)-->
-    <node pkg="wheele" type="wheele_odom" name="wheele_odom" output="screen">
-    </node> 
+    <node pkg="wheele" type="wheele_odom" name="wheele_odom" output="screen" /> 
 
     <!-- Teleoperation nodes -->
     <include if="(arg joystick)" file="$(find teleop_twist_joy)/launch/teleop.launch"/>
