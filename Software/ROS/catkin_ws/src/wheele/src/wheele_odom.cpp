@@ -50,19 +50,24 @@ void ticksCb(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
 
   vMean_L=ticks.m1l; //vMean_L=(ticks.m1l+ticks.m2l+ticks.m3l)/3.0;
   vMean_R=ticks.m1r; //vMean_R=(ticks.m1r+ticks.m2r+ticks.m2r)/3.0;
+
+  /* To avoid errors in measure of th */
+  if ((int(vMean_R) - int(vMean_L)) > 1 ){
+    /* Convert rad/s->m/s*/
+    vMean_L=vMean_L*r_wheel;
+    vMean_R=vMean_R*r_wheel;
+    
+    vth = ((vMean_R - vMean_L) / lenght_btw_wheels);
+  }else{
+    vth=0;
+  }
+
   /* Convert rad/s->m/s*/
   vMean_L=vMean_L*r_wheel;
   vMean_R=vMean_R*r_wheel;
 
   vx = ((vMean_R + vMean_L) / 2.0); // Can be necessary a scale factor due friccions
   vy = 0;
-  /* To avoid errors in measure of th */
-  if ((int(vMean_R) - int(vMean_L)) > 10 ){
-    vth = ((vMean_R - vMean_L) / lenght_btw_wheels);
-  }else{
-    vth=0;
-  }
-  
   std::cout << "vmean R "<< vMean_R << "  vmean L "<< vMean_L << "\n";
   std::cout << "vx:  "<< vx << "  vth:  "<< vth <<"\n";
 
@@ -96,7 +101,7 @@ int main(int argc, char **argv) {
   
   tf::TransformBroadcaster odom_broadcaster;
   
-  ros::Rate r(1.0); // 1Hz
+  ros::Rate r(10); // 1Hz
 
   while (n.ok()) {
 
