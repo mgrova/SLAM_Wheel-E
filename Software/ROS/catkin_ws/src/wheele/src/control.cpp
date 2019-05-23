@@ -125,7 +125,7 @@ int main(int argc, char **argv){
   ros::init(argc, argv, "control");
   ros::NodeHandle n;
   ros::Subscriber ref_sub = n.subscribe("cmd_vel",10,get_ref);
-  ros::Subscriber ticks_sub = n.subscribe("encoders_ticks",10,get_ticks);
+  ros::Subscriber ticks_sub = n.subscribe("encoders",10,get_ticks);
   ros::Publisher pwm_pub = n.advertise<wheele::pwm6>("pwm", 10);
 
   ros::Subscriber kp_sub = n.subscribe("kp",10,get_kp);

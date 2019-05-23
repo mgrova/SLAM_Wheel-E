@@ -101,7 +101,6 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include
 #  LIBRARIES mpu6050_imu
   CATKIN_DEPENDS rospy
 #  DEPENDS system_lib
@@ -115,7 +114,6 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
 # include
-  include/mpu6050_imu/
   ${catkin_INCLUDE_DIRS}
 )
 

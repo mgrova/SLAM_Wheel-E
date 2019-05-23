@@ -48,8 +48,8 @@ void ticksCb(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
   ticks.m2r=ticks_read->data[4];
   ticks.m3r=ticks_read->data[5];
 
-  vMean_L=ticks.m1l; //vMean_L=(ticks.m1l+ticks.m2l+ticks.m3l)/3.0;
-  vMean_R=ticks.m1r; //vMean_R=(ticks.m1r+ticks.m2r+ticks.m2r)/3.0;
+  vMean_L=(ticks.m1l+ticks.m2l)/2.0;
+  vMean_R=(ticks.m1r+ticks.m2r)/2.0;
 
   /* To avoid errors in measure of th */
   if ((int(vMean_R) - int(vMean_L)) > 1 ){
@@ -59,17 +59,14 @@ void ticksCb(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
     
     vth = ((vMean_R - vMean_L) / lenght_btw_wheels);
   }else{
+    /* Convert rad/s->m/s*/
+    vMean_L=vMean_L*r_wheel;
+    vMean_R=vMean_R*r_wheel;
     vth=0;
   }
 
-  /* Convert rad/s->m/s*/
-  vMean_L=vMean_L*r_wheel;
-  vMean_R=vMean_R*r_wheel;
-
   vx = ((vMean_R + vMean_L) / 2.0); // Can be necessary a scale factor due friccions
   vy = 0;
-  std::cout << "vmean R "<< vMean_R << "  vmean L "<< vMean_L << "\n";
-  std::cout << "vx:  "<< vx << "  vth:  "<< vth <<"\n";
 
   /* Apply differential model */
   dt = (current_time - last_time).toSec();
@@ -83,10 +80,13 @@ void ticksCb(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
   th += delta_th;
 
   /* Check rotation limits */
-  if (th > pi) {th -= TwoPI;}
-  else if( th <= -pi) {th += TwoPI;}
+  if (th >= TwoPI) {th -= TwoPI;}
+  else if( th <= -TwoPI) {th += TwoPI;}
 
   last_time = current_time;
+  std::cout << "vmean R "<< vMean_R << "  vmean L "<< vMean_L << "\n";
+  std::cout << "vx:  "<< vx << "  vth:  "<< vth <<"\n";
+  std::cout << "x: "<< x<< " y: " << y<< "  th: "<< th <<std::endl;
 }
 
 
@@ -96,12 +96,12 @@ int main(int argc, char **argv) {
 
   ros::NodeHandle n;
 
-  ros::Subscriber ticks_sub = n.subscribe("encoders_ticks",10,ticksCb);
+  ros::Subscriber ticks_sub = n.subscribe("encoders",10,ticksCb);
   ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("odom", 50);
   
   tf::TransformBroadcaster odom_broadcaster;
   
-  ros::Rate r(10); // 1Hz
+  ros::Rate r(25); // 1Hz
 
   while (n.ok()) {
 
