@@ -27,7 +27,7 @@ if __name__ == '__main__':
             raw_accel = imu1.raw_accel()
             raw_gyro = imu1.raw_gyro()
             rawImu.header.stamp = rospy.Time.now()
-            rawImu.header.frame_id = 'base_link'#'imu_link'
+            rawImu.header.frame_id = 'imu_link'
             rawImu.header.seq = rawseq
             rawImu.orientation_covariance[0] = -1
             rawImu.linear_acceleration.x = raw_accel[0]
@@ -44,7 +44,7 @@ if __name__ == '__main__':
             sca_accel = imu1.accel()
             sca_gyro = imu1.gyro()
             scaImu.header.stamp = rospy.Time.now()
-            scaImu.header.frame_id = 'base_link'#'imu_link'
+            scaImu.header.frame_id = 'imu_link'
             scaImu.header.seq = scaseq
             scaImu.orientation_covariance[0] = -1
             scaImu.linear_acceleration.x = sca_accel[0]
