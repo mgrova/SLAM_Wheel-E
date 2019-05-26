@@ -52,12 +52,12 @@ void ticksCb(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
   vMean_R=(ticks.m1r+ticks.m2r)/2.0;
 
   /* To avoid errors in measure of th */
-  if ((int(vMean_R) - int(vMean_L)) > 1 ){
+  if (abs((int(vMean_R) - int(vMean_L))) > 5 ){
     /* Convert rad/s->m/s*/
     vMean_L=vMean_L*r_wheel;
     vMean_R=vMean_R*r_wheel;
     
-    vth = ((vMean_R - vMean_L) / lenght_btw_wheels);
+    vth = ((vMean_R - vMean_L) / lenght_btw_wheels)*0.25;
   }else{
     /* Convert rad/s->m/s*/
     vMean_L=vMean_L*r_wheel;
@@ -84,9 +84,6 @@ void ticksCb(const std_msgs::Float64MultiArray::ConstPtr& ticks_read){
   else if( th <= -TwoPI) {th += TwoPI;}
 
   last_time = current_time;
-  std::cout << "vmean R "<< vMean_R << "  vmean L "<< vMean_L << "\n";
-  std::cout << "vx:  "<< vx << "  vth:  "<< vth <<"\n";
-  std::cout << "x: "<< x<< " y: " << y<< "  th: "<< th <<std::endl;
 }
 
 
