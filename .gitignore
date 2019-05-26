@@ -7,3 +7,4 @@ Software/ROS/catkin_ws/devel/
 Software/ROS/catkin_ws/src/.vscode
 *.vscode*
 Software/ROS/catkin_ws/ticks.txt
+*ticks.txt*
