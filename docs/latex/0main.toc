@@ -1,0 +1,19 @@
+\select@language {spanish}
+\contentsline {section}{\numberline {1}Introducci\IeC {\'o}n al proyecto}{2}{section.1}
+\contentsline {section}{\numberline {2}Hardware empleado en el proyecto}{2}{section.2}
+\contentsline {subsection}{\numberline {2.1}Robot movil dise\IeC {\~n}ado}{2}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Dise\IeC {\~n}o PCB}{2}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}Controladores de abordo}{2}{subsection.2.3}
+\contentsline {subsubsection}{\numberline {2.3.1}Raspberry Pi, Arduino, etc}{2}{subsubsection.2.3.1}
+\contentsline {subsection}{\numberline {2.4}C\IeC {\'a}maras empleadas}{2}{subsection.2.4}
+\contentsline {section}{\numberline {3}Software empleado en el proyecto}{2}{section.3}
+\contentsline {subsection}{\numberline {3.1}Lo de ROS y tal}{2}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Uso de librer\IeC {\'\i }as externas}{2}{subsection.3.2}
+\contentsline {section}{\numberline {4}Introducci\IeC {\'o}n al SLAM}{2}{section.4}
+\contentsline {subsection}{\numberline {4.1}\textit {RTAB-Map SLAM}}{2}{subsection.4.1}
+\contentsline {subsubsection}{\numberline {4.1.1}Fundamento te\IeC {\'o}rico de la t\IeC {\'e}cnica}{2}{subsubsection.4.1.1}
+\contentsline {subsubsection}{\numberline {4.1.2}An\IeC {\'a}lisis de resultados obtenidos}{2}{subsubsection.4.1.2}
+\contentsline {subsection}{\numberline {4.2}\textit {ORB-SLAM 2}}{2}{subsection.4.2}
+\contentsline {subsubsection}{\numberline {4.2.1}Fundamento te\IeC {\'o}rico de la t\IeC {\'e}cnica}{2}{subsubsection.4.2.1}
+\contentsline {subsubsection}{\numberline {4.2.2}An\IeC {\'a}lisis de resultados obtenidos}{2}{subsubsection.4.2.2}
+\contentsline {section}{\numberline {5}Referencias}{2}{section.5}

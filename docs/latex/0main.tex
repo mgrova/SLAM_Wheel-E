@@ -1,0 +1,108 @@
+\documentclass[a4paper,twoside]{article}
+
+%% Language and font encodings
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=2.5cm,right=2.5cm,marginparwidth=0.5cm]{geometry}
+
+\usepackage{amsmath}			%Paquete matemático
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+
+\usepackage{hyperref}		%Paquete empleado para colocar hipervinculos
+\hypersetup{
+ colorlinks = true,
+ linkcolor = black,
+}
+
+\usepackage{eurosym}
+\usepackage{pdfpages}			%Sirve para incluir PDF en el documento
+\usepackage{anysize}			%Podremos colocar imagenes de cualquier tamaño
+\usepackage{subfig}				%Nos permitira colocar varias imagenes en una figura
+\usepackage{float}				%Podremos crear y colocar boxes donee queramos
+\usepackage[export]{adjustbox}
+
+%Colocamos cabeceras y pies de pagina
+%(CONSULTA: http://edicionesoniricas.com/maquetar-latex-encabezados-pies-pagina/)
+%(CONSULTA2: https://es.sharelatex.com/learn/Headers_and_footers)
+%\bfseries es análogo a \textbf{}
+% \leftmark-> Adds name and number of the current top-level structure (section for article) in uppercase letters.
+%\rightmark-> Adds name and number of the current next to top-level structure (subsection for article) in uppercase letters.
+\usepackage{fancyhdr}		%Paquetes necesarios
+\pagestyle{fancy}			%Borra los parametros por defecto
+\fancyhf{}
+\fancyhead[RO,LE]{\bfseries\thepage}
+\fancyhead[LO,RE]{\bfseries\rightmark}
+%Nos aseguramos de que en las paginas plain, no haya ni cabeceras ni lineas
+\fancypagestyle{plain}
+{
+ \fancyhead{} % elimina cabeceras en paginas "plain"
+ \renewcommand{\headrulewidth}{0pt} % así como la raya
+}
+
+%Definimos las lineas divisoras de las cabeceras y pie de pagina
+\renewcommand{\headrulewidth}{1pt}	%Define el grosor de la línea de head
+\renewcommand{\footrulewidth}{0pt}		%Define el grosor de la linea foot (Si no queremos linea, 0pt)
+\addtolength{\headheight}{0.5pt} % espacio para la raya
+
+%Librerias para introducir código de Matlab
+%\usepackage{bigfoot} % to allow verbatim in footnote
+\usepackage[numbered,framed]{matlab-prettifier}
+\lstset{
+ style              = Matlab-editor,
+ basicstyle         = \mlttfamily,
+ escapechar         = ",
+ mlshowsectionrules = true
+}
+\usepackage{listings}
+\usepackage{xcolor} % for setting colors
+
+
+% Pie de pagina
+%\fancyfoot{} % limpia el pie
+\fancyfoot[C]{- \thepage -} % número de página centrado
+
+%Nos generará texto para pruebas de maquetado
+\usepackage{lipsum}
+
+% To include code in differents languages
+%\usepackage{minted}
+%\usemintedstyle{borland}
+%\usepackage{mdframed}
+
+% To can use multirow
+\usepackage{multirow}
+%----------------------------------------------------------------------------------------------------------------------------------
+\begin{document}
+
+\begin{titlepage}
+\centering
+\Huge{\textbf{AMPLIACIÓN DE ROBÓTICA}} \\
+\Huge{Comparativa de técnicas de SLAM empleando un robot movil}\\
+
+\vspace{2cm}
+\LARGE{Grado en Ingeniería Electrónica, Mecatrónica y Robótica}\\
+\rule{\textwidth}{0.1mm}
+\large{\tableofcontents}
+\vspace{1cm}
+\rule{\textwidth}{0.1mm}
+\Large{\textbf{Autores:} \\
+                         López Gil, Miguel \\
+                         Montes Grova, Marco Antonio\\
+                         Osuna Cañas, Alfonso Carlos}
+\end{titlepage}
+\newpage
+
+% %%%%%%%%%%%   INTRODUCCION %%%%%%%%%%%%%%%%%%
+\section{Introducción al proyecto}
+
+\input{1hard.tex}
+\input{2soft.tex}
+\input{3slam.tex}
+\section{Referencias}
+
+\end{document}
