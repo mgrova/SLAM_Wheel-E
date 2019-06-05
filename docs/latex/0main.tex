@@ -101,7 +101,10 @@
 
 % %%%%%%%%%%%   INTRODUCCION %%%%%%%%%%%%%%%%%%
 \section{Introducción al proyecto}
-Pos eso,...
+En este proyecto se implementan diferentes técnicas de SLAM visuales, así como diversas fuentes de odometría, sobre un robot móvil de bajo presupuesto.\par
+ El robot ha sido diseñado con una topología basada en los vehículos de exploración espacial conocidos como \textit{rovers}, utilizando materiales y métodos de construcción asequibles teniendo en mente una sencilla sustitución e iterabilidad de cada componente.\par
+ La odometría del robot se obtiene a partir de la fusión sensorial de una estimación de la posición a partir de encoders ópticos, y de la velocidad y aceleración medidas por una IMU.\par
+ Las imágenes utilizadas para las técnicas SLAM provienen de una cámara \textit{Kinect for Xbox 360} de Microsoft, que cuenta con una cámara RGB y un sensor de profundidad matricial
 
 \newpage
 \input{1hard.tex}
@@ -115,11 +118,12 @@ Pos eso,...
 \newpage
 \bibliography{orb_cite}
 \nocite{murORB2}
-\nocite{atmega}
 \nocite{rtabmap}
-\nocite{WinNT}
+\nocite{MooreStouchKeneralizedEkf2014}
 \nocite{PyCmdMessenger}
 \nocite{CmdMessenger}
+\nocite{WinNT}
+\nocite{atmega}
 % \url{http://introlab.github.io/rtabmap/} \\
 % \url{https://introlab.3it.usherbrooke.ca/mediawiki-introlab/images/7/7a/Labbe18JFR_preprint.pdf} \\
 % \url{https://introlab.3it.usherbrooke.ca/mediawiki-introlab/images/b/bc/TRO2013.pdf}
