@@ -8,3 +8,21 @@ Software/ROS/catkin_ws/src/.vscode
 *.vscode*
 Software/ROS/catkin_ws/ticks.txt
 *ticks.txt*
+
+## Core latex/pdflatex auxiliary files:
+docs/latex/*.aux
+docs/latex/*.lof
+docs/latex/*.log
+docs/latex/*.lot
+docs/latex/*.fls
+docs/latex/*.out
+docs/latex/*.toc
+docs/latex/*.fmt
+docs/latex/*.fot
+docs/latex/*.cb
+docs/latex/*.cb2
+docs/latex/.*.lb
+docs/latex/*.bbl
+docs/latex/*.blg
+docs/latex/*.fdb_latexmk
+
