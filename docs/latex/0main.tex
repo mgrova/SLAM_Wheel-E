@@ -102,9 +102,11 @@
 % %%%%%%%%%%%   INTRODUCCION %%%%%%%%%%%%%%%%%%
 \section{Introducción al proyecto}
 En este proyecto se implementan diferentes técnicas de SLAM visuales, así como diversas fuentes de odometría, sobre un robot móvil de bajo presupuesto.\par
- El robot ha sido diseñado con una topología basada en los vehículos de exploración espacial conocidos como \textit{rovers}, utilizando materiales y métodos de construcción asequibles teniendo en mente una sencilla sustitución e iterabilidad de cada componente.\par
- La odometría del robot se obtiene a partir de la fusión sensorial de una estimación de la posición a partir de encoders ópticos, y de la velocidad y aceleración medidas por una IMU.\par
- Las imágenes utilizadas para las técnicas SLAM provienen de una cámara \textit{Kinect for Xbox 360} de Microsoft, que cuenta con una cámara RGB y un sensor de profundidad matricial
+El robot ha sido diseñado con una topología inspirada en los vehículos de exploración espacial conocidos como \textit{rovers}, utilizando materiales y métodos de construcción asequibles y manteniendo como objetivo una sencilla sustitución e iterabilidad de cada componente. La estructura está diseñada en FreeCad y compuesta por piezas de madera mecanizadas en una cortadora láser cnc. Algunos elementos sin funcionalidad estructural, como los encoders o el soporte de la cámara, han sido fabricados mediante impresión 3D.\\
+La disposición geométrica es la de un vehículo diferencial, con tres pares de ruedas, cada una con su respectiva pareja de motor y encoder. Como drivers de los motores se han usado tres puentes H \textit{L293D} integrados en una placa de circuito impreso diseñada expresamente para ello.
+\par
+La odometría del robot se obtiene a partir de una estimación de la posición a partir de encoders ópticos, y de la velocidad y aceleración medidas por una IMU \textit{mpu-6050}. La fusión sensorial se realiza mediante un filtro de Kalman extendido, implementado en el paquete \textit{robot localization} de ROS kinetic. \\
+Las imágenes y medidas de profundidad utilizadas para las técnicas SLAM provienen de una cámara \textit{Kinect for Xbox 360} de Microsoft, que cuenta con una cámara RGB y un sensor de profundidad matricial.
 
 \newpage
 \input{1hard.tex}
