@@ -80,7 +80,7 @@
 \usepackage{cite}
 %----------------------------------------------------------------------------------------------------------------------------------
 \begin{document}
-
+\bibliographystyle{ieeetr}
 \begin{titlepage}
 \centering
 \Huge{\textbf{AMPLIACIÓN DE ROBÓTICA}} \\
@@ -113,10 +113,14 @@ Pos eso,...
 \input{3slam.tex}
 
 \newpage
-\section{Referencias}
-
 \bibliography{orb_cite}
-\url{http://introlab.github.io/rtabmap/} \\
-\url{https://introlab.3it.usherbrooke.ca/mediawiki-introlab/images/7/7a/Labbe18JFR_preprint.pdf} \\
-\url{https://introlab.3it.usherbrooke.ca/mediawiki-introlab/images/b/bc/TRO2013.pdf}
+\nocite{murORB2}
+\nocite{atmega}
+\nocite{rtabmap}
+\nocite{WinNT}
+\nocite{PyCmdMessenger}
+\nocite{CmdMessenger}
+% \url{http://introlab.github.io/rtabmap/} \\
+% \url{https://introlab.3it.usherbrooke.ca/mediawiki-introlab/images/7/7a/Labbe18JFR_preprint.pdf} \\
+% \url{https://introlab.3it.usherbrooke.ca/mediawiki-introlab/images/b/bc/TRO2013.pdf}
 \end{document}
