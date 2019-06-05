@@ -1,5 +1,5 @@
 image_width: 640
-image_height: 488
+image_height: 480
 camera_name: rgb_B00362722000129B
 camera_matrix:
   rows: 3
