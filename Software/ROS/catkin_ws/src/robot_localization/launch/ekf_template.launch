@@ -1,10 +1,10 @@
 <launch>
   <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
-    <rosparam command="load" file="$(find robot_localization)/params/ekf_template.yaml" />
+    <rosparam command="load" file="$(find wheele)/config/ekf_template_wheele.yaml" />
 
    <!--  Placeholder for output topic remapping
-    <remap from="odometry/filtered" to=""/>
-    <remap from="accel/filtered" to=""/>
+    <remap from="odometry/filtered" to="odom_ekf"/>
+    <remap from="accel/filtered" to="acc_ekf"/>
     -->
 
   </node>

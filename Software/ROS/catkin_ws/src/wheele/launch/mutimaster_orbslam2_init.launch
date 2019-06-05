@@ -33,7 +33,7 @@
        <arg name="depth_camera_info_url" default="$(find wheele)/config/KINECT.yaml" />  
      </include>  -->
     <include if="$(arg using_rpi)" file="$(find wheele)/launch/freenect_throttle.launch">
-        <arg name="rate"  value="10"/>
+        <arg name="rate"  value="15"/>
         <arg name="approx_sync" value="true" />
         <arg name="rgbd_sync" value="true"/>
         <arg name="orb_slam" value="true"/> 
