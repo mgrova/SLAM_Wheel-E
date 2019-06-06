@@ -25,4 +25,5 @@ docs/latex/.*.lb
 docs/latex/*.bbl
 docs/latex/*.blg
 docs/latex/*.fdb_latexmk
+docs/latex/*.synctex.gz
 
