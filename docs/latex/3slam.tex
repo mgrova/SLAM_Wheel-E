@@ -1,6 +1,37 @@
 \section{Introducción al SLAM\textit{(Simultaneous Localization and Mapping)}}
 ¿Qué cojones es el SLAM?
 
+\subsection{Clasificación técnicas de SLAM}
+La forma en que se toma información de las imagenes que recibe y de su entorno y cómo la procesa permite distinguir las siguientes tipos de sistemas
+SLAM visual:
+\begin{itemize}
+    \item \textit{Denso vs Disperso} \\
+    En función de la cantidad de datos tomada de cada imagen, se realizará ésta clasificación. Las técnicas de SLAM disperso sólo emplean una pequeña
+    región de pixeles, cómo pueden ser puntos característicos. Sin embargo, las técnicas densas emplean la mayoría o todos los píxeles de cada frame
+    que reciben. \\
+    Debido a que la cantidad y tipo de información que toman son diferentes, el tipo de mapa que se obtendrá también lo es. Con las técnicas de SLAM
+    disperso se obtendrá una nube de puntos que será una representación de los puntos característicos de las escena y se usará sobre todo para hacer
+    un tracking de la pose de la cámara. Por otro lado, un mapa dentro tendrá muchos más detalles y, requerirá de una mucho más elevada carga computacional.
+
+ \item \textit{Directo vs Indirecto} \\
+En función de cómo las técnicas de SLAM empleen y traten la información que reciben, se podrá clasificar en SLAM directo o indirecto.\\
+El SLAM infirecto, se basa en extraer primero las features de la imagen, puntos característicos, para posteriormente emplearlos para localizarse y contruir
+el mapa. Para extraer estos puntos caracteristicos existen muchos descriptores: ORB, SIFT, FAST, etc. \\
+En contraste, el SLAM Directo,emplean directamente la intensidad de los pixeles, de tal modo que se obtengan features intermedios. Estos metodos tratan de 
+obtener la profundidad y estructura del entorno a partir de una optimización del mapa. Los procesos de extracción de puntos característicos son mucho más
+pesados computacionalmente si se trabaja al mismo rate que un slam indirecto.\\
+Por último, destacar, que los metodos indirectos de SLAM son más tolerantes a los cambios de iluminación del entorno.\\
+
+A continuación, se monstarán una comparativa de una serie de técnicas de SLAM:
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.6\textwidth]{images/comp_slam}
+    \caption{Comparativa de técnicas SLAM}
+\end{figure}
+
+\end{itemize}
+En éste proyecto, se probará ORB-SLAM2 y RTAB-Map, los cuales abordan el problema del SLAM desde dos puntos de vista completamente distinto, cómo se
+verá a continuación.
 \subsection{\textit{RTAB-Map SLAM}}
 RTAB-Map \textit{(Real-Time Appearance-Based Mapping)} es una técnica de Graph-SLAM\footnote{http://robots.stanford.edu/papers/thrun.graphslam.pdf} basada en la detección de bucles cerrados incrementales. Es totalmente funcional 
 con sensores RGB-D, Stereo y LIDAR. \\
@@ -25,7 +56,7 @@ y con más frecuencia, mientras que el resto pasarán a la memoria de largo plaz
 \begin{figure}[h!]
     \centering
     \includegraphics[width=.4\textwidth]{images/rtabmap_memory}
-    \caption{Estructura de memoria de la ténica RTAB-Map}
+    \caption{Estructura de memoria de la técnica RTAB-Map}
 \end{figure}
 
 
@@ -53,6 +84,57 @@ observadas.
 \end{comment}
 \subsubsection{Análisis de resultados obtenidos}
 
+\newpage
 \subsection{\textit{ORB-SLAM 2}}
+ORB-SLAM2 es una técnica de SLAM en tiempo real para cámaras Monocular, Stereo y RGB-D que se engloba dentro de las técnicas de 
+\textit{Sparse-Slam}. Se computa la trayectoria y hace una reconstrucción dispersa 3D del entorno. Al igual que todas las técnicas 
+de SLAM, se basa en la detección de bucles cerrados y  se relocaliza en tiempo real. \\
+Se basa en la detección de \textit{keyframes} que emplea para hacer un tracking de los mismos y a partir de ello crear el 
+mapa local que, posteriormente, se optimizará junto al mapa global. \\
+Unos de los puntos destacables de ésta técnica de SLAM son los siguientes:
+\begin{itemize}
+    \item Emplea \textit{grafo de covisibilidad}. Tanto el seguimiento como el mapping se focalizan en el área covisible,
+    independientemente del tamaño del mapa completo, consiguiendo así explorar entornos amplios sin
+    aumentar el tiempo y la carga de computación.
+
+    \item La estrategia para detectar los bucles cerrados de visión en tiempo real se basa en la optimización de
+   un de grafo denominado \textit{Essencial Graph}, lo cuál se desarrollará mas adelante.
+\end{itemize}
+
 \subsubsection{Fundamento teórico de la técnica}
+A continuación, se tratará un poco el funcionamiento interno del algoritmo, el cuál presenta el siguiente esquema:
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\textwidth]{images/orb_scheme}
+    \caption{Estructura interna de ORB-SLAM2}
+\end{figure}
+
+Se observa cómo existen 6 grandes módulos, los cuales de lanzarán en 3 hilos paralelos. \\
+En primer lugar, se tendrá el preprocesamiento de la imagen, de la cuál se obtendrán  ORB features 
+\textit{(Oriented Fast and Rotated BRIEF)}. \\
+Los hilos desempeñarán las siguientes funciones:
+\begin{itemize}
+    \item El \textit{tracking} se encargará de localizar la cámara en cada frame buscando marches entre las features
+    del mapa local y minimizando la reprojección del error aplicando un \textit{Bundle Adjustment}\footnote{https://homes.cs.washington.edu/~sagarwal/bal.pdf} sólo de 
+    movimiento.
+    \item El \textit{Local Mapping} se encargará de gestionar y optimizar el mapa local aplicando un \textit{BA} local.
+    \item El hilo de \textit{Loop Closing} se encargará de detectar bucles cerrados grandes y corregir la deriva acumulada
+    realizando una optimización del grafo del \textit{pose} obtenido. Este hilo, lanza 4 hilos internos que se encagarán de
+    realizar un \textit{Bundle Adjustement} completo tras la optimización del grafo del \textit{pose}, para hayar la solución
+    más optima.
+\end{itemize}
+
+En caso de que el sistema pierda el tracking, lleva integrado un modulo de \textit{Plane recognition} basado en un vocabulario 
+de palabras que básicamente es una especie de preentrenamiento de la técnica, para poder obtener y asociar keyframes más fácilmente. \\
+
 \subsubsection{Análisis de resultados obtenidos}
+En la imagen a continuación, puede observarse la técnica corriendo en un ordenador. Destacar que ésta técnica de SLAM presenta una carga computacional bastante elevada.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\textwidth]{images/working_zone_orb}
+    \caption{ORB-SLAM2 en funcionamiento}
+\end{figure}
+
+Se observa en la imagen superior izquierda las features que está obteniendo en ese frame, a partir de las cuales se ha creado en mapa local y,
+por extensión el global. En la imagen inferior izquierda, se puede observar el mapa creado, el cuál se analizará más tarde.\\
+Por último, a la derecha se tienen las terminales a partir de las cuales se ha lanzado el SLAM y se realiza la comunicación con el robot.
