@@ -41,7 +41,7 @@ Debido a las bajas prestaciones y requerimientos de los motores, se ha optado po
 Por comodidad y robustez, se ha diseñado en \textit{KiCad} una placa de circuito impreso muy simple que facilita el cableado y permite integrar algún componente pasivo (como diodos fly-back o capacidades de by-pass). Gracias al laboratorio de electrónica este diseño ha sido revelado sobre una placa de una sola cara, obteniendo, como se aprecia en las imágenes, un acabado final bastante bueno.\\
  \begin{figure}[h!]
  	\centering
- 	\includegraphics[width=.6\textwidth]{images/hw/pcb_kicad}
+ 	\includegraphics[width=.2\textwidth]{images/hw/pcb_kicad}
  	\caption{Diseño en KiCad de la PCB.}
  \end{figure}
   \begin{figure}[h!]
@@ -51,9 +51,14 @@ Por comodidad y robustez, se ha diseñado en \textit{KiCad} una placa de circuit
   \end{figure}
  Los microchips requieren de una referencia de tensión lógica (para operar la señal de entrada correctamente) y de una fuente de potencia capaz de alimentar los motores. La referencia se consigue de una salida de cinco voltios del arduino, que será quien se comunique con el driver. La alimentación de los motores corre a cargo de un transformador externo de 12V y XA.
 	
+<<<<<<< HEAD
 \subsection{Encoders}
 Los sensores elegidos para medir la velocidad de cada rueda y estimar la posición y velocidad del robot, son unos sencillos encoders ópticos binarios junto a unos discos perforados. Al pasar la luz por una perforación del disco, que gira a la misma velocidad que la rueda, se manda una señal digital al micro. Contabilizando los flancos de subida o de bajada en cierto periódo de tiempo, y conociendo las dimensiones del disco, se obtiene una estimación de la velocidad. Para más detalles en este proceso dirigirese a la ventanilla 3 seccion software encoders GRACIAS. \\
 La corriente necesaria para que funcionen correctamente los encoders es mínima, por lo que se alimentan desde una salida de cinco voltios de baja potencia del arduino.
+=======
+\subsection{Encoders}\label{enc_hard}
+Los sensores elegidos para medir la velocidad de cada rueda y estimar la posición y velocidad del robot, son unos sencillos encoders ópticos binarios junto a unos discos perforados. Al pasar la luz por una perforación del disco, que gira a la misma velocidad que la rueda, se manda una señal digital al micro. Contabilizando los flancos de subida o de bajada en cierto periódo de tiempo, y conociendo las dimensiones del disco, se obtiene una estimación de la velocidad. Para más detalles en este proceso dirigirese a la ventanilla 3 seccion software encoders GRACIAS. 
+>>>>>>> 99be32a6af63629257e8615c8aa425785a982917
  \begin{figure}[h!]
  	\centering
  	\includegraphics[width=.6\textwidth]{images/hw/encoder_img}
@@ -65,7 +70,7 @@ La corriente necesaria para que funcionen correctamente los encoders es mínima,
   	\caption{Disco perforado impreso en 3D.}
   \end{figure}
   
-\subsection{IMU}
+\subsection{IMU}\label{imu_hardw}
 Como ya se ha mencionado con anterioridad, se ha escogido una IMU mpu-6050 de seis grados de libertad para obtener datos de las velocidades y aceleraciones del robot. El microchip contine varios subsitemas, de los cuales nos interesa resaltar especialmente:
 \begin{itemize}
 	\item Giroscópio (tres ejes), con un rango progamable de ±250, ±500, ±1000 y ±2000 °/s (grados / segundos).
