@@ -81,7 +81,20 @@ Como alternativa, el orden de almacenamiento de las observaciones se elige de fo
 preferible mantener en la memoria de trabajo aquellas localizaciones que son más susceptibles de ser
 observadas.
 \end{comment}
+\subsection{Framework de optimización Octomap}
+El paquete de ros empleado para emplear la ténica RTAB-Map,\textit{rtabmap-ros}, posee la posibilidad de extraer también el mapa de ocupación 2D y 3D gracias al Framework 
+\textit{Octomap}\footnote{https://octomap.github.io/}. \\
+Este framework es una librería de C++ que permite la obtención de mapas probabilisticos basándose en una estructura de representación jerarquica de datos para subdividir
+el espacio 3D, esta estructura es denominada \textit{Octotrees}. \\
 
+Los \textit{Octotrees} se emplean para almacenar propiedades booleanas del entorno, en el caso de
+la robotica estas propiedas booleanas es la ocupación de dicha celda, de la cual es posible definir su tamaño minimo en función de la resolución de mapa
+deseada.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.7\textwidth]{images/octotree}
+    \caption{Funcionamiento del \textit{octotree} y su estructura en arbol}
+\end{figure}
 
 \newpage
 \subsubsection{\textit{ORB-SLAM 2}}
@@ -137,21 +150,6 @@ por extensión el global. En la imagen inferior izquierda, se puede observar el 
 Por último, a la derecha se tienen las terminales a partir de las cuales se ha lanzado el SLAM y se realiza la comunicación con el robot.\\
 
 \newpage
-\subsection{Framework de optimización Octomap}
-El paquete de ros empleado para emplear la ténica RTAB-Map,\textit{rtabmap-ros}, posee la posibilidad de extraer también el mapa de ocupación 2D y 3D gracias al Framework 
-\textit{Octomap}\footnote{https://octomap.github.io/}. \\
-Este framework es una librería de C++ que permite la obtención de mapas probabilisticos basándose en una estructura de representación jerarquica de datos para subdividir
-el espacio 3D, esta estructura es denominada \textit{Octotrees}. \\
-
-Los \textit{Octotrees} se emplean para almacenar propiedades booleanas del entorno, en el caso de
-la robotica estas propiedas booleanas es la ocupación de dicha celda, de la cual es posible definir su tamaño minimo en función de la resolución de mapa
-deseada.
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=.7\textwidth]{images/octotree}
-    \caption{Funcionamiento del \textit{octotree} y su estructura en arbol}
-\end{figure}
-\newpage
 
 \section{Comparativa de resultados empleando \textit{rosbags} del robot}
 Para realizar un análisis y una comparativa entre éstas dos técnicas de SLAM, se ha optado por generar un set de datos del robot y correrlo con ambas técnicas,
@@ -174,19 +172,113 @@ y los contrastes del mapa eran reducidos para así comparar el resultado inicial
 Se realizarán 3 pruebas, las cuales se encuentras recogidas en vídeos existentes en la carpeta del proyecto. En primer lugar se mostrará el mapa creado por \textit{RTAB-Map} y
 la estimación del \textit{path} del robot. Tras ello, se mostrará el mapa de ocupación generado por \textit{OctoMap} tanto en 2D cómo en 3D y, por último, se mostrará el
 resultado obtenido con \textit{ORB-SLAM2 RGB-D}.
-
+\newpage
 \subsection{Análisis de resultados con el primer \textit{rosbag}}
 Este dataset será el que contiene el salón en un estado común, sin alterar la cantidad de features existentes en el entorno.
 \subsubsection{RTAB-Map y local path}
-\subsubsection{OctoMap}
-\subsubsection{ORB-SLAM2 RGB-D}
+En primer lugar, se mostrará el mapa denso del entorno obtenido gracias a RTABMAP y cómo, tras recorrer un cuadrado de aproximadamente 1$m^2$ realiza el bucle cerrado del entorno
+y ajustará el mismo.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.4\textwidth]{images/slam/bag1_rtabmap_noLC}
+    \includegraphics[width=.415\textwidth]{images/slam/bag1_rtabmap_LC}
+    \caption{Mapa creado antes y después del \textit{Loop Closure}}
+\end{figure}
 
+El mapa obtenido, será un mapa denso el cual posee toda la información posible del entorno, cómo se muestra a continuación:
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/slam/bag1_rtabmapbonito}
+    \caption{Mapa obtenido con RTAB-Map}
+\end{figure}
+\newpage
+\subsubsection{OctoMap}
+Gracias a \textit{Octomap} se ha obtenido el mapa de ocupación probabilistico del entorno. Se mostrará, al igual que antes, el mapa antes y despues del loop closure, ya que es local
+destacable de ésta técnica de SLAM.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.4\textwidth]{images/slam/bag1_occupGrid_noLC}
+    \includegraphics[width=.435\textwidth]{images/slam/bag1_occupGrid_LC}
+    \caption{Mapa de ocupación antes y despues del \textit{Loop Closure}}
+\end{figure}
+
+Además, \textit{Octomap} nos proporciona el mapa de ocupación 3D, cómo el mostrado a continuación:
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/slam/bag1_octomap_LC}
+    \caption{Mapa obtenido con RTAB-Map y empleando el framework \textit{Octomap}}
+\end{figure}
+\subsubsection{ORB-SLAM2 RGB-D}
+En el caso del ORB-SLAM2, con éste dataset los resultados han sido peores, debido a que en cierto momento, los cambios de iluminosidad procedentes del balcón de la casa, hacen que se
+se pierda dentro del mapa creado. A continuación se muestra el frame anterior a la pérdida de la localización dentro del mapa. Los colores representan la altura en el eje Z.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/slam/bag1_orb_beforeLOSE}
+    \caption{Momento anterior a la pérdida del robot en el primer dataset}
+\end{figure}
+
+Sin embargo, se observa cómo, cuándo vuelve a ver el inicio del mapa, dónde tomó un número elevado de features, se relocalizará, cómo se muestra a continuación:
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/slam/bag1_orb_relocal}
+    \caption{Relocalización del robot en el primer dataset}
+\end{figure}
+\newpage
 \subsection{Análisis de resultados con el segundo \textit{rosbag}}
 En éste segundo dataset, el escenario será más parecido a un escenario experimental debido a que se han colocado objetos por el salón de tal modo que en todo el mapa se
 obtengan una cantidad elevada de features.
 \subsubsection{RTAB-Map y local path}
+Al igual que anteriormente, se destacará el loop closure detectado por el mapa. Se observa cómo, antes de dicho momento, las imagenes de la tela de la pared aparecen superpuestas,
+sin embargo, posteriormente, se observa cómo ha detectado que ya conocia ese setpoint y cerró el bucle:
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.4\textwidth]{images/slam/bag3_rtabmap_noLC}
+    \includegraphics[width=.415\textwidth]{images/slam/bag3_rtabmap_LC}
+    \caption{Mapa creado antes y después del \textit{Loop Closure} con el segundo dataset}
+\end{figure}
+El mapa obtenido, será un mapa denso el cual posee toda la información posible del entorno, cómo se muestra a continuación:
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/slam/bag3_rtabmapbonito}
+    \caption{Mapa obtenido con RTAB-Map empleando el segundo dataset}
+\end{figure}
+
+
 \subsubsection{OctoMap}
+Gracias a \textit{Octomap} se ha obtenido el mapa de ocupación probabilistico del entorno. Se mostrará, al igual que antes, el mapa antes y despues del loop closure, ya que es local
+destacable de ésta técnica de SLAM.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.4\textwidth]{images/slam/bag3_occupGrid_noLC}
+    \includegraphics[width=.435\textwidth]{images/slam/bag3_occupGrid_LC}
+    \caption{Mapa de ocupación antes y despues del \textit{Loop Closure}}
+\end{figure}
+
+Además, \textit{Octomap} nos proporciona el mapa de ocupación 3D, cómo el mostrado a continuación:
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/slam/bag3_octomap_LC}
+    \caption{Mapa obtenido con RTAB-Map y empleando el framework \textit{Octomap}}
+\end{figure}
+
 \subsubsection{ORB-SLAM2 RGB-D}
+En éste segundo set de datos, se evitó el cambio de iluminación en el punto dónde antes se perdio, de tal modo que en éste caso no pase y, efectivamente, cómo se mostrará a continuación,
+en ese punto no se perdió:
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/slam/bag3_orb_avoidLOSE}
+    \caption{Modificación del entorno para evitar la perdida de ORB}
+\end{figure}
+
+Por tanto, en éste caso sí se ha logrado obtener un mapa disperso del entorno:
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/slam/bag3_orb_map}
+    \caption{Mapa del entorno empleando ORB-SLAM2}
+\end{figure}
+
+\newpage
 \subsection{Resultados obtenidos de ORB-SLAM2 Monocular}
 Debido a la compleja inicialización que conlleva emplear ésta técnica monocular, no ha sido posible evaluar su funcionamiento con los bags generados, ya que no se logró que se
 inicializase. Sin embargo, para comprobar su funcionamiento, se ha optado por mover la cámara \textit{Hand-handle}, de tal modo que se asegure la inicialización del SLAM. \\
