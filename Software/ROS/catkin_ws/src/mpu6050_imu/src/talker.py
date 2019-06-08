@@ -12,7 +12,7 @@ if __name__ == '__main__':
         rawseq = scaseq = 0 # Sequential counter used in sensor_msgs/Imu.msg
         rospy.init_node('imu', anonymous=True)
         #rospy.init_node('pca', anonymous=True)
-        rate = rospy.Rate(10) # 10hz rate = rospy.Rate(8000) # 8khz
+        rate = rospy.Rate(50) # 50hz rate = rospy.Rate(8000) # 8khz
 
         i2c=ini2c()
         imu1=mpu6050.mpu6050(i2c)

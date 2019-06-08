@@ -50,7 +50,7 @@ Por comodidad y robustez, se ha diseñado en \textit{KiCad} una placa de circuit
   	\caption{Acabado final de la PCB revelada.}
   \end{figure}
 	
-\subsection{Encoders}
+\subsection{Encoders}\label{enc_hard}
 Los sensores elegidos para medir la velocidad de cada rueda y estimar la posición y velocidad del robot, son unos sencillos encoders ópticos binarios junto a unos discos perforados. Al pasar la luz por una perforación del disco, que gira a la misma velocidad que la rueda, se manda una señal digital al micro. Contabilizando los flancos de subida o de bajada en cierto periódo de tiempo, y conociendo las dimensiones del disco, se obtiene una estimación de la velocidad. Para más detalles en este proceso dirigirese a la ventanilla 3 seccion software encoders GRACIAS. 
  \begin{figure}[h!]
  	\centering
@@ -63,7 +63,7 @@ Los sensores elegidos para medir la velocidad de cada rueda y estimar la posici�
   	\caption{Disco perforado impreso en 3D.}
   \end{figure}
   
-\subsection{IMU}
+\subsection{IMU}\label{imu_hardw}
 Como ya se ha mencionado con anterioridad, se ha escogido una IMU mpu-6050 de seis grados de libertad para obtener datos de las velocidades y aceleraciones del robot. El microchip contine varios subsitemas, de los cuales nos interesa resaltar especialmente:
 \begin{itemize}
 	\item Giroscópio (tres ejes), con un rango progamable de ±250, ±500, ±1000 y ±2000 °/s (grados / segundos).
