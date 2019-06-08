@@ -1,4 +1,4 @@
-\section{Introducción al SLAM\textit{(Simultaneous Localization and Mapping)}}
+\section{Análisis e introducción a las técnicas de SLAM}
 ¿Qué cojones es el SLAM?
 
 \subsection{Clasificación técnicas de SLAM}
@@ -30,9 +30,9 @@ A continuación, se monstarán una comparativa de una serie de técnicas de SLAM
 \end{figure}
 
 \end{itemize}
-En éste proyecto, se probará ORB-SLAM2 y RTAB-Map, los cuales abordan el problema del SLAM desde dos puntos de vista completamente distinto, cómo se
-verá a continuación.
-\subsection{\textit{RTAB-Map SLAM}}
+
+\subsection{Técnicas SLAM implementadas en éste proyecto}
+\subsubsection{\textit{RTAB-Map SLAM}}
 RTAB-Map \textit{(Real-Time Appearance-Based Mapping)} es una técnica de Graph-SLAM\footnote{http://robots.stanford.edu/papers/thrun.graphslam.pdf} basada en la detección de bucles cerrados incrementales. Es totalmente funcional 
 con sensores RGB-D, Stereo y LIDAR. \\
 El detector de bucles cerrados se basará en la comparativa de cuán semenjantes son la imagenes en una localización y la previa. Cuándo una hipótesis 
@@ -45,7 +45,6 @@ de bucle cerrado es aceptada, se añade una nueva restricción al \textit{graph}
 \end{figure}
 
 
-\subsubsection{Fundamento teórico de la técnica}
 Este algoritmo plantea una estrategia de particionado de memoria que pretende asemejarse al funcionamiento de la memoria humana, 
 dónde ésta se estructura en: \\
 Memoria de trabajo del robot \textit{(Working Memory)}, la memoria a largo plazo \textit{(Long Term Memory)}, 
@@ -82,10 +81,10 @@ Como alternativa, el orden de almacenamiento de las observaciones se elige de fo
 preferible mantener en la memoria de trabajo aquellas localizaciones que son más susceptibles de ser
 observadas.
 \end{comment}
-\subsubsection{Análisis de resultados obtenidos}
+
 
 \newpage
-\subsection{\textit{ORB-SLAM 2}}
+\subsubsection{\textit{ORB-SLAM 2}}
 ORB-SLAM2 es una técnica de SLAM en tiempo real para cámaras Monocular, Stereo y RGB-D que se engloba dentro de las técnicas de 
 \textit{Sparse-Slam}. Se computa la trayectoria y hace una reconstrucción dispersa 3D del entorno. Al igual que todas las técnicas 
 de SLAM, se basa en la detección de bucles cerrados y  se relocaliza en tiempo real. \\
@@ -101,7 +100,6 @@ Unos de los puntos destacables de ésta técnica de SLAM son los siguientes:
    un de grafo denominado \textit{Essencial Graph}, lo cuál se desarrollará mas adelante.
 \end{itemize}
 
-\subsubsection{Fundamento teórico de la técnica}
 A continuación, se tratará un poco el funcionamiento interno del algoritmo, el cuál presenta el siguiente esquema:
 \begin{figure}[h!]
     \centering
@@ -127,7 +125,6 @@ Los hilos desempeñarán las siguientes funciones:
 En caso de que el sistema pierda el tracking, lleva integrado un modulo de \textit{Plane recognition} basado en un vocabulario 
 de palabras que básicamente es una especie de preentrenamiento de la técnica, para poder obtener y asociar keyframes más fácilmente. \\
 
-\subsubsection{Análisis de resultados obtenidos}
 En la imagen a continuación, puede observarse la técnica corriendo en un ordenador. Destacar que ésta técnica de SLAM presenta una carga computacional bastante elevada.
 \begin{figure}[h!]
     \centering
@@ -137,4 +134,61 @@ En la imagen a continuación, puede observarse la técnica corriendo en un orden
 
 Se observa en la imagen superior izquierda las features que está obteniendo en ese frame, a partir de las cuales se ha creado en mapa local y,
 por extensión el global. En la imagen inferior izquierda, se puede observar el mapa creado, el cuál se analizará más tarde.\\
-Por último, a la derecha se tienen las terminales a partir de las cuales se ha lanzado el SLAM y se realiza la comunicación con el robot.
+Por último, a la derecha se tienen las terminales a partir de las cuales se ha lanzado el SLAM y se realiza la comunicación con el robot.\\
+
+\newpage
+\subsection{Framework de optimización Octomap}
+El paquete de ros empleado para emplear la ténica RTAB-Map,\textit{rtabmap-ros}, posee la posibilidad de extraer también el mapa de ocupación 2D y 3D gracias al Framework 
+\textit{Octomap}\footnote{https://octomap.github.io/}. \\
+Este framework es una librería de C++ que permite la obtención de mapas probabilisticos basándose en una estructura de representación jerarquica de datos para subdividir
+el espacio 3D, esta estructura es denominada \textit{Octotrees}. \\
+
+Los \textit{Octotrees} se emplean para almacenar propiedades booleanas del entorno, en el caso de
+la robotica estas propiedas booleanas es la ocupación de dicha celda, de la cual es posible definir su tamaño minimo en función de la resolución de mapa
+deseada.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.7\textwidth]{images/octotree}
+    \caption{Funcionamiento del \textit{octotree} y su estructura en arbol}
+\end{figure}
+\newpage
+
+\section{Comparativa de resultados empleando \textit{rosbags} del robot}
+Para realizar un análisis y una comparativa entre éstas dos técnicas de SLAM, se ha optado por generar un set de datos del robot y correrlo con ambas técnicas,
+de tal modo que ambas téngan los mismos datos de entrada y se pueda analizar de mejor modo la salida de la arquitectura. \\
+La implementación de todo el sistema, también es posible correrlo en tiempo real con el robot empleando una o la otra técnica, pero de ese modo sería más complejo
+realizar una comparativa entre ellas. \\
+Estos datasets, que han sido grabados en forma de \textit{rosbag}, se grabaron desde el ordenador en el que corre el SLAM, de todos los topicos que se recibiaN
+del ordenador de abordo del robot a través de la comunicación \textit{Multi-master} implementada.\\
+A continuación, se muestra una imagen de los topicos contenidos en ambos datasets:
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.5\textwidth]{images/topics_bags}
+    \caption{topicos contenidos en el bag}
+\end{figure}
+
+En ambos datasets el robot recorrerá un cuadrado en torno al salón de la casa de uno de los integrantes del grupo. En el primer dataset, el estado del salón será 
+el comun, de modo que haya una parte del mapa que no contendrán muchas features. Sin embargo, en el segundo se colocaron objetos en zonas dónde la cantidad de features
+y los contrastes del mapa eran reducidos para así comparar el resultado inicial con uno en un entorno experimental, dónde se ha forzado que el entorno esté lleno de features.\\
+
+Se realizarán 3 pruebas, las cuales se encuentras recogidas en vídeos existentes en la carpeta del proyecto. En primer lugar se mostrará el mapa creado por \textit{RTAB-Map} y
+la estimación del \textit{path} del robot. Tras ello, se mostrará el mapa de ocupación generado por \textit{OctoMap} tanto en 2D cómo en 3D y, por último, se mostrará el
+resultado obtenido con \textit{ORB-SLAM2 RGB-D}.
+
+\subsection{Análisis de resultados con el primer \textit{rosbag}}
+Este dataset será el que contiene el salón en un estado común, sin alterar la cantidad de features existentes en el entorno.
+\subsubsection{RTAB-Map y local path}
+\subsubsection{OctoMap}
+\subsubsection{ORB-SLAM2 RGB-D}
+
+\subsection{Análisis de resultados con el segundo \textit{rosbag}}
+En éste segundo dataset, el escenario será más parecido a un escenario experimental debido a que se han colocado objetos por el salón de tal modo que en todo el mapa se
+obtengan una cantidad elevada de features.
+\subsubsection{RTAB-Map y local path}
+\subsubsection{OctoMap}
+\subsubsection{ORB-SLAM2 RGB-D}
+\subsection{Resultados obtenidos de ORB-SLAM2 Monocular}
+Debido a la compleja inicialización que conlleva emplear ésta técnica monocular, no ha sido posible evaluar su funcionamiento con los bags generados, ya que no se logró que se
+inicializase. Sin embargo, para comprobar su funcionamiento, se ha optado por mover la cámara \textit{Hand-handle}, de tal modo que se asegure la inicialización del SLAM. \\
+El gran punto a favor que posee el empleo de SLAM monocular es que no es sensible a la luz, de tal modo que funciona correctamente en exteriores. \\
+Por ello, la prueba realiza es en el mismo salón, pero saliendo al balcón y grabando al exterior. \\

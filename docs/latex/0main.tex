@@ -86,11 +86,14 @@
 \Huge{\textbf{AMPLIACIÓN DE ROBÓTICA}} \\
 \Huge{Comparativa de técnicas de SLAM empleando un robot movil}\\
 
-\vspace{1cm}
+\vspace{2cm}
 \LARGE{Grado en Ingeniería Electrónica, Mecatrónica y Robótica}\\
 \rule{\textwidth}{0.1mm}
-\large{\tableofcontents}
-\vspace{1cm}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=.6\textwidth]{images/wheele_real}
+\end{figure}
+\vspace{2cm}
 \rule{\textwidth}{0.1mm}
 \Large{\textbf{Autores:} \\
                          López Gil, Miguel \\
@@ -98,7 +101,8 @@
                          Osuna Cañas, Alfonso Carlos}
 \end{titlepage}
 \newpage
-
+\tableofcontents
+\newpage
 % %%%%%%%%%%%   INTRODUCCION %%%%%%%%%%%%%%%%%%
 \section{Introducción al proyecto}
 En este proyecto se implementan diferentes técnicas de SLAM visuales, así como diversas fuentes de odometría, sobre un robot móvil de bajo presupuesto. El objetivo final ha sido diseñar e implementar una plataforma de desarollo donde poder estudiar los conceptos vistos durante el curso. Para ello, y teniendo en mente el tiempo y los recursos limitados de los que se disponen, se han optado por soluciones baratas o fabricadas \textit{in-house} y de sencilla implementación para favorecer un rápido prototipado. \par
@@ -123,6 +127,7 @@ Las imágenes y medidas de profundidad utilizadas para las técnicas SLAM provie
 \bibliography{orb_cite}
 \nocite{murORB2}
 \nocite{rtabmap}
+\nocite{hornung13auro}
 \nocite{MooreStouchKeneralizedEkf2014}
 \nocite{PyCmdMessenger}
 \nocite{CmdMessenger}
