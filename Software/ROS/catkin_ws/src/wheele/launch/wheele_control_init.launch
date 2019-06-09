@@ -37,12 +37,21 @@
 
   </node>
     
-
+    <include  file="$(find wheele)/launch/freenect_throttle.launch">
+        <arg name="rate"  value="10"/>
+        <arg name="approx_sync" value="true" />
+        <arg name="rgbd_sync" value="true"/> 
+        <arg name="orb_slam" value="false"/> 
+    </include>
     <!-- Odometry of diff robot (Wheele)-->
     <node pkg="wheele" type="wheele_odom" name="wheele_odom" output="screen" /> 
 
     <!-- Teleoperation nodes -->
     <include if="(arg joystick)" file="$(find teleop_twist_joy)/launch/teleop.launch"/>
     <node unless="(arg joystick)" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard.py" output="screen" />
+
+    <node name="imu_talker" pkg="mpu6050_imu" type="talker.py" output="screen" />
+        
+    <include file="$(find imu_calib)/launch/mpu6050_applyCalib.launch" />
 
 </launch>

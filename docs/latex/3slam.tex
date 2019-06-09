@@ -1,21 +1,58 @@
 \section{Análisis e introducción a las técnicas de SLAM}
-¿Qué cojones es el SLAM?
+El SLAM\textit{(Simultaneous Localization and Mapping)} es una tecnica cuyo objetivo es contruir un mapa de un entorno desconocido con un robot movil 
+y conocer la posición de dicho robot dentro del mapa. \\
+El primer planteamiento de la resolución de estos dos problemas cómo son la localización de un robot y la creación de mapas de manera conjunta surgió 
+en 1986 en un congreso del IEEE en San Francisco. \\
+Durante aquellos años, se habia comenzado a introducir métodos probabilistico en la inteligencia artificial 
+y en la robotica. En dicha conferencia, se llegó a la conclusión de que la generación de mapas consistentes y localización de manera probabilistica era
+un problema fundamental.\\
 
+Tras ello, se establecieron las bases estadisticas para describir la relaciones entre \textit{landmarks}, objetos de referencia y 
+para manipular la incertidumbre geométrica. \\
+El planteamiento básico del problema de SLAM es el mostrado a continuación:
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.6\textwidth]{images/slam_prob}
+    \caption{problema básico de SLAM}
+\end{figure}
+
+Dado un robot que se mueve por un entorno desconocido tomando observaciones relativas de un número desconocido de landmarks empleando un sensor posicionado
+en el robot. Para el instante \textit{k}, se definen las siguientes variables:
+\begin{itemize}
+    \item $\textbf{x}_k$: Vector de estados que describe la posición y orientación del vehículo.
+    \item $\textbf{u}_k$: Vector de control aplicado el instante anterior sobre el vehículo para que se encuentre
+en el estado $\textit{x}_k$ en el instante \textit{k}.
+    \item $\textbf{m}_i$:Vector que describe posición del i-ésimo landmark cuya verdadera ubicación se supone invariable con el tiempo.
+    \item $\textbf{z}_{ik}$: Observación tomada desde el vehiculo de la posición del i-ésimo landmark en el instante \textit{k}.
+\end{itemize}
+Por tanto, se deberá computar la siguiente distribución probabilistica en cada instante \textit{k}:
+\begin{equation}
+    P\Big( \textbf{x}_k ,m | \textbf{Z}_{0:k},\textbf{U}_{0:k},x_0\Big)
+\end{equation}
+La solución se obtendrá de manera recursiva empleando el teorema de Bayes en un proceso en dos pasos: \textit{Time-Update} y \textit{Measurement-Update}. Para ello,
+será necesario conocer el modelo de observación y el de movimiento. \\
+A continuación se mostrará el modelo de observación y movimiento respectivamente:
+\begin{center}
+    $P\Big( \textbf{z}_k | \textbf{x}_{k},m \Big)$ \hspace{2cm} $P\Big( \textbf{x}_k | \textbf{x}_{k-1},\textbf{u}_{k} \Big)$
+\end{center}
+
+Una vez planteado de manera superficial el problema a resolver, el modo de abordarlo se ha desarrollado en muchas direcciones durante los últimos 20 años. \\
+Algunos de estos métodos se muestran a continuación y se hablará de ellos, para posteriormente indagar en dos técnicas concretas.
 \subsection{Clasificación técnicas de SLAM}
 La forma en que se toma información de las imagenes que recibe y de su entorno y cómo la procesa permite distinguir las siguientes tipos de sistemas
 SLAM visual:
 \begin{itemize}
-    \item \textit{Denso vs Disperso} \\
-    En función de la cantidad de datos tomada de cada imagen, se realizará ésta clasificación. Las técnicas de SLAM disperso sólo emplean una pequeña
-    región de pixeles, cómo pueden ser puntos característicos. Sin embargo, las técnicas densas emplean la mayoría o todos los píxeles de cada frame
-    que reciben. \\
-    Debido a que la cantidad y tipo de información que toman son diferentes, el tipo de mapa que se obtendrá también lo es. Con las técnicas de SLAM
-    disperso se obtendrá una nube de puntos que será una representación de los puntos característicos de las escena y se usará sobre todo para hacer
-    un tracking de la pose de la cámara. Por otro lado, un mapa dentro tendrá muchos más detalles y, requerirá de una mucho más elevada carga computacional.
+\item \textit{Denso vs Disperso} \\
+En función de la cantidad de datos tomada de cada imagen, se realizará ésta clasificación. Las técnicas de SLAM disperso sólo emplean una pequeña
+región de pixeles, cómo pueden ser puntos característicos. Sin embargo, las técnicas densas emplean la mayoría o todos los píxeles de cada frame
+que reciben. \\
+Debido a que la cantidad y tipo de información que toman son diferentes, el tipo de mapa que se obtendrá también lo es. Con las técnicas de SLAM
+disperso se obtendrá una nube de puntos que será una representación de los puntos característicos de las escena y se usará sobre todo para hacer
+un tracking de la pose de la cámara. Por otro lado, un mapa denso tendrá muchos más detalles y, requerirá de una mucho más elevada carga computacional.
 
  \item \textit{Directo vs Indirecto} \\
 En función de cómo las técnicas de SLAM empleen y traten la información que reciben, se podrá clasificar en SLAM directo o indirecto.\\
-El SLAM infirecto, se basa en extraer primero las features de la imagen, puntos característicos, para posteriormente emplearlos para localizarse y contruir
+El SLAM Indirecto, se basa en extraer primero las features de la imagen, puntos característicos, para posteriormente emplearlos para localizarse y contruir
 el mapa. Para extraer estos puntos caracteristicos existen muchos descriptores: ORB, SIFT, FAST, etc. \\
 En contraste, el SLAM Directo,emplean directamente la intensidad de los pixeles, de tal modo que se obtengan features intermedios. Estos metodos tratan de 
 obtener la profundidad y estructura del entorno a partir de una optimización del mapa. Los procesos de extracción de puntos característicos son mucho más
