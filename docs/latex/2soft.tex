@@ -60,11 +60,15 @@ De esta forma es sencillo publicar un tópico de 'comandos del sistema', como ap
 
 \subsubsection{Interfaz Arduino/Motores}
 Same old same old
-\subsection{Implementación filtro estadístico}
-Introducción de porqué es interesante y eso, lo de vender la moto as usual
-\subsubsection{Filtro de Kalman Extendido}
-Background teorico que coma espacio, poner la imagen del filtro esa con colores bonicos y eso
+\subsection{Implementación de filtro estadístico}
+La información que el sistema obtiene de los sensores está sujeta a ruido e incertidumbres de la medida. A fin de minimizar los errores y mejorar la estimación de la posicion y velocidad del robot se ha 
+considerado que era de especial interes y utilidad la aplicación de un filtro recursivo Bayesiano como estimador de estados, en concreto el filtro de Kalman extendido.
 \subsubsection{ROS-Robot Localization Package}
-pues eso, lo mismo de lo otro, como funca y tal
+
 \subsection{Arquitectura general del sistema}
-Aqui lo de rqt\_plot and eso
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=\textwidth]{images/rqt_graphs/graph_RTABMAP.pdf}
+    \caption{Captura de los nodos ejecutandose durante uno de los experimentos realizados con el robot}
+    \label{rqt01}
+\end{figure}
