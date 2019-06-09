@@ -3,11 +3,14 @@
 ROS (Robotic Operating System) consite en un framework para la robótica sobre el que desarrolladores de cualquier 
 ambito pueden aportar soluciones modulares a los sistemas de forma general. La modularidad de ROS hace que desarrollar 
 un nuevo sistema o prototipo pueda ser una tarea tan sencilla como interconectar módulos de otros desarrolladores con 
-los propios.\\
+los propios.
+\begin{comment}
 Esta característica lo hace idoneo para un proyecto como este en el que el uso de técnicas de percepción, 
 mapeado, localization, etc, complejas se escapa del alcance; y solo sea necesario el desarrollo de modulos específicos de este robot
 que sean capaces de comunicarse con aquellos más complejos y sean capaces de proporcionarle los datos necesarios para implementar los
-algoritmos de SLAM. \\
+algoritmos de SLAM. \\    
+\end{comment}
+
 
 El sistema operativo empleado tanto en el ordenador de abordo del robot,la Raspberry Pi, cómo en en el ordenador principal es Ubuntu 16.04, de tal modo que la distro de ROS en la que ha sido 
 implementado el proyecto es ROS Kinetic Kame\footnote{https://wiki.ros.org/kinetic}.
@@ -25,9 +28,8 @@ Sobre ambos `wrapers' se ha escrito el nodo de ROS encargado de publicar los dat
 de la IMU en el primero y reescalados en el segundo. El tipo de mensaje en el que se publican los datos es de tipo \textit{\href{http://docs.ros.org/kinetic/api/sensor_msgs/html/msg/Imu.html}{sensor\_msgs/Imu}}.\\
 
 Como se trata de un sensor de bajo nivel que aporta información a los estratos más bajos del control, para poder disponer depués de mayor ancho de banda, se ha elegido una frecuencia de muestreo del sensor de $50\ [Hz]$; sufucientemente alta para no comprometer la estabildiad del sistema
- pero tambien lo sufucientemente baja como para no saturar el ordenador de abordo (teniendo en cuenta que este también deberá mantener un flujo constante de imagenes capturadas por la cámara, con el coste que eso conlleva).
+pero tambien lo sufucientemente baja como para no saturar el ordenador de abordo (teniendo en cuenta que este también deberá mantener un flujo constante de imagenes capturadas por la cámara, con el coste que eso conlleva).
 
- \newpage
  \subsubsection{Interfaz con encoders}\label{enc_soft}
 Otro sensor añadido son los encoders mencionados en \ref{enc_hard}. Para su programación se ha desarrollado un `wraper' en C++ de la librería para Raspberr-Pi 3B \textit{pigpio} 
 \cite{pigpio}. Como los encoders solo pueden ofrecer información de la magnitud de la velocidad y no del sentido es necesario hacer una conversión a nivel de sofware para poder
@@ -97,25 +99,33 @@ Des esta forma todos tienen acceso de una forma hasta cierto punto `real-time' a
     \includegraphics[width=0.6\textwidth]{images/ros_multimaster.png}
     \caption{Esquema del funncionamiento básico del paquete Multimaster}
 \end{figure}
+
 En este proyecto su integración se ha llevado a cabo lanzando en la Raspberry-Pi y en otro PC los nodos correspondientes siendo la Raspberry-Pi la 
 suministradora de información y el PC el encargado de procesarla.
+
 \subsection{Implementación filtro estadístico}
 Introducción de porqué es interesante y eso, lo de vender la moto as usual
+
 \subsubsection{Filtro de Kalman Extendido}
-Background teorico que coma espacio, poner la imagen del filtro esa con colores bonicos y eso
-\subsection{Implementación de filtro estadístico}
 La información que el sistema obtiene de los sensores está sujeta a ruido e incertidumbres de la medida. A fin de minimizar los errores y mejorar la estimación de la posicion y velocidad del robot se ha 
-considerado que era de especial interes y utilidad la aplicación de un filtro recursivo Bayesiano como estimador de estados, en concreto el filtro de Kalman extendido.
+considerado que era de especial interes y utilidad la aplicación de un filtro recursivo Bayesiano como estimador de estados, en concreto el filtro de Kalman extendido. \\
+Este filtro es una extensión del filtro de Kalman para sistemas no lineales.
+
 \subsubsection{ROS-Robot Localization Package}
 
+\newpage
+
 \subsection{Arquitectura general del sistema}
-Aqui lo de rqt\_plot and eso
+
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=\textwidth]{images/rqt_graphs/graph_RTABMAP.pdf}
     \caption{Captura de los nodos ejecutandose durante uno de los experimentos realizados con el robot}
     \label{rqt01}
+\end{figure}
+
 \section{Puntos destacables de la implementación del proyecto}
+
 \subsection{Obtención de los parámetros de la cámara}
 Destacar que, siempre es necesario conocer los parámetros intrinsecos de la cámara además de la matriz de rotación. \\
 Para obtener la matriz de parámetros de nuestra cámara, se ha hecho uso del paquete de ROS, \textit{\href{http://wiki.ros.org/camera_calibration}{Camera\_calibration}}.\\
@@ -143,4 +153,4 @@ paquete de ROS \textit{\href{https://github.com/ros-drivers/freenect\_stack}{Fre
 Para poder tener control del motor integrado en la cámara, se ha empleado el paquete \textit{\href{https://github.com/muhrix/kinect_aux}{Kinect-aux}}.
     
 
-\end{figure}
+
