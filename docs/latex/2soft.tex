@@ -103,11 +103,18 @@ suministradora de información y el PC el encargado de procesarla.
 Introducción de porqué es interesante y eso, lo de vender la moto as usual
 \subsubsection{Filtro de Kalman Extendido}
 Background teorico que coma espacio, poner la imagen del filtro esa con colores bonicos y eso
+\subsection{Implementación de filtro estadístico}
+La información que el sistema obtiene de los sensores está sujeta a ruido e incertidumbres de la medida. A fin de minimizar los errores y mejorar la estimación de la posicion y velocidad del robot se ha 
+considerado que era de especial interes y utilidad la aplicación de un filtro recursivo Bayesiano como estimador de estados, en concreto el filtro de Kalman extendido.
 \subsubsection{ROS-Robot Localization Package}
-pues eso, lo mismo de lo otro, como funca y tal
+
 \subsection{Arquitectura general del sistema}
 Aqui lo de rqt\_plot and eso
-
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=\textwidth]{images/rqt_graphs/graph_RTABMAP.pdf}
+    \caption{Captura de los nodos ejecutandose durante uno de los experimentos realizados con el robot}
+    \label{rqt01}
 \section{Puntos destacables de la implementación del proyecto}
 \subsection{Obtención de los parámetros de la cámara}
 Destacar que, siempre es necesario conocer los parámetros intrinsecos de la cámara además de la matriz de rotación. \\
@@ -135,3 +142,5 @@ También se lanzarán los drivers de la cámara, aunque no aparezcan en la image
 paquete de ROS \textit{\href{https://github.com/ros-drivers/freenect\_stack}{Freenect}}.
 Para poder tener control del motor integrado en la cámara, se ha empleado el paquete \textit{\href{https://github.com/muhrix/kinect_aux}{Kinect-aux}}.
     
+
+\end{figure}
