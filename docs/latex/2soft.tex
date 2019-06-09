@@ -50,8 +50,14 @@ Otra simplicación hecha es que el modelo del robot consiste en un modelo difere
 Este nodo se suscribe al desarrollado en \ref{enc_soft} en el `topic' \textit{encoders}, y cada vez que llega un mensaje nuevo con los datos de los 
 encoders calcula el avance del robot en base al modelo propuesto. La publicación de los datos se hace en el `topic' \textit{odom} a un ratio de $25\ [Hz]$ 
 con un mensaje del tipo \textit{\href{http://docs.ros.org/melodic/api/nav_msgs/html/msg/Odometry.html}{nav\_msgs/Odometry}}.
+
 \subsubsection{Interfaz Raspberry-Pi/Arduino}
-Qué hace, a quién se suscribe y donde publica el qué
+La comunicación por puerto serie se implementa haciendo uso de la librería \textit{CmdMessenger}. MIGUEL LAS PUTAS REFERENCIAS ACUÉRDATE., que permite definir comandos (con la posibilidad de asociarles argumentos y callbacks) de forma eficiente y sencilla.
+Por la parte de la Raspberry, se usan las librerías CmdMessenger (escrita en c) o su alternativa PyCmdMessenger (en Python) en el nodo serial\_com.py para transmitir por el puerto serie.\\
+Los siguientes comandos son los más importantes \\
+Cmd\_off; Al recibir este comando el micro pasa a no hacer nada, comportándose como un apagado de emergencia. \par
+De esta forma es sencillo publicar un tópico de 'comandos del sistema', como apagar o funciones de debugeo, y otros tópicos para los datos que hayan de retransmitirse. Cuando llegan datos desde el arduino, se ejecuta un callback (de la librería externa, no de ROS) que publica dicha información el tópico correspondiente. Si es el caso contrario, y se busca enviar datos al arduino, el nodo se subscribirá al tópico con ese dato y en el callback asociado (ahora sí de ROS) se envía al arduino.
+
 \subsubsection{Interfaz Arduino/Motores}
 Same old same old
 \subsection{Implementación filtro estadístico}

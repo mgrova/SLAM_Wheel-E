@@ -51,14 +51,11 @@ Por comodidad y robustez, se ha diseñado en \textit{KiCad} una placa de circuit
   \end{figure}
  Los microchips requieren de una referencia de tensión lógica (para operar la señal de entrada correctamente) y de una fuente de potencia capaz de alimentar los motores. La referencia se consigue de una salida de cinco voltios del arduino, que será quien se comunique con el driver. La alimentación de los motores corre a cargo de un transformador externo de 12V y XA.
 	
-<<<<<<< HEAD
 \subsection{Encoders}
 Los sensores elegidos para medir la velocidad de cada rueda y estimar la posición y velocidad del robot, son unos sencillos encoders ópticos binarios junto a unos discos perforados. Al pasar la luz por una perforación del disco, que gira a la misma velocidad que la rueda, se manda una señal digital al micro. Contabilizando los flancos de subida o de bajada en cierto periódo de tiempo, y conociendo las dimensiones del disco, se obtiene una estimación de la velocidad. Para más detalles en este proceso dirigirese a la ventanilla 3 seccion software encoders GRACIAS. \\
 La corriente necesaria para que funcionen correctamente los encoders es mínima, por lo que se alimentan desde una salida de cinco voltios de baja potencia del arduino.
-=======
 \subsection{Encoders}\label{enc_hard}
 Los sensores elegidos para medir la velocidad de cada rueda y estimar la posición y velocidad del robot, son unos sencillos encoders ópticos binarios junto a unos discos perforados. Al pasar la luz por una perforación del disco, que gira a la misma velocidad que la rueda, se manda una señal digital al micro. Contabilizando los flancos de subida o de bajada en cierto periódo de tiempo, y conociendo las dimensiones del disco, se obtiene una estimación de la velocidad. Para más detalles en este proceso dirigirese a la ventanilla 3 seccion software encoders GRACIAS. 
->>>>>>> 99be32a6af63629257e8615c8aa425785a982917
  \begin{figure}[h!]
  	\centering
  	\includegraphics[width=.6\textwidth]{images/hw/encoder_img}
@@ -99,5 +96,4 @@ La potencia eléctrica necesaria para que el micro, y sus periféricos, operen c
 
 \subsection{Cámara}
 La \textit{Kinect for Xbox 360} integra una cámara RGB y un sensor de profundidad de luz infrarroja estructurada. El rango del sensor de profundidad alcanza, aproximadamente, de los 0.7 a los seis o siete metros. El campo de visión del dispositivo es de 57º horizontalmente y 43º en la vertical, aunque cuenta con un soporte motorizado capaz de inclinar la cámara MASMENOS 27º verticalmente. La resolución máxima de la cámara es de 1280x1024 píxeles, pero la más usada es 640x480 píxeles puesto que el frame rate depende fuertemente de la resolución con la que se trabaje, con un techo en los 30Hz.\\
-La Kinect emplea un conector propietario que no es más que un conector USB con dos líneas de alimentación adicionales a 12 voltios.  
-\subsection{Conexionado}
+La Kinect emplea un conector propietario que no es más que un conector USB con dos líneas de alimentación adicionales a 12 voltios.
