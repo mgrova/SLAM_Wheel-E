@@ -18,8 +18,8 @@
   <!-- By default, calibrations are stored to file://${ROS_HOME}/camera_info/${NAME}.yaml,
        where ${NAME} is of the form "[rgb|depth]_[serial#]", e.g. "depth_B00367707227042B".
        See camera_info_manager docs for calibration URL details. -->
-  <arg name="rgb_camera_info_url"   default="" />
-  <arg name="depth_camera_info_url" default="$(find wheele)/config/KINECT.yaml" />
+  <arg name="rgb_camera_info_url"   value="package://wheele/config/rgb_B00362722000129B.yaml" />
+  <arg name="depth_camera_info_url" value="package://wheele/config/depth_B00362722000129B.yaml"/>
 
   <!-- Use OpenNI's factory-calibrated depth->RGB registration? -->
   <arg name="depth_registration" default="true" />

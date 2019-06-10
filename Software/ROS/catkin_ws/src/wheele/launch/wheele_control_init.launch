@@ -10,39 +10,22 @@
     <!-- Establish RPi-Arduino serial communication -->
     <node pkg="wheele" type="serial_com.py" name="serial_com.py" output="screen" />
 
-    <!-- PI controller implemented in wheele motors -->
-<!--
-    <node pkg="wheele" type="control" name="control" output="screen" >
-        <param name="Kp_m1L" default="0"/>
-        <param name="Ki_m1L" default="0"/>
-        <param name="Kp_m2L" default="0"/>
-        <param name="Ki_m2L" default="0"/>
-        <param name="Kp_m3L" default="0"/>
-        <param name="Ki_m3L" default="0"/>
-
-        <param name="Kp_m1R" default="0"/>
-        <param name="Ki_m1R" default="0"/>
-        <param name="Kp_m2R" default="0"/>
-        <param name="Ki_m2R" default="0"/>
-        <param name="Kp_m3R" default="0"/>
-        <param name="Ki_m3R" default="0"/>
-    </node>
--->
+    <!-- Launch Robot Localization pkg -> Basicly EKF -->
   <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
     <rosparam command="load" file="$(find wheele)/config/ekf_template_wheele.yaml" />
 
     <remap from="odometry/filtered" to="odom_ekf"/>
     <remap from="accel/filtered" to="accel_ekf"/>
-    
-
   </node>
     
+    <!-- Launch camera drivers -->
     <include  file="$(find wheele)/launch/freenect_throttle.launch">
         <arg name="rate"  value="10"/>
         <arg name="approx_sync" value="true" />
         <arg name="rgbd_sync" value="true"/> 
         <arg name="orb_slam" value="false"/> 
     </include>
+
     <!-- Odometry of diff robot (Wheele)-->
     <node pkg="wheele" type="wheele_odom" name="wheele_odom" output="screen" /> 
 
@@ -50,6 +33,7 @@
     <include if="(arg joystick)" file="$(find teleop_twist_joy)/launch/teleop.launch"/>
     <node unless="(arg joystick)" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard.py" output="screen" />
 
+    <!-- IMU pkgs -->
     <node name="imu_talker" pkg="mpu6050_imu" type="talker.py" output="screen" />
         
     <include file="$(find imu_calib)/launch/mpu6050_applyCalib.launch" />

@@ -4,7 +4,7 @@
 
 /*
 ENABLE(PWM) |      A       |     B        |   STATUS           |
---------------------------------------------------------- |
+---------------------------------------------------------      |
      LOW    |    ----      |    ----      |MOTOR PARADO        |
      HIGH   |    HIGH      |     LOW      |MOTOR GIRA DELANTE  |
      HIGH   |    LOW       |     HIGH     |MOTOR GIRA AL REVES |
@@ -52,8 +52,6 @@ void write_pwm(int enable,int pwm, int dir1, int dir2){
         analogWrite(enable, abs(pwm));
     }
     else{
-        //digitalWrite(dir1, LOW);
-        //digitalWrite(dir2, LOW);
         digitalWrite(enable, LOW);
     }
 }

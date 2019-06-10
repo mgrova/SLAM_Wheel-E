@@ -76,11 +76,14 @@ float claw(int m, std::chrono::duration<double> dt, float ref, float out, float 
               kd=kd_topic;
               break;
   }
+  /* Control law aplication */
   p = kp*ek;
   i = ki*(i+ek*dt.count());
   d = kd*((ek-ek1)/dt.count());
-  ukns=p+i+d+(sat_err_integrated/0.01)+ueq;  // PID + antiwindup + offset'
+  ukns=p+i+d+(sat_err_integrated/0.01)+ueq;  // PID + antiwindup + offset
+  
   ROS_INFO_STREAM("ukns:  "<<ukns <<"\n");
+
   if(ukns<-255) ukreal=-255;  // Saturation
   else if(ukns>255) ukreal=255;
   else ukreal=ukns;
@@ -152,19 +155,26 @@ while(n.ok()) {
   dt=t_act-t_lastT;
   t_lastT=t_act;
 
+  /* Apply claw function to each motor */
   pwm_msg.m1l=claw(1 ,dt, left_ref_ticks, ticks.m1l, ek1_m1l, sat_err_m1l, i_m1l);
   ROS_INFO_STREAM("pwm m1l:  "<<pwm_msg.m1l <<"\n");
+
   pwm_msg.m1r=claw(2 ,dt, right_ref_ticks, ticks.m1r, ek1_m1r, sat_err_m1r, i_m1r);
   ROS_INFO_STREAM("pwm m1r:  "<<pwm_msg.m1r <<"\n");
+  
   pwm_msg.m2l=claw(3 ,dt, left_ref_ticks, ticks.m2l, ek1_m2l, sat_err_m2l, i_m2l);
   ROS_INFO_STREAM("pwm m2l:  "<<pwm_msg.m2l <<"\n");
+  
   pwm_msg.m2r=claw(4 ,dt, right_ref_ticks, ticks.m2r, ek1_m2r, sat_err_m2r, i_m2r);
   ROS_INFO_STREAM("pwm m2r:  "<<pwm_msg.m2r <<"\n");
+  
   pwm_msg.m3l=claw(5 ,dt, left_ref_ticks, ticks.m3l, ek1_m3l, sat_err_m3l, i_m3l);
   ROS_INFO_STREAM("pwm m3l:  "<<pwm_msg.m3l <<"\n");
+  
   pwm_msg.m3r=claw(6 ,dt, right_ref_ticks, ticks.m3r, ek1_m3r, sat_err_m3r, i_m3r);
   ROS_INFO_STREAM("pwm m3r:  "<<pwm_msg.m3r <<"\n");
 
+  /* Publish ROS msg with PWM apply over motors */
   pwm_pub.publish(pwm_msg);
 
   ros::spinOnce();
