@@ -87,13 +87,13 @@ Como ya se ha mencionado con anterioridad, se ha escogido una IMU MPU-6050 de se
 \end{itemize}
 Puesto que la IMU consume muy poca potencia en todo momento, se puede alimentar sin problemas desde cualquier salida de referencia de la Raspberry. \\
 
+\newpage
 A continuación, se mostrará una imagen de la IMU conectada:
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=.5\textwidth]{images/hw/rpi_imu}
-	\caption{Cámara RGB-D Kinect}
+	\caption{Conexionado entre la RPi y la IMU por $I^2C$}
 \end{figure}
-
 
 \subsection{Raspberry Pi}
 Este \textit{single-board computer}, como se le denomina en inglés, alberga muchas posibilidades. En el centro de todas ellas se encuentra un procesado ARM Cortex-A53 de 64-bit a 1.4Ghz capaz de correr varias distribuciones de GNU/Linux. \\
@@ -104,6 +104,12 @@ La Raspberry es alimentada a través de un puerto micro USB a 5V con una corrien
 \subsection{Arduino Uno}
 Por conveniencia se ha optado por una placa arduino, que además de un microcontrolador ATmega328p, integra un puerto usb con un chipset que facilita su programación y la comunicación serie con el mismo. Incluye también un cristal de cuarzo , que provee una fuente prescisa para la señal de reloj y resulta especialmente útil para implementar el control de bajo nivel.\\
 El micro cuenta con una memoria flash progamable de 32 kilobytes y una eeprom de un kilobyte, que es más que suficiente para el uso que se le va a dar. Dos timers de 8 bits y otro de 16 bits generan las interrumpciones necesarias para controlar el tiempo real e implementar el control. De todas las 23 posibles entradas/salidas digitales del micro, se ocupan cuatro salidas para seleccionar el sentido de la marcha de los motores (dos para todos las ruedas de la izquierda y dos para las de la derecha) y seis canales PWM para controlar la velocidad individual de cada uno.\\
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=.3\textwidth]{images/hw/arduino}
+	\caption{Microcontrolador empleado para la comunicación a bajo nivel}
+\end{figure}
+
 La potencia eléctrica necesaria para que el micro, y sus periféricos, operen correctamente (5V y menos de 100mA) se obtienen por el puerto USB desde la Raspberry Pi, aprovechando el bus de comunicación serie.
 
 \subsection{Cámara}
@@ -118,7 +124,6 @@ La \textit{Kinect for Xbox 360 V1} integra una cámara RGB y un sensor de profun
 El campo de visión del dispositivo es de 57º horizontalmente y 43º en la vertical, aunque cuenta con un soporte motorizado que controla el \textit{pitch} de la camara. \\
 La resolución máxima de la cámara es de 1280x1024 píxeles, pero la más usada es 640x480 píxeles puesto que el frame rate depende fuertemente de la resolución con la que se trabaje en los 30Hz.\\
 
-\newpage
 El calculo de la profundidad lo realiza del siguiente modo a partir de la matriz proyectada:
 \begin{figure}[h!]
 	\centering
@@ -126,6 +131,7 @@ El calculo de la profundidad lo realiza del siguiente modo a partir de la matriz
 	\caption{Cámara RGB-D Kinect}
 \end{figure}
 
+\newpage
 \subsection{Esquema de comunicación del hardware}
 Debido a la multitud de entradas y salidas digitales y analógicas necesarias, al coste computacional de todo el sistema, y a la variedad de las comunicaciones, se plantea una configuración muy modular 
 entre el ordenador de abordo (la \textit{Raspberry Pi}), los periféricos y la unidad de procesamiento para las partes más pesadas del software.\\
