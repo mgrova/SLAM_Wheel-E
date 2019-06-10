@@ -1,12 +1,12 @@
 # SLAM_Wheel-E
 Este es un proyecto en el cual se busca realizar una comparativa de la implementación de diferentes técnicas de SLAM empleando un robot movil diferencial tipo Rover.
 
-![alt text](/docs/latex/images/slam/bag1_rtabmapbonito "RTABmap")
+![alt text](/docs/latex/images/slam/bag1_rtabmapbonito.jpg "RTABmap")
 
-![alt text](/docs/latex/images/slam/bag3_orb_map "ORB")
+![alt text](/docs/latex/images/slam/bag3_orb_map.jpg "ORB")
 
 # Wheel-E 
-![alt text](/docs/latex/images/wheele_real "wheele")
+![alt text](/docs/latex/images/wheele_real.jpg "wheele")
 
 Un desarrollo en profundidad del proyecto se encuentra en la carpeta docs.
 
