@@ -116,11 +116,26 @@ Este filtro es una extensión del filtro de Kalman para sistemas no lineales.
 \newpage
 
 \subsection{Arquitectura general del sistema}
+A continuación, se mostrará la comunicación entre nodos tanto dentro de la RPi cómo en el momento de lanzar las técnicas de SLAM. En primer lugar se mostrará la estructura en el momento en el que se grabó
+el \textit{bag} y, cómo sería la estructura si se realizará SLAM en tiempo real:
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=.8\textwidth]{images/rqt_graphs/rpi_onboardBAG.pdf}
+    \caption{Captura de los nodos corriendo dentro de la Rapberry Pi 3B+}
+    \label{rqt01}
+\end{figure}
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=\textwidth]{images/rqt_graphs/graph_RTABMAP.pdf}
-    \caption{Captura de los nodos ejecutandose durante uno de los experimentos realizados con el robot}
+    \includegraphics[width=.8\textwidth]{images/rqt_graphs/graph_RTABMAP.pdf}
+    \caption{Captura de los nodos ejecutandose cuando se corre SLAM sobre los bags}
+    \label{rqt01}
+\end{figure}
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=.8\textwidth]{images/rqt_graphs/rpi_onboardSLAM.pdf}
+    \caption{Captura de los nodos cuando se realiza SLAM en tiempo real}
     \label{rqt01}
 \end{figure}
 

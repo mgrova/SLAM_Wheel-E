@@ -129,10 +129,10 @@ software externo es expuesto en la seccion4.  \\
 
 Todo el sistema, exceptuándo el control de bajo nivel del micro, corre en ROS Kinetic, en una configuración de multi-masters que relega los procesos computacionalmente costosos
 (algoritmos de SLAM y fusión sensorial) a un portátil conectado a la Raspberry a través de una red \textit{Wireless} dedicada.\\
-Las imágenes y medidas de profundidad utilizadas para las técnicas SLAM provienen de una \textit{Kinect for Xbox 360 v1} de Microsoft, que cuenta con una cámara RGB y un sensor de
-profundidad matricial. \\
+Para obtener información visual del entorno, se empleará un sensor RGB-D, es decir, la cámara \textit{Kinect v1 for Xbox 360}
 
-Por último, una breve explicación teórica del SLAM y se realizará una comparativa de dos técnicas de SLAM, en concreto \textit{RTAB-Map} y \textit{ORB-SLAM 2}.
+Por último, una breve explicación teórica del SLAM y se realizará una comparativa de dos técnicas de SLAM, en concreto \textit{RTAB-Map} y \textit{ORB-SLAM 2}. \\
+Además de ello se probará un software de optimización de mapas denominado \textit{Octomap}, el cual ayudará a obtener el mapa de ocupación 2D y 3D.
 
 \newpage
 \input{1hard.tex}

@@ -202,7 +202,7 @@ A continuación, se muestra una imagen de los topicos contenidos en ambos datase
     \caption{topicos contenidos en el bag}
 \end{figure}
 
-En ambos datasets el robot recorrerá un cuadrado en torno al salón de la casa de uno de los integrantes del grupo. En el primer dataset, el estado del salón será 
+En ambos datasets el robot recorrerá un camino en torno al salón de la casa de uno de los integrantes del grupo. En el primer dataset, el estado del salón será 
 el comun, de modo que haya una parte del mapa que no contendrán muchas features. Sin embargo, en el segundo se colocaron objetos en zonas dónde la cantidad de features
 y los contrastes del mapa eran reducidos para así comparar el resultado inicial con uno en un entorno experimental, dónde se ha forzado que el entorno esté lleno de features.\\
 
@@ -212,11 +212,12 @@ resultado obtenido con \textit{ORB-SLAM2 RGB-D}.
 \newpage
 
 \subsection{Análisis de resultados con el primer \textit{rosbag}}
-Este dataset será el que contiene el salón en un estado común, sin alterar la cantidad de features existentes en el entorno.
+Este dataset será el que contiene el salón en un estado común, sin alterar la cantidad de features existentes en el entorno. \\
+En él, se recorrerá un camino de, aproximadamente, 1$m^2$ en torno al salón.
 
 \subsubsection{RTAB-Map y local path}
-En primer lugar, se mostrará el mapa denso del entorno obtenido gracias a RTABMAP y cómo, tras recorrer un cuadrado de aproximadamente 1$m^2$ realiza el bucle cerrado del entorno
-y ajustará el mismo.
+En primer lugar, se mostrará el mapa denso obtenido gracias a RTABMAP. Se obsrrva cómo, el loop closure del mapa ha funcionado correctamente de tal modo que la estructura final
+del mapa será el rectangulo que confirma el salón.
 \begin{figure}[h!]
     \centering
     \includegraphics[width=.4\textwidth]{images/slam/bag1_rtabmap_noLC}
@@ -230,7 +231,21 @@ El mapa obtenido, será un mapa denso el cual posee toda la información posible
     \includegraphics[width=.9\textwidth]{images/slam/bag1_rtabmapbonito}
     \caption{Mapa obtenido con RTAB-Map}
 \end{figure}
-\newpage
+
+Gracias a la realización de dicho mapa, se ha optado por medir la tela grande de la pared y el cuadro sobre el sillón naranja tanto en el mapa cómo la distancia real, para comprobar
+el error que posee ésta técnica.
+
+\begin{center}
+\begin{tabular}{ c | c | c | c }
+     & Media en el mapa creado & Medida real & Error de RTAB-Map\\
+     \hline
+     Tela de la pared & X cm & X cm \\
+     Cuadro sobre sillón & X cm & X cm \\
+\end{tabular}
+\end{center}
+
+En este caso, se obsrrva que ...
+
 \subsubsection{OctoMap}
 Gracias a \textit{Octomap} se ha obtenido el mapa de ocupación probabilistico del entorno. Se mostrará, al igual que antes, el mapa antes y despues del loop closure, ya que es local
 destacable de ésta técnica de SLAM.
@@ -247,6 +262,7 @@ Además, \textit{Octomap} nos proporciona el mapa de ocupación 3D, cómo el mos
     \includegraphics[width=.9\textwidth]{images/slam/bag1_octomap_LC}
     \caption{Mapa obtenido con RTAB-Map y empleando el framework \textit{Octomap}}
 \end{figure}
+
 \subsubsection{ORB-SLAM2 RGB-D}
 En el caso del ORB-SLAM2, con éste dataset los resultados han sido peores, debido a que en cierto momento, los cambios de iluminosidad procedentes del balcón de la casa, hacen que se
 se pierda dentro del mapa creado. A continuación se muestra el frame anterior a la pérdida de la localización dentro del mapa. Los colores representan la altura en el eje Z.
@@ -262,29 +278,46 @@ Sin embargo, se observa cómo, cuándo vuelve a ver el inicio del mapa, dónde t
     \includegraphics[width=.9\textwidth]{images/slam/bag1_orb_relocal}
     \caption{Relocalización del robot en el primer dataset}
 \end{figure}
+
+Debido a que el mapa no se ha llegado a completar se ha obtado por no realizar una comparativa de las medidas en éste caso.
+
 \newpage
+
 \subsection{Análisis de resultados con el segundo \textit{rosbag}}
 En éste segundo dataset, el escenario será más parecido a un escenario experimental debido a que se han colocado objetos por el salón de tal modo que en todo el mapa se
 obtengan una cantidad elevada de features.
+
 \subsubsection{RTAB-Map y local path}
 Al igual que anteriormente, se destacará el loop closure detectado por el mapa. Se observa cómo, antes de dicho momento, las imagenes de la tela de la pared aparecen superpuestas,
 sin embargo, posteriormente, se observa cómo ha detectado que ya conocia ese setpoint y cerró el bucle:
 \begin{figure}[h!]
     \centering
     \includegraphics[width=.4\textwidth]{images/slam/bag3_rtabmap_noLC}
-    \includegraphics[width=.415\textwidth]{images/slam/bag3_rtabmap_LC}
+    \includegraphics[width=.51\textwidth]{images/slam/bag3_rtabmap_LC}
     \caption{Mapa creado antes y después del \textit{Loop Closure} con el segundo dataset}
 \end{figure}
+
 El mapa obtenido, será un mapa denso el cual posee toda la información posible del entorno, cómo se muestra a continuación:
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=.9\textwidth]{images/slam/bag3_rtabmapbonito}
+    \includegraphics[width=.7\textwidth]{images/slam/bag3_rtabmapbonito}
     \caption{Mapa obtenido con RTAB-Map empleando el segundo dataset}
 \end{figure}
 
+A continuación, se realizará la comparativa del error cometido por ésta técnica de SLAM:
+\begin{center}
+    \begin{tabular}{ c | c | c | c }
+         & Media en el mapa creado & Medida real & Error de RTAB-Map\\
+         \hline
+         Tela de la pared & X cm & X cm \\
+         Cuadro sobre sillón & X cm & X cm \\
+    \end{tabular}
+\end{center}
+    
+    En este caso, se obsrrva que ...
 
-\subsubsection{OctoMap}
+    \subsubsection{OctoMap}
 Gracias a \textit{Octomap} se ha obtenido el mapa de ocupación probabilistico del entorno. Se mostrará, al igual que antes, el mapa antes y despues del loop closure, ya que es local
 destacable de ésta técnica de SLAM.
 \begin{figure}[h!]
@@ -301,6 +334,7 @@ Además, \textit{Octomap} nos proporciona el mapa de ocupación 3D, cómo el mos
     \caption{Mapa obtenido con RTAB-Map y empleando el framework \textit{Octomap}}
 \end{figure}
 
+\newpage
 \subsubsection{ORB-SLAM2 RGB-D}
 En éste segundo set de datos, se evitó el cambio de iluminación en el punto dónde antes se perdio, de tal modo que en éste caso no pase y, efectivamente, cómo se mostrará a continuación,
 en ese punto no se perdió:
@@ -316,6 +350,17 @@ Por tanto, en éste caso sí se ha logrado obtener un mapa disperso del entorno:
     \includegraphics[width=.9\textwidth]{images/slam/bag3_orb_map}
     \caption{Mapa del entorno empleando ORB-SLAM2}
 \end{figure}
+
+Debido a que con éste bag si ha sido posible completar el mapa empleando RTAB-Map, se tomarán también las medidas de la tela y el cuadro, de tal modo que:
+A continuación, se realizará la comparativa del error cometido por ésta técnica de SLAM:
+\begin{center}
+    \begin{tabular}{ c | c | c | c }
+         & Media en el mapa creado & Medida real & Error de ORB-SLAM 2\\
+         \hline
+         Tela de la pared & X cm & X cm \\
+         Cuadro sobre sillón & X cm & X cm \\
+    \end{tabular}
+    \end{center}
 
 \newpage
 \subsection{Resultados obtenidos de ORB-SLAM2 Monocular}

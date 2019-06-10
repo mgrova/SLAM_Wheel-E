@@ -16,9 +16,9 @@ Con el fin de obtener una vista general de todo el proyecto, así como del coste
 \subsection{Chasis del vehículo}
 Fabricado a partir de un tablón plano de edf cortado en una CNC láser de forma gratuita gracias al Fablab de la Universidad de Sevilla en la facultad de Arquitectura. \\
 El robot ha sido diseñado con una topología inspirada en los vehículos de exploración espacial conocidos como \textit{ROVERS}, utilizando materiales y métodos de construcción asequibles y
-manteniendo como objetivo una sencilla sustitución e iterabilidad de cada componente. \\
-Algunos elementos sin funcionalidad estructural, como los encoders o el soporte de la cámara, han sido fabricados mediante impresión 3D. Todos los modelados pueden encontrarse en la sección
-hardware de \textit{Git-Hub}.
+manteniendo como objetivo una posible sencilla sustitución de cada componente. \\
+Algunos elementos sin funcionalidad estructural, como los encoders o el soporte de la cámara, han sido fabricados mediante impresión 3D. \\
+Todos los modelados pueden encontrarse en la sección hardware de \textit{Git-Hub}.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=.5\textwidth]{images/hw/wheele_stl}
@@ -30,12 +30,6 @@ La disposición geométrica es la de un vehículo diferencial, con tres pares de
 \subsection{Motores DC}
  Los seis motores utilizados, a pesar de que deberían comportarse de forma parecida, presentan respuestas muy diferenciadas; para una señal de control idéntica cada uno de ellos muestran puntos de operación distintos y se observan respuestas ante escalón muy variadas. Sin embargo, 
  todos presentan un comportamiento común, una gran zona muerta que complicará mucho la operación del robot a velocidades extremadamente bajas. En concreto, con el convesor digital-analógico del microcontrolador seleccionado (más detalles en la seccion2.arduino), se pierde un 40\% de los bits del rango de salida a causa de este incoveniente.  
- \begin{figure}[h!]
- 	\centering
- 	\includegraphics[width=.6\textwidth]{images/hw/estatica}
- 	\caption{Característica estática de un motor}
- \end{figure}
- \newpage
 \subsubsection{Especificaciones}
 \begin{itemize}
 	\item Tensión de trabajo: 3-6 V.
@@ -44,6 +38,16 @@ La disposición geométrica es la de un vehículo diferencial, con tres pares de
 	\item Reductora: 48 revoluciones a una.
 	\item Peso (sin ruedas): 29 gramos.
 \end{itemize}
+
+\newpage
+A continuación, se mostrará la caracteristica estática obtenida para uno de los motores, la caracterización para el resto se ha realizado de forma análoga. 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=.6\textwidth]{images/hw/estatica}
+	\caption{Característica estática de un motor}
+\end{figure}
+
+
 \subsubsection{Drivers}
 Se han empleado tres microchips L293D que integra cada uno dos puentes H. Estos puentes H nos permiten configurar la dirección de giro con dos señales digitales y la velocidad con otras dos señales analógicas.\\
 Por comodidad y robustez, se ha diseñado en \textit{KiCad} una placa de circuito impreso muy simple que facilita el cableado y permite integrar algún 
@@ -60,12 +64,11 @@ un acabado final bastante bueno.\\
  Los integrados requieren de una referencia de tensión lógica de 5V y una alimentación para los motores, que será a 6V. \\
 Los 5V se sacarán del Arduino y los motores se alimentarán con una fuente externa de 6V y X A.
 
-
+\newpage
 \subsection{Encoders}\label{enc_hard}
 Los sensores elegidos para medir la velocidad de cada rueda y estimar la posición y velocidad del robot, son unos sencillos encoders ópticos binarios junto a unos discos perforados. Al pasar la luz por una perforación del disco, 
 que gira a la misma velocidad que la rueda, se manda una señal digital al micro. Contabilizando los flancos de subida o de bajada en cierto periódo de tiempo, y conociendo las dimensiones del disco, se obtiene una estimación de 
-la velocidad. Para más detalles en este proceso dirigirese a la ventanilla 3 seccion software encoders GRACIAS. 
-\newpage
+la velocidad.
  \begin{figure}[h!]
  	\centering
 	 \includegraphics[width=.4\textwidth]{images/hw/encoder_img_rect}
