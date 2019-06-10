@@ -127,7 +127,7 @@ Las capacidades interesantes de este paquete las podemos resumir en las siguient
 
 \subsection{Arquitectura general del sistema}
 A continuación, se mostrará la comunicación entre nodos tanto dentro de la RPi cómo en el momento de lanzar las técnicas de SLAM. En primer lugar se mostrará la estructura en el momento en el que se grabó
-el \textit{bag} y, cómo sería la estructura si se realizará SLAM en tiempo real:
+el \textit{bag} y, cómo sería la estructura si se realizará SLAM :
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=.8\textwidth]{images/rqt_graphs/rpi_onboardBAG.pdf}
@@ -156,12 +156,12 @@ Para los experimentos, y en concreto con RTAB-Map, la estructura nodal es la sig
 \section{Puntos destacables de la implementación del proyecto}
 
 \subsection{Obtención de los parámetros de la cámara}
-Destacar que, siempre es necesario conocer los parámetros intrinsecos de la cámara además de la matriz de rotación. Para obtener la matriz de parámetros de nuestra cámara, se ha hecho uso del paquete de ROS, \textit{\href{http://wiki.ros.org/camera_calibration}{Camera\_calibration}}.\\
+Destacar que, siempre es necesario conocer los parámetros intrínsecos de la cámara además de la matriz de rotación. Para obtener la matriz de parámetros de nuestra cámara, se ha hecho uso del paquete de ROS, \textit{\href{http://wiki.ros.org/camera_calibration}{Camera\_calibration}}.\\
 Este paquete nos proporcionará la herramienta mostrada a continuación, que gracias a un tablero de ajedrez nos dará los parámetros intrínsecos de nuestra cámara:
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=0.57\textwidth]{images/calibration_art}
-    \caption{GUI proporcionada por el paquete}
+    \caption{GUI proporcionada por el paquete ejecutándose}
 \end{figure}
 
 Las matrices serán dadas en pormato \textit{.ost} y \textit{.yaml} que, despues se le pasará cuando se quiera emplear la cámara para actualizar el topic camera\_info,cuyo 

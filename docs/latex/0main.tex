@@ -86,15 +86,15 @@
 \centering
 \Huge{\textbf{AMPLIACIÓN DE ROBÓTICA}} \\
 \Huge{Comparativa de técnicas de SLAM empleando un robot movil}\\
-
-\vspace{2cm}
+\vspace{0.5cm}
 \LARGE{Grado en Ingeniería Electrónica, Mecatrónica y Robótica}\\
 \rule{\textwidth}{0.1mm}
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=.6\textwidth]{images/wheele_real}
+	\includegraphics[width=.5\textwidth]{images/wheele_real}
+	\includegraphics[width=.5\textwidth]{images/slam/bag1_rtabmapbonito}
 \end{figure}
-\vspace{2cm}
+\vspace{0.1cm}
 \rule{\textwidth}{0.1mm}
 \Large{\textbf{Autores:} \\
                          López Gil, Miguel \\
@@ -144,6 +144,13 @@ Más adelante, se expone en profundidad una breve explicación teórica de las m
 \input{3slam.tex}
 
 \newpage
+\section{Conclusiones del proyecto}
+En este proyecto, el objetivo principal ha sido abordar el problema completo del SLAM. Desde el diseño de un robot de bajo coste, empleando hardware barato, lo cual ha supuesto
+un añadido de complejidad, hasta la implementación una técnica de SLAM. Sin embargo, gracias a los filtros estadísticos implementados, ha sido posible solventar el problema que conllevaría las deficientes medidas 
+del entorno tomadas por el robot construido. \\
+Para poder llegar a obtener dichas medidas ha sido necesario diseñar toda una arquitectura software tanto para realizar un control  a bajo como a alto nivel del robot. \\
+Gracias a ello, ha sido posible implementar metodologías de SLAM realimentando con éstas medidas estimadas por el filtro llegando a los resultados satisfactorios mostrados anteriormente.
+
 \bibliography{cites}
 \nocite{murORB2}
 \nocite{rtabmap}

@@ -108,18 +108,15 @@ La potencia eléctrica necesaria para que el micro, y sus periféricos, operen c
 
 
 \subsection{Cámara}
-La \textit{Kinect for Xbox 360 V1} integra una cámara RGB y un sensor de profundidad de luz infrarroja estructurada. El rango del sensor de profundidad esta comprendido entre los 0.7 y los 6 metros. El campo de visión del dispositivo es de 57º horizontalmente y 43º en la vertical, aunque cuenta con un soporte motorizado que controla el \textit{pitch} de la camara con un rango de ±27º. La resolución máxima de la cámara es de 1280x1024 píxeles, siendo la más usada 640x480 píxeles; puesto que el \textit{frame rate} depende fuertemente de la resolución con la que se trabaje.
+La \textit{Kinect for Xbox 360 V1} integra una cámara RGB y un sensor de profundidad de luz infrarroja estructurada. El rango del sensor de profundidad esta comprendido entre los 0.7 y los 6 metros. El campo de visión del
+dispositivo es de 57º horizontalmente y 43º en la vertical, aunque cuenta con un soporte motorizado que controla el \textit{pitch} de la camara con un rango de ±27º. La resolución máxima de la cámara es de 1280x1024 píxeles,
+siendo la más usada 640x480 píxeles; puesto que el \textit{frame rate} depende fuertemente de la resolución con la que se trabaje. \\
+El calculo de la profundidad se realiza a partir de la matriz proyectada.
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=.5\textwidth]{images/kinect}
-	\caption{Cámara RGB-D Kinect}
-\end{figure}
-
-El calculo de la profundidad se realiza del siguiente modo a partir de la matriz proyectada:
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=.4\textwidth]{images/kinect_teo}
-	\caption{Cámara RGB-D Kinect}
+	\includegraphics[width=.4\textwidth]{images/kinect}
+	\includegraphics[width=.5\textwidth]{images/kinect_teo}
+	\caption{Cámara RGB-D Kinect y esquema del cálculo de profundidad}
 \end{figure}
 
 \newpage
