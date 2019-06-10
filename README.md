@@ -1,5 +1,5 @@
 # SLAM_Wheel-E
-Este es un proyecto en el cual se busca realizar una comparativa de la implementación de diferentes técnicas de SLAM empleando un robot movil diferencial tipo Rover.
+Este es un proyecto en el cual se busca realizar una comparativa de diferentes técnicas de SLAM empleando un robot movil diferencial tipo Rover.
 
 ![alt text](/docs/latex/images/slam/bag1_rtabmapbonito.jpg "RTABmap")
 
@@ -65,6 +65,6 @@ sudo apt-get install ros-kinetic-octomap-*
 ```
 
 ## ORB-SLAM2
-
+Se enlaza directamente al repositorio original.
 https://github.com/appliedAI-Initiative/orb_slam_2_ros
 
