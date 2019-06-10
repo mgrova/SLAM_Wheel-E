@@ -104,7 +104,7 @@ En este proyecto su integración se ha llevado a cabo lanzando en la Raspberry-P
 suministradora de información y el PC el encargado de procesarla.
 
 \subsection{Implementación filtro estadístico}
-Introducción de porqué es interesante y eso, lo de vender la moto as usual
+Debido a los múltiples sensores que integra el robot, a la variedad de sus medidas y a las incertidumbres, desconocidas, a la que están sujetos, se ha considerado necesario y tremendamente benificioso la implementación de algún tipo de @textit{data fusion}. Con este objetivo se introduce un filtro estadístico, de Kallman, para estimar los estados del vehículo. La razón por la que se ha elegido este filtro frente a otros, por ejemplo un filtro de información, se debe a la simpleza del modelo de observación, pues las posibles entradas son meramente la odometría de los encoders, las medidas de la IMU y la odemetría visual.
 
 \subsubsection{Filtro de Kalman Extendido}
 La información que el sistema obtiene de los sensores está sujeta a ruido e incertidumbres de la medida. A fin de minimizar los errores y mejorar la estimación de la posicion y velocidad del robot se ha 
@@ -112,6 +112,7 @@ considerado que era de especial interes y utilidad la aplicación de un filtro r
 Este filtro es una extensión del filtro de Kalman para sistemas no lineales.
 
 \subsubsection{ROS-Robot Localization Package}
+Como implementación del EKF se ha decidido usar el paquete de ROS kinetic \textit{Robot Localization}\cite{MooreStouchKeneralizedEkf2014}. Este paquete contiene dos nodos de estimación de estados, uno con un filtro extendido y el segundo con un \textit{Unscented Kallman Filter}.
 
 \newpage
 
