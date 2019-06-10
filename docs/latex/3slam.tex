@@ -69,6 +69,7 @@ A continuación, se monstarán una comparativa de una serie de técnicas de SLAM
 \end{itemize}
 
 \subsection{Técnicas SLAM implementadas en éste proyecto}
+Destacar que, mientras la primera técnica de SLAM es una técnica determinista, la segunda será probabilistica.
 \subsubsection{\textit{RTAB-Map SLAM}}
 RTAB-Map \textit{(Real-Time Appearance-Based Mapping)} es una técnica de Graph-SLAM\footnote{http://robots.stanford.edu/papers/thrun.graphslam.pdf} basada en la detección de bucles cerrados incrementales. Es totalmente funcional 
 con sensores RGB-D, Stereo y LIDAR. \\
@@ -119,10 +120,17 @@ preferible mantener en la memoria de trabajo aquellas localizaciones que son má
 observadas.
 \end{comment}
 \subsection{Framework de optimización Octomap}
-El paquete de ros empleado para emplear la ténica RTAB-Map,\textit{rtabmap-ros}, posee la posibilidad de extraer también el mapa de ocupación 2D y 3D gracias al Framework 
+El paquete de ROS empleado para emplear la ténica RTAB-Map,\textit{rtabmap-ros}, posee la posibilidad de extraer también el mapa de ocupación 2D y 3D gracias al Framework 
 \textit{Octomap}\footnote{https://octomap.github.io/}. \\
 Este framework es una librería de C++ que permite la obtención de mapas probabilisticos basándose en una estructura de representación jerarquica de datos para subdividir
 el espacio 3D, esta estructura es denominada \textit{Octotrees}. \\
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/octomap_beauty}
+    \caption{Optimización realizará empleando los \textit{Octotrees}}
+\end{figure}
+
 
 Los \textit{Octotrees} se emplean para almacenar propiedades booleanas del entorno, en el caso de
 la robotica estas propiedas booleanas es la ocupación de dicha celda, de la cual es posible definir su tamaño minimo en función de la resolución de mapa
@@ -237,9 +245,9 @@ el error que posee ésta técnica.
 
 \begin{center}
 \begin{tabular}{ c | c | c | c }
-     & Media en el mapa creado & Medida real & Error de RTAB-Map\\
+     & Ancho en el mapa creado & Ancho real & Error de RTAB-Map\\
      \hline
-     Tela de la pared & X cm & X cm \\
+     Tela de la pared & 1.75 m & 2 m & 0.15m\\
      Cuadro sobre sillón & X cm & X cm \\
 \end{tabular}
 \end{center}
@@ -304,19 +312,7 @@ El mapa obtenido, será un mapa denso el cual posee toda la información posible
     \includegraphics[width=.7\textwidth]{images/slam/bag3_rtabmapbonito}
     \caption{Mapa obtenido con RTAB-Map empleando el segundo dataset}
 \end{figure}
-
-A continuación, se realizará la comparativa del error cometido por ésta técnica de SLAM:
-\begin{center}
-    \begin{tabular}{ c | c | c | c }
-         & Media en el mapa creado & Medida real & Error de RTAB-Map\\
-         \hline
-         Tela de la pared & X cm & X cm \\
-         Cuadro sobre sillón & X cm & X cm \\
-    \end{tabular}
-\end{center}
     
-    En este caso, se obsrrva que ...
-
     \subsubsection{OctoMap}
 Gracias a \textit{Octomap} se ha obtenido el mapa de ocupación probabilistico del entorno. Se mostrará, al igual que antes, el mapa antes y despues del loop closure, ya que es local
 destacable de ésta técnica de SLAM.
@@ -350,17 +346,6 @@ Por tanto, en éste caso sí se ha logrado obtener un mapa disperso del entorno:
     \includegraphics[width=.9\textwidth]{images/slam/bag3_orb_map}
     \caption{Mapa del entorno empleando ORB-SLAM2}
 \end{figure}
-
-Debido a que con éste bag si ha sido posible completar el mapa empleando RTAB-Map, se tomarán también las medidas de la tela y el cuadro, de tal modo que:
-A continuación, se realizará la comparativa del error cometido por ésta técnica de SLAM:
-\begin{center}
-    \begin{tabular}{ c | c | c | c }
-         & Media en el mapa creado & Medida real & Error de ORB-SLAM 2\\
-         \hline
-         Tela de la pared & X cm & X cm \\
-         Cuadro sobre sillón & X cm & X cm \\
-    \end{tabular}
-    \end{center}
 
 \newpage
 \subsection{Resultados obtenidos de ORB-SLAM2 Monocular}
