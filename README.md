@@ -1,11 +1,14 @@
 # SLAM_Wheel-E
 Este es un proyecto en el cual se busca realizar una comparativa de la implementación de diferentes técnicas de SLAM empleando un robot movil diferencial tipo Rover.
-El proyecto contiene los siguientes apartados
 
- - Uso de camara RGB-D tipo Kinect con Raspberry Pi 3B/B+
- - Comunicación multimaster RPI-PC
- - Modelado dinámico del robot
- - Implementación de tecnicas de SLAM
+![alt text](/docs/latex/images/slam/bag1_rtabmapbonito "RTABmap")
+
+![alt text](/docs/latex/images/slam/bag3_orb_map "ORB")
+
+# Wheel-E 
+![alt text](/docs/latex/images/wheele_real "wheele")
+
+Un desarrollo en profundidad del proyecto se encuentra en la carpeta docs.
 
 # DEPENDENCIAS
 ## Uso de lod gpio de la RPi
@@ -53,13 +56,15 @@ cd ~/catkin_ws
 catkin_make
 ```
 
-## Dependencias del nodo para usar RaspiCam
-Se ha compilado a mano el paquete, siguiendo las instrucciones del siguiente repo:
-https://github.com/UbiquityRobotics/raspicam_node
-## Graph SLAM
-Para implementar Graph Slam, se hará uso del framework RTAB-Map, el cual es necesario tener instalado tanto en la RPi como en el PC.
+## RTAB-Map SLAM
+Se deberan tener instalados los siguientes paquetes de ros y sus respectivas dependencias:
 ```
-sudo apt install ros-kinetic-rtabmap-ros 
+sudo apt-get install ros-kinetic-rtabmap-ros
+sudo apt-get install ros-kinetic-octomap-*
+
 ```
-# WORK IN PROGRESS...
+
+## ORB-SLAM2
+
+https://github.com/appliedAI-Initiative/orb_slam_2_ros
 
