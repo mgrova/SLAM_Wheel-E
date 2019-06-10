@@ -74,10 +74,10 @@ encoders calcula el avance del robot en base al modelo propuesto. La publicació
 
 \subsubsection{Interfaz Raspberry-Pi/Arduino}
 La comunicación por puerto serie se implementa haciendo uso de la librería \textit{CmdMessenger} \cite{CmdMessenger}, que permite definir comandos (con la posibilidad de asociarles argumentos y callbacks) de forma eficiente y sencilla.
-Por la parte de la Raspberry, se usan las librerías CmdMessenger (escrita en c) o su alternativa PyCmdMessenger (en Python) en el nodo serial\_com.py para transmitir por el puerto serie. Los siguientes comandos son los más importantes: \\
+Por la parte de la Raspberry, se usan las librerías CmdMessenger (desarrollada en C) o su alternativa PyCmdMessenger (en Python) en el nodo \textit{serial\_com.py} para transmitir por el puerto serie. Los siguientes comandos son los más importantes: \\
 \begin{itemize}
-	\item Cmd\_off; Al recibir este comando el micro pasa a no hacer nada, comportándose como un apagado de emergencia.
-	\item Change\_ref; Acompañado de un valor de referencia de la velocidad, que el micro usará para el control de los motores.
+	\item \textbf{Cmd\_off} $\rightarrow$ Al recibir este comando el micro pasa a no hacer nada, comportándose como un apagado de emergencia.
+	\item \textbf{Change\_ref} $\rightarrow$ Acompañado de un valor de referencia de la velocidad, que el micro usará para el control de los motores.
 \end{itemize}
 \par
 De este modo es sencillo publicar un tópico de 'comandos del sistema', como apagar o funciones de debugeo, y otros tópicos para los datos que hayan de retransmitirse. Cuando llegan datos desde el arduino, se ejecuta un callback (de la librería externa, no de ROS) que publica dicha información el tópico correspondiente. Si es el caso contrario, y se busca enviar datos al arduino, el nodo se subscribirá al tópico con ese dato y en el callback asociado (ahora sí de ROS) se envía al arduino.
@@ -100,7 +100,7 @@ En este proyecto, su integración se ha llevado a cabo lanzando en la Raspberry-
 suministradora de información y el PC el encargado de procesarla.
 
 \subsection{Implementación filtro estadístico}
-Debido a los múltiples sensores que integra el robot, a la variedad de sus medidas y a las incertidumbres, desconocidas, a la que están sujetos, se ha considerado necesario y tremendamente benificioso la implementación de algún tipo de @textit{data fusion}. Con este objetivo se introduce un filtro estadístico, de Kallman, para estimar los estados del vehículo. La razón por la que se ha elegido este filtro frente a otros, por ejemplo un filtro de información, se debe a la simpleza del modelo de observación, pues las posibles entradas son meramente la odometría de los encoders, las medidas de la IMU y la odemetría visual.
+Debido a los múltiples sensores que integra el robot, a la variedad de sus medidas y a las incertidumbres, desconocidas, a la que están sujetos, se ha considerado necesario y tremendamente benificioso la implementación de algún tipo de \textit{Data Fusion}. Con este objetivo se introduce un filtro estadístico, de Kalman, para estimar el vector de estados del vehículo. La razón por la que se ha elegido este filtro frente a otros, por ejemplo un filtro de información, se debe a la simpleza del modelo de observación, pues las posibles entradas son meramente la odometría de los encoders, las medidas de la IMU y la odemetría visual.
 
 \subsubsection{Filtro de Kalman Extendido}
 La información que el sistema obtiene de los sensores está sujeta a ruido e incertidumbres de la medida. A fin de minimizar los errores y mejorar la estimación de la posicion y velocidad del robot se ha 
@@ -135,41 +135,42 @@ el \textit{bag} y, cómo sería la estructura si se realizará SLAM en tiempo re
     \label{rqt01}
 \end{figure}
 
-\begin{figure}[!ht]
-    \centering
-    \includegraphics[width=.8\textwidth]{images/rqt_graphs/graph_RTABMAP.pdf}
-    \caption{Captura de los nodos ejecutandose cuando se corre SLAM sobre los bags}
-    \label{rqt01}
-\end{figure}
+\newpage
+Si se corriese el SLAM en tiempo real, la arquitectura de nodos de ROS sería la siguiente:
 
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=.8\textwidth]{images/rqt_graphs/rpi_onboardSLAM.pdf}
     \caption{Captura de los nodos cuando se realiza SLAM en tiempo real}
-    \label{rqt01}
+    \label{rqt02}
+\end{figure}
+
+Para los experimentos, y en concreto con RTAB-Map, la estructura nodal es la siguiente:
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=.8\textwidth]{images/rqt_graphs/graph_RTABMAP.pdf}
+    \caption{Captura de los nodos ejecutandose cuando se corre SLAM sobre los bags}
+    \label{rqt03}
 \end{figure}
 
 \section{Puntos destacables de la implementación del proyecto}
 
 \subsection{Obtención de los parámetros de la cámara}
-Destacar que, siempre es necesario conocer los parámetros intrinsecos de la cámara además de la matriz de rotación. \\
-Para obtener la matriz de parámetros de nuestra cámara, se ha hecho uso del paquete de ROS, \textit{\href{http://wiki.ros.org/camera_calibration}{Camera\_calibration}}.\\
+Destacar que, siempre es necesario conocer los parámetros intrinsecos de la cámara además de la matriz de rotación. Para obtener la matriz de parámetros de nuestra cámara, se ha hecho uso del paquete de ROS, \textit{\href{http://wiki.ros.org/camera_calibration}{Camera\_calibration}}.\\
 Este paquete nos proporcionará la herramienta mostrada a continuación, que gracias a un tablero de ajedrez nos dará los parámetros intrínsecos de nuestra cámara:
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.8\textwidth]{images/calibration_art}
+    \includegraphics[width=0.57\textwidth]{images/calibration_art}
     \caption{GUI proporcionada por el paquete}
 \end{figure}
 
 Las matrices serán dadas en pormato \textit{.ost} y \textit{.yaml} que, despues se le pasará cuando se quiera emplear la cámara para actualizar el topic camera\_info,cuyo 
-tipo de mensaje será \textit{\href{http://docs.ros.org/melodic/api/sensor_msgs/html/msg/CameraInfo.html}{sensor\_msgs/CameraInfo}}.\\
-
-\newpage
+tipo de mensaje será \textit{\href{http://docs.ros.org/melodic/api/sensor_msgs/html/msg/CameraInfo.html}{sensor\_msgs/CameraInfo}}.
 \subsection{Inicialización del robot}
 Para lanzar todos los nodos de ROS en el ordenador de abordo del robot y en el ordenador principal se han creado los siguientes ficheros \textit{roslaunch}:
     \begin{figure}[!ht]
         \centering
-        \includegraphics[width=0.6\textwidth]{images/whee}
+        \includegraphics[width=0.57\textwidth]{images/whee}
         \caption{Nodos lanzados en el robot}
     \end{figure}
 

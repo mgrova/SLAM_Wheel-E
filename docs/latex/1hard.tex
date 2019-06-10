@@ -2,9 +2,9 @@
 Con el fin de obtener una vista general de todo el proyecto, así como del coste del mismo se lista a continuación todos los componentes del robot y su coste:
 \begin{itemize}
 	\item \textbf{Chasis del vehículo}. Fabricado a partir de un tablón plano de edf cortado en una CNC láser de forma gratuita gracias al Fablab de la Universidad de Sevilla en la facultad de Arquitectura.
-	\item \textbf{Motores de corriente continua}(\~10 euros). Adquiridos a través de tiendas digitales destinadas a la importación por un precio muy ajustado, tal y como se refleja en la calidad del producto. Sin embargo, formaban parte de un kit que incluye ruedas y acople al eje de transmisión, suponiendo un ahorro importante de tiempo y dinero. 
+	\item \textbf{Motores de corriente continua}($\approx$ 10 euros). Adquiridos a través de tiendas digitales destinadas a la importación por un precio muy ajustado, tal y como se refleja en la calidad del producto. Sin embargo, formaban parte de un kit que incluye ruedas y acople al eje de transmisión, suponiendo un ahorro importante de tiempo y dinero. 
 	\item \textbf{Encoders ópticos} (6 euros). Compuestos por un diodo emisor de luz (comprados también en los mismos sitios web que los motores) y por un disco que interrumpe el paso del haz lumínico diseñado específicamente e impreso en 3D.
-	\item \textbf{Microcontrolador ATmega328} (~10pavos). Aunque la gran parte del código implementado en el micro no utiliza las librerías de arduino, por comodidad se ha optado por un microchip ya montado en una placa tipo arduino (un modelo no oficial, clónico).
+	\item \textbf{Microcontrolador ATmega328} ($\approx$ 10 euros). Aunque la gran parte del código implementado en el micro no utiliza las librerías de arduino, por comodidad se ha optado por un microchip ya montado en una placa tipo arduino (un modelo no oficial, clónico).
 	\item \textbf{IMU MPU-6050} (3 euros). Con la capacidad de medir velocidades y aceleraciónes el los tres ejes del espacio.
 	\item \textbf{Raspberry Pi 3B+} (30 euros). Constituye el cerebro del robot, y centraliza la comunicación con los demás sistemas. Aunque puede resultar el componente más caro del proyecto, se disponían de varias de antemano, por lo que no hubo que asumir su coste.
 	\item \textbf{Kinect for Xbox 360 V1} (15 euros). Esta popular cámara merece la fama que tiene por lo asequible que es (especialmente el modelo más antiguo) y las utilidades que trae. Se demuestra como la opción más socorrida para desarollar con poco presupuesto aplicaciones que requieran de imágenes o sensores de profundidad.
@@ -56,7 +56,7 @@ un acabado final bastante bueno.
  \end{figure}
  \par
 Los integrados requieren de una referencia de tensión lógica de 5V y una alimentación para los motores de 6V.
-La referencia lógica proviene, obviamente, del Arduino. Los motores sin embargo son alimentados con una fuente externa de 6V y 2A máxmimo.
+La referencia lógica proviene, obviamente, del Arduino. Los motores sin embargo son alimentados con una fuente externa de 6V y 2A máximo. \\
 
 \subsection{Encoders}\label{enc_hard}
 Los sensores elegidos para medir la velocidad de cada rueda y estimar la posición y velocidad del robot, son unos sencillos encoders ópticos binarios junto a unos discos perforados. Al pasar la luz por una perforación del disco, 
@@ -97,6 +97,7 @@ La Raspberry es alimentada a través de un puerto micro USB a 5V con una corrien
 \subsection{Arduino Uno}
 Por conveniencia se ha optado por una placa arduino, que además de un microcontrolador ATmega328p, integra un puerto usb con un chipset que facilita su programación y la comunicación serie con el mismo. Incluye también un cristal de cuarzo , que provee una fuente prescisa para la señal de reloj y resulta especialmente útil para implementar el control de bajo nivel en tiempo real.
 El micro cuenta con una memoria flash progamable de 32 kilobytes y una eeprom de un kilobyte, que es más que suficiente para el uso que se le va a dar. Dos timers de 8 bits y otro de 16 bits generan las interrumpciones necesarias para controlar el tiempo real e implementar el control. De todas las 23 posibles entradas/salidas digitales del micro, se ocupan cuatro salidas para seleccionar el sentido de la marcha de los motores (dos para todos las ruedas de la izquierda y dos para las de la derecha) y seis canales PWM para controlar la velocidad individual de cada uno.\\
+\newpage
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=.3\textwidth]{images/hw/arduino}
@@ -104,20 +105,20 @@ El micro cuenta con una memoria flash progamable de 32 kilobytes y una eeprom de
 \end{figure}
 \par
 La potencia eléctrica necesaria para que el micro, y sus periféricos, operen correctamente (5V y menos de 100mA) se obtienen por el puerto USB desde la Raspberry Pi, aprovechando el bus de comunicación serie.
-\newpage
+
 
 \subsection{Cámara}
 La \textit{Kinect for Xbox 360 V1} integra una cámara RGB y un sensor de profundidad de luz infrarroja estructurada. El rango del sensor de profundidad esta comprendido entre los 0.7 y los 6 metros. El campo de visión del dispositivo es de 57º horizontalmente y 43º en la vertical, aunque cuenta con un soporte motorizado que controla el \textit{pitch} de la camara con un rango de ±27º. La resolución máxima de la cámara es de 1280x1024 píxeles, siendo la más usada 640x480 píxeles; puesto que el \textit{frame rate} depende fuertemente de la resolución con la que se trabaje.
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=.4\textwidth]{images/kinect}
+	\includegraphics[width=.5\textwidth]{images/kinect}
 	\caption{Cámara RGB-D Kinect}
 \end{figure}
-\par
+
 El calculo de la profundidad se realiza del siguiente modo a partir de la matriz proyectada:
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=.5\textwidth]{images/kinect_teo}
+	\includegraphics[width=.4\textwidth]{images/kinect_teo}
 	\caption{Cámara RGB-D Kinect}
 \end{figure}
 
@@ -127,6 +128,6 @@ Debido a la multitud de entradas y salidas digitales y analógicas necesarias, a
 entre el ordenador de abordo (la \textit{Raspberry Pi}), los periféricos y la unidad de procesamiento para las partes más pesadas del software.\\
   \begin{figure}[h!]
   	\centering
-  	\includegraphics[width=.7\textwidth]{images/hw/wheele_esquema}
+  	\includegraphics[width=.9\textwidth]{images/hw/wheele_esquema}
   	\caption{Esquema de conexionado de todos los componentes}
   \end{figure}

@@ -216,7 +216,9 @@ y los contrastes del mapa eran reducidos para así comparar el resultado inicial
 
 Se realizarán 3 pruebas, las cuales se encuentras recogidas en vídeos existentes en la carpeta del proyecto. En primer lugar se mostrará el mapa creado por \textit{RTAB-Map} y
 la estimación del \textit{path} del robot. Tras ello, se mostrará el mapa de ocupación generado por \textit{OctoMap} tanto en 2D cómo en 3D y, por último, se mostrará el
-resultado obtenido con \textit{ORB-SLAM2 RGB-D}.
+resultado obtenido con \textit{ORB-SLAM2 RGB-D}. \\
+
+Destacar que, se pueden observar los resultados de las técnicas de SLAM en el directorio \textit{videos\_wheeleSLAM} de éste proyecto.
 \newpage
 
 \subsection{Análisis de resultados con el primer \textit{rosbag}}
@@ -224,7 +226,7 @@ Este dataset será el que contiene el salón en un estado común, sin alterar la
 En él, se recorrerá un camino de, aproximadamente, 1$m^2$ en torno al salón.
 
 \subsubsection{RTAB-Map y local path}
-En primer lugar, se mostrará el mapa denso obtenido gracias a RTABMAP. Se obsrrva cómo, el loop closure del mapa ha funcionado correctamente de tal modo que la estructura final
+En primer lugar, se mostrará el mapa denso obtenido gracias a RTABMAP. Se observa cómo, el loop closure del mapa ha funcionado correctamente de tal modo que la estructura final
 del mapa será el rectangulo que confirma el salón.
 \begin{figure}[h!]
     \centering
@@ -247,12 +249,12 @@ el error que posee ésta técnica.
 \begin{tabular}{ c | c | c | c }
      & Ancho en el mapa creado & Ancho real & Error de RTAB-Map\\
      \hline
-     Tela de la pared & 1.75 m & 2 m & 0.15m\\
-     Cuadro sobre sillón & X cm & X cm \\
+     Tela de la pared & 1.72 m & 1.8 m & 0.08 m\\
+     Cuadro sobre sillón & 1.07 m & 1.13m & 0.05m\\
 \end{tabular}
 \end{center}
 
-En este caso, se obsrrva que ...
+Se observa cómo, el error de ésta técnica de SLAM frente a las medidas reales es casi un orden de magnitud menor, algo que se considera asumible.
 
 \subsubsection{OctoMap}
 Gracias a \textit{Octomap} se ha obtenido el mapa de ocupación probabilistico del entorno. Se mostrará, al igual que antes, el mapa antes y despues del loop closure, ya que es local
@@ -313,6 +315,7 @@ El mapa obtenido, será un mapa denso el cual posee toda la información posible
     \caption{Mapa obtenido con RTAB-Map empleando el segundo dataset}
 \end{figure}
     
+\newpage
     \subsubsection{OctoMap}
 Gracias a \textit{Octomap} se ha obtenido el mapa de ocupación probabilistico del entorno. Se mostrará, al igual que antes, el mapa antes y despues del loop closure, ya que es local
 destacable de ésta técnica de SLAM.
@@ -347,9 +350,25 @@ Por tanto, en éste caso sí se ha logrado obtener un mapa disperso del entorno:
     \caption{Mapa del entorno empleando ORB-SLAM2}
 \end{figure}
 
+Se observa cómo, el mapa obtenido empleando ésta técnica se basa mayoritariamente en la detección de los features del entorno. En comparativa con RTAB-Map, ésta técnica podría parecer
+mucho peor, sin embargo, bajo un ordenador de altas prestaciones los resultados para robótica sin muy destacables ya el mapa disperso es completamente funcional para poder relocalizarse
+y, de ese modo, conocer la posición del robot movil que esté implementando el SLAM en ese momento.
 \newpage
 \subsection{Resultados obtenidos de ORB-SLAM2 Monocular}
 Debido a la compleja inicialización que conlleva emplear ésta técnica monocular, no ha sido posible evaluar su funcionamiento con los bags generados, ya que no se logró que se
 inicializase. Sin embargo, para comprobar su funcionamiento, se ha optado por mover la cámara \textit{Hand-handle}, de tal modo que se asegure la inicialización del SLAM. \\
 El gran punto a favor que posee el empleo de SLAM monocular es que no es sensible a la luz, de tal modo que funciona correctamente en exteriores. \\
 Por ello, la prueba realiza es en el mismo salón, pero saliendo al balcón y grabando al exterior. \\
+
+Para inicializar el SLAM, ha sido necesario asegurarse que se tomaban y se lograban tracker las \textit{features} de la tela de la pared. A continuación, se mostrará una imagen
+del mapa grabado durante bastante tiempo, asegurandose de que se tomaban los suficientes puntos característicos y, se intentó realizar una prueba de cómo estima la altura del piso, 
+saliendo al balcón y haciendo que la cámara apuntase al suelo. Es por ello que el mapa tiene la siguiente forma:
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/slam/mono}
+    \caption{Mapa del entorno empleando ORB-SLAM2 Monocular Hand-Handle}
+\end{figure}
+
+Se observa cómo ésta técnica es insensible a los cambios de luminosidad en la imagen anterior y los puntos alejados que ha tomado son features tomadas de los edificios de enfrente de la
+casa.
