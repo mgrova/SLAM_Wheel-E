@@ -6,11 +6,11 @@ Este es un proyecto en el cual se busca realizar una comparativa de diferentes t
 ![alt text](/docs/latex/images/slam/bag3_orb_map.jpg "ORB")
 
 # Wheel-E 
-![alt text](/docs/latex/images/hw/wheele_esquema.jpg "wheele")
+![alt text](/docs/latex/images/hw/wheele_esquema.png "wheele_esquema")
 
 ![alt text](/docs/latex/images/wheele_real.jpg "wheele")
 
-Un análisis en detalle de todo el proyecto, así como de sus resultados se encuentra (en español) [aquí relative link](doc.md). Todos los recursos bibliográficos se encuentran en [docs/ relative link](SLAM_Wheel-E/docs/). 
+Un análisis en detalle de todo el proyecto, así como de sus resultados se encuentra (en español) [aquí](doc.md). Los recursos bibliográficos disponibles se pueden consultar en [docs/](SLAM_Wheel-E/docs/). 
 
 # DEPENDENCIAS
 ## Uso de lod gpio de la RPi
